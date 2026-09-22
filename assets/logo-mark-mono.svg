@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500" role="img" aria-label="Veya">
+  <title>Veya</title>
+  <g fill="currentColor">
+    <rect x="244" y="160" width="13" height="55"/>
+    <rect x="244" y="285" width="13" height="55"/>
+    <rect x="162" y="246" width="58" height="12"/>
+    <rect x="280" y="246" width="58" height="12"/>
+    <circle cx="203" cy="201.5" r="8.5"/>
+    <circle cx="293" cy="201.5" r="8.5"/>
+    <circle cx="207.5" cy="297" r="8"/>
+    <circle cx="293" cy="297" r="8.5"/>
+  </g>
+</svg>
