@@ -33,8 +33,7 @@ dependencies = [
 ]
 
 [tool.setuptools]
-# assets/, research/ and notebooks/ sit in the root, so auto-discovery bails out.
-packages = ["veya"]
+packages = ["veya", "veya.foundry"]
 
 [project.urls]
 Homepage = "https://huggingface.co/veyadynamics/veya"

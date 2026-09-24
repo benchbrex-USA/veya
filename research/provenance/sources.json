@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "checked_at": "2026-09-25",
+  "policy": {
+    "integrate": "Source code may be locally synchronized for analysis and adaptation subject to its license and upstream dependency licenses.",
+    "reference_only": "Do not copy code into Veya. Use only public behavior, documentation, papers, and independently produced outputs until an explicit compatible license is verified."
+  },
+  "sources": [
+    {"source_id":"source_001","repository":"https://github.com/fastino-ai/GLiNER2.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["dynamic-schema","classification","extraction","relations"],"audit_terms":["gliner","fastino"]},
+    {"source_id":"source_002","repository":"https://github.com/Knowledgator/GLiFormer.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["dynamic-schema","extraction"],"audit_terms":["gliformer","knowledgator"]},
+    {"source_id":"source_003","repository":"https://github.com/Knowledgator/GLiClass.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["zero-shot-classification","hierarchical-labels"],"audit_terms":["gliclass"]},
+    {"source_id":"source_004","repository":"https://github.com/NandhaKishorM/laya.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","calibration","multilingual","routing"],"audit_terms":["laya","convai"]},
+    {"source_id":"source_005","repository":"https://github.com/wfzyx/von.git","branch":"master","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","routing"],"audit_terms":["von"]},
+    {"source_id":"source_006","repository":"https://github.com/deepanwadhwa/OpenDecision.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","semantic-scoring"],"audit_terms":["opendecision"]},
+    {"source_id":"source_007","repository":"https://github.com/jaredpalmer/kev.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","calibration","training","serving"],"audit_terms":["kev"]},
+    {"source_id":"source_008","repository":"https://github.com/Mapika/decider.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","calibration","schema-cache","continuous-batching","training"],"audit_terms":["decider","mapika"]},
+    {"source_id":"source_009","repository":"https://github.com/TianyuCodings/NanoJev.git","branch":"main","code_license":"MIT","integration_policy":"integrate","capabilities":["typed-decisions","agent-control"],"audit_terms":["nanojev","openjev"]},
+    {"source_id":"source_010","repository":"https://github.com/bespokelabsai/nimble.git","branch":"main","code_license":"NO-LICENSE-FILE-VERIFIED","integration_policy":"reference_only","capabilities":["typed-decisions","contrastive-curation","evaluation"],"audit_terms":["nimble","bespoke"]},
+    {"source_id":"source_011","repository":"https://github.com/mateolafalce/system-one-model.git","branch":"main","code_license":"NO-LICENSE-FILE-VERIFIED","integration_policy":"reference_only","capabilities":["typed-decisions","distillation","calibration"],"audit_terms":["system-one-model","lafalce"]},
+    {"source_id":"source_012","repository":"https://github.com/iapp-technology/openthai-systemone.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","multilingual","continued-pretraining","synthetic-data"],"audit_terms":["openthai","systemone"]},
+    {"source_id":"source_013","repository":"https://github.com/TheoLeeCJ/SemIf.git","branch":"master","code_license":"MIT","integration_policy":"integrate","capabilities":["direct-scoring","shared-prefix","evaluation"],"audit_terms":["semif"]},
+    {"source_id":"source_014","repository":"https://github.com/nokia-applied-research/AnyJev.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-readout","calibration","no-training"],"audit_terms":["anyjev","nokia-applied-research"]},
+    {"source_id":"source_015","repository":"https://github.com/ikermoel/open-alternative-jev.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","open-runtime"],"audit_terms":["open-alternative-jev"]},
+    {"source_id":"source_016","repository":"https://github.com/mmastrac/djev.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","diffusion-readout","serving"],"audit_terms":["djev","diffusiongemma"]},
+    {"source_id":"source_017","repository":"https://github.com/Gestalt-Lab/jeff.git","branch":"main","code_license":"Apache-2.0","integration_policy":"integrate","capabilities":["typed-decisions","candidate-scoring","training"],"audit_terms":["jeff","gestalt-lab"]}
+  ]
+}
