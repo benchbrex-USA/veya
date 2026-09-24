@@ -1,0 +1,22 @@
+{
+  "source_id": "source_018",
+  "repository": "https://github.com/allebee/jevk5.git",
+  "revision": "0571ef373722dd10cace82c81580d7b675fe6b53",
+  "license": "Apache-2.0",
+  "copied_paths": [
+    "LICENSE",
+    "NOTICE",
+    "jevk5/runtime.py",
+    "jevk5/prompt.py",
+    "training/order_avg.py",
+    "training/temp_choice.py"
+  ],
+  "purpose": [
+    "typed-decisions",
+    "runtime",
+    "prompt-formatting",
+    "order-averaging",
+    "temperature-calibration"
+  ],
+  "copied_at": "2026-09-25"
+}
