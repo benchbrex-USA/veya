@@ -1,0 +1,15 @@
+{
+  "source_id": "source_026",
+  "repository": "https://github.com/EldanRing/winnow-inference.git",
+  "revision": "77d14580c6732ca2f3745750c1dc1fd446d8bcee",
+  "license": "MIT",
+  "copied_paths": [
+    "LICENSE",
+    "scripts/parity.py",
+    "scripts/verify_model.py",
+    "docs/EVALUATION.md",
+    "docs/IMPLEMENTATION.md"
+  ],
+  "copied_at": "2026-09-25",
+  "purpose": "Veya Foundry research snapshot; preserve upstream license/attribution"
+}

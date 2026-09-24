@@ -1,0 +1,15 @@
+{
+  "source_id": "source_019",
+  "repository": "https://github.com/hopit-ai/hopper.git",
+  "revision": "4d9014561e9b313ec978dbd09762f618f7d5506a",
+  "license": "Apache-2.0",
+  "copied_paths": [
+    "LICENSE",
+    "hopper_decisions/model.py",
+    "hopper_decisions/calibration.py",
+    "hopper_decisions/fastpath.py",
+    "hopper_decisions/prompt.py"
+  ],
+  "copied_at": "2026-09-25",
+  "purpose": "Veya Foundry research snapshot; preserve upstream license/attribution"
+}

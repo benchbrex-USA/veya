@@ -1,0 +1,15 @@
+{
+  "source_id": "source_024",
+  "repository": "https://github.com/tomaarsen/SpanMarkerNER.git",
+  "revision": "b38ca4844eb67e13302d05acff331f362627e2c3",
+  "license": "Apache-2.0",
+  "copied_paths": [
+    "LICENSE",
+    "span_marker/modeling.py",
+    "span_marker/tokenizer.py",
+    "span_marker/data_collator.py",
+    "span_marker/evaluation.py"
+  ],
+  "copied_at": "2026-09-25",
+  "purpose": "Veya Foundry research snapshot; preserve upstream license/attribution"
+}
