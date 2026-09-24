@@ -1,0 +1,15 @@
+{
+  "source_id": "source_022",
+  "repository": "https://github.com/AnswerDotAI/ModernBERT.git",
+  "revision": "c6d942312f1b0b24d423628b8e477a3e97c7038f",
+  "license": "Apache-2.0",
+  "copied_paths": [
+    "LICENSE",
+    "src/bert_layers/attention.py",
+    "src/bert_layers/layers.py",
+    "src/algorithms/rope_schedule.py",
+    "sequence_classification.py"
+  ],
+  "copied_at": "2026-09-25",
+  "purpose": "Veya Foundry research snapshot; preserve upstream license/attribution"
+}
