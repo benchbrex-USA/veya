@@ -1,0 +1,15 @@
+{
+  "source_id": "source_021",
+  "repository": "https://github.com/Heman10x-NGU/Verdict-open-jev.git",
+  "revision": "30f15564821626ca5c1ad5b2638c4eb7078787dd",
+  "license": "Apache-2.0",
+  "copied_paths": [
+    "LICENSE",
+    "core/engine_encoder.py",
+    "core/calibration.py",
+    "core/primitives.py",
+    "scripts/exp_hard_negatives.py"
+  ],
+  "copied_at": "2026-09-25",
+  "purpose": "Veya Foundry research snapshot; preserve upstream license/attribution"
+}
