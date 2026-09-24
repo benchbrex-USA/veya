@@ -1,0 +1,14 @@
+{
+  "source_id": "source_023",
+  "repository": "https://github.com/huggingface/setfit.git",
+  "revision": "be332d6d4993e272fd9bca4364e8025880228b48",
+  "license": "Apache-2.0",
+  "copied_paths": [
+    "LICENSE",
+    "src/setfit/losses.py",
+    "src/setfit/modeling.py",
+    "src/setfit/trainer_distillation.py"
+  ],
+  "copied_at": "2026-09-25",
+  "purpose": "Veya Foundry research snapshot; preserve upstream license/attribution"
+}
