@@ -1,0 +1,15 @@
+{
+  "source_id": "source_025",
+  "repository": "https://github.com/mithalouni/system-one-open.git",
+  "revision": "77f1f7cccf8aa752e0ed7edcc8d2094bac707bdc",
+  "license": "MIT",
+  "copied_paths": [
+    "LICENSE",
+    "s1/engine.py",
+    "s1/metrics.py",
+    "s1/schema.py",
+    "train.py"
+  ],
+  "copied_at": "2026-09-25",
+  "purpose": "Veya Foundry research snapshot; preserve upstream license/attribution"
+}
