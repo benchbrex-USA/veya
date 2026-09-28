@@ -1,0 +1,27 @@
+{
+  "cardinality_temperatures": {
+    "choice:11+": 1.8768868409628021,
+    "choice:3-5": 1.2076712505429734
+  },
+  "checkpoint_id": "models/production english",
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "dataset_hash": "ag_news_test_0_400__banking77_test_20way_0_80",
+  "fitted_at": "2026-09-22T12:54:16Z",
+  "fitting_split": "calibration",
+  "fitting_role": "calibration",
+  "fit_split_hashes": {
+    "ag_news_test_seed17_0_400": "c10d7eb80cfc1330ff0b89204309af3ee815e3de001923a288d6ea06605d541c",
+    "banking77_test_seed17_0_80": "0c8495708da64a089db326662e89bd2942c55c4d4c73dd821be51e9a3d4eaa4c"
+  },
+  "format": "veya-calibration-v1",
+  "global_temperature": 1.2076712505429734,
+  "method": "temperature-nll",
+  "scorer_id": "base_decision_head",
+  "min_observations": 32,
+  "notes": "choice:3-5 fit on 400 AG News public-test rows. choice:11+ fit on 80 Banking77 public-test rows at 20 options. Other shipped buckets were left unchanged.",
+  "primitive_temperatures": {},
+  "sample_counts": {
+    "choice:11+": 80,
+    "choice:3-5": 400
+  }
+}

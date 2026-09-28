@@ -1,0 +1,146 @@
+{
+  "format": "veya-release-manifest-v2",
+  "model": "veya",
+  "release": "0.3.5-audit-baseline.1",
+  "release_status": {
+    "english_choice": "RESEARCH RELEASE",
+    "english_noul": "RESEARCH ONLY",
+    "english_score_categorical": "RESEARCH ONLY",
+    "multilingual_choice": "RESEARCH ONLY",
+    "multilingual_noul": "RESEARCH ONLY",
+    "multilingual_score": "RESEARCH ONLY"
+  },
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "git_branch": "codex/phase-1-9-forensic-audit",
+  "working_tree": "dirty; includes preserved pre-audit user work and audit repairs",
+  "architecture_version": "veya-shortlist-k8-packed-rerank-v1",
+  "served_scorer_id": "base_decision_head",
+  "base_checkpoint": "models/production",
+  "base_checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "model_config": "models/production/rl_agent_config.json",
+  "model_config_hash": "ae287b56bbcf5f8c4f4541ae9dfd00c914c4c48b940b8398c3058af37ba92bbd",
+  "tokenizer": "models/production/tokenizer",
+  "tokenizer_files": {
+    "models/production/tokenizer/tokenizer.json": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30",
+    "models/production/tokenizer/tokenizer_config.json": "50044de60daaa73df97d262e15a40d4faf0160e7d742df64b377877a1320dd12"
+  },
+  "runtime_files": {
+    "veya/__init__.py": "272bb6891d1d12475a0131a16146c8dbfc89efab2c4a241ef3d7c1d174810853",
+    "veya/agent.py": "a434f991f4edd27278cf49ce7d9af50bb1fc403074a63e0e9419d41f66f15551",
+    "veya/calibration.py": "de4a79d4345784fac2f16e3c256021ba162f03171a10416aec526e9f7698c0ca",
+    "veya/common.py": "4b9e77b7f78a0377e1cbd3656c01bfb4613e66a08c5f2892af364f3a3e2465a2",
+    "veya/email.py": "8f71e5edb7cc5105f80e4dccf46f2e9ba99ea2692b0587f004d334f92d563805",
+    "veya/lang.py": "ec1b58209f2386167d6a2504334a5abeed8152a3b37008a57ba8c1c28d41db32",
+    "veya/manifest.py": "4e57503a03de23204f3738a3830eb5d1f1404e2b18b4ca1192c3905695924c0f",
+    "veya/presets.py": "2a3370f587cae29696bfa487edcc51caf47a211518733fdb192cf6d4eddbf1ea",
+    "veya/release_bundle.py": "d62ac6442174ec6073cd51ad1974d03051cb75825bc164587bdbd11ac880497c",
+    "veya/reranker.py": "75b1356ddf7c6f755838c88d0918d107c835728125f1c37ce81b29e846b2991b",
+    "veya/router.py": "10be5b9b11c3014b99cf12d3caf68af253832f4fb314532fed2a6eb69b04b96e",
+    "veya/selective.py": "b42302713f38ce9f55856572263c39d83d61585d596cdbf829ed1658a015266f",
+    "veya/server.py": "6b9546a0c80acfbc51efc0b6155c37e46221eecbbb7f05940cc238eec535622d",
+    "veya/shortlist.py": "a5c100fc356db0a285176c709310776b9e98823d4a7330c0557d1d63b8c6151b",
+    "veya/shortlist_artifact.py": "b697ca2389997a286550fddb97f3dee53d780739b8157e8ad32547af71f9ba40"
+  },
+  "choice": {
+    "packed_max_candidates": 19,
+    "hierarchical_enabled": true,
+    "shortlist_trigger_candidates": 20,
+    "shortlist_k": 8,
+    "shortlist_artifact": "models/production/shortlist_k8.pt",
+    "shortlist_hash": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "shortlist_training_split": "banking77_train_seed17_0_800",
+    "shortlist_training_status": "DEVELOPMENT-EXPOSED",
+    "embed_max_length": 96,
+    "high_n": {
+      "architecture": "shortlist_k8_packed_rerank",
+      "scorer_id": "base_decision_head",
+      "calibration_route": "shortlist_k8_packed_rerank"
+    },
+    "small_n": {
+      "architecture": "packed",
+      "scorer_id": "base_decision_head",
+      "max_candidates": 19,
+      "calibration_route": "packed"
+    }
+  },
+  "routing": {
+    "language_router": "english checkpoint defers confidently detected non-English text",
+    "choice_router": "models/production/choice_router.json",
+    "choice_router_hash": "ca81f034535b499cca72f678546e875f356619f81e67c46e61ae01aed491fb13",
+    "cutoff_evidence": "artifacts/release/route_cutoff_audit.json",
+    "cutoff_evidence_hash": "2a304c1c5b9270225aec72304292fbdbefab25490132ff440136de87690b4ddc"
+  },
+  "calibration": {
+    "packed_choice": "models/production/calibration.json",
+    "packed_choice_hash": "1d1c5834b362e86f60abac9d608a4a9506ba4fe5100c352538900a4958b5ad9b",
+    "packed_scorer_id": "base_decision_head",
+    "hierarchical_choice": "models/production/calibration_shortlist_k8.json",
+    "hierarchical_choice_hash": "b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50",
+    "hierarchical_route": "shortlist_k8_packed_rerank",
+    "hierarchical_scorer_id": "base_decision_head",
+    "hierarchical_temperature": 1.971127355603397,
+    "noul": "checkpoint temperature only; no independent audit calibration artifact",
+    "score": "checkpoint categorical temperature only; ordinal is RESEARCH ONLY"
+  },
+  "selective_policy": "artifacts/release/selective_policy.json",
+  "selective_policy_hash": "80e7be582c9c890cf73da701cbd86a71c6d908331186ee68f1021763011cd620",
+  "automation": {
+    "status": "DISABLED",
+    "reason": "The validation-selected nominal 5% threshold observed 6.99% risk on development-exposed reporting data; no production risk guarantee is supported."
+  },
+  "supported_languages": [
+    "en"
+  ],
+  "supported_primitives": [
+    "choice",
+    "noul",
+    "score-categorical"
+  ],
+  "research_artifacts_not_served": {
+    "phase9_hypothesis": {
+      "status": "RESEARCH ONLY",
+      "reason": "Development-exposed validation/test lineage and unresolved injection sensitivity; not loaded by this manifest.",
+      "scorer_head": "artifacts/experiments/phase9/finalist_head.pt",
+      "scorer_head_hash": "8ccd560a7464d0dfa35a5382694bbf398d991fa2f2acf869525a2e93a0008d50",
+      "encoder_delta": "artifacts/experiments/phase9/encoder_delta.pt",
+      "encoder_delta_hash": "c2c8eec02fa01e118f36a9920b1f023d0785dd35c699a6e240c561054253d517"
+    },
+    "ordinal_score": "RESEARCH ONLY",
+    "semantic_candidate_enrichment": "RETIRED",
+    "phase6_reranker_heads": "RETIRED"
+  },
+  "data_lineage": "docs/audit/data_lineage.json",
+  "data_lineage_hash": "fd3e0ec3c8bf619336a3a797296ae1c5aeae24ce5cec8dbca3b6f2cc2bb7385d",
+  "blind_evaluation": {
+    "freeze_manifest": "docs/audit/blind_clinc150_val_freeze.json",
+    "freeze_manifest_hash": "35787c5b14c90a06deade592270fa8de59efbe6342a9d868837a4fd8991e53be",
+    "dataset": "research/data/clinc150/data_full.json",
+    "dataset_hash": "36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0",
+    "split": "val",
+    "example_count": 3000,
+    "harness": "research/veyabench/run_blind_clinc150.py",
+    "harness_hash": "6a0261c675ed7921e0fb8bb4fa60b6f5de6d4d4cf93fa83d9ab051fe0010ede4",
+    "status": "SEALED_EVALUATED",
+    "result": "artifacts/release/blind_clinc150_val_result.json",
+    "result_hash": "406d728226f81f9586c091f60d9f003328453331ad740595eb639d1542137e8d",
+    "evaluation_runs": 1,
+    "aggregate_summary": {
+      "retrieval_recall_at_8": 0.356,
+      "conditional_accuracy_given_hit": 0.9803370786516854,
+      "end_to_end_accuracy": 0.349,
+      "ece_end_to_end": 0.26731340633441336,
+      "permutation_top1_flips": 0
+    },
+    "superseded_failed_partition_record": "artifacts/release/blind_clinc150_test_failed_run.json"
+  },
+  "known_limitations": [
+    "All Banking77 test rows used by prior phases are DEVELOPMENT-EXPOSED and cannot certify this release.",
+    "The K=8 projection is Banking77-trained; cross-domain retrieval quality is not assumed.",
+    "Automation is disabled; reported probabilities are not a production risk guarantee.",
+    "English is the only served language. The separate multilingual checkpoint is uncalibrated for release use.",
+    "Noul and categorical Score lack independent calibration artifacts in this audited release.",
+    "Ordinal Score is RESEARCH ONLY.",
+    "Phase-9 hypothesis scoring is not served.",
+    "SystemOne re-encodes state per question because question-conditioned attention makes hidden-state reuse unsafe."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "format": "veya-hypothesis-scorer-v1",
+  "scorer_id": "hypothesis_hce2_h0",
+  "template_version": "phase9-h0-v1",
+  "variant": "H0",
+  "base_checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "head_file": "finalist_head.pt",
+  "encoder_delta": "encoder_delta.pt",
+  "start_layer": 26,
+  "objective": "listwise_cross_entropy",
+  "promoted_on_validation": true
+}

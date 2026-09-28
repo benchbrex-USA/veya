@@ -1,0 +1,55 @@
+{
+  "format": "veya-phase10-research-manifest-v1",
+  "status": "KEEP_AS_RESEARCH",
+  "retriever_id": "phase10-domain-general-k8-v1",
+  "served": false,
+  "feature_flag": "phase10_domain_general",
+  "default_retriever": "current",
+  "git_branch": "codex/phase-10-domain-retrieval",
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "files": {
+    "artifact": {
+      "path": "artifacts/experiments/phase10/domain_general_k8.pt",
+      "sha256": "a82e369346d9ee3bbd9bc0df09bbebebea5c92c1a42b6c667b08675e918d713f"
+    },
+    "selection": {
+      "path": "artifacts/experiments/phase10/retriever_comparison.json",
+      "sha256": "65eac8fe0415c7290bda4f300b5def999263dce20906260bf5633a8f0e0ff1af"
+    },
+    "validation": {
+      "path": "artifacts/experiments/phase10/validation_report.json",
+      "sha256": "418199ab74171f51337dbe47bfac9bb3ad6e45d674d1602d0454542402610d86"
+    },
+    "blind_result": {
+      "path": "artifacts/experiments/phase10/blind_massive_result.json",
+      "sha256": "8d9c06cf78668fb729243b3bea1b6d41f7e22dc27d894d88f1f58a36d295afda"
+    },
+    "diagnostics": {
+      "path": "artifacts/experiments/phase10/diagnostics.json",
+      "sha256": "ca671f7879431f62fcc4a214ca3f0f5eb497a1596730f4bf9fcf570641ff97eb"
+    },
+    "split_freeze": {
+      "path": "artifacts/experiments/phase10/splits.json",
+      "sha256": "4ad513379f8962177c42e9e3cb572c5cb8a08c12b8f8d715f3902e742ee990a2"
+    },
+    "selection_dataset_registry": {
+      "path": "research/data/phase10/registry.json",
+      "sha256": "b4aad1a23be66f831b5eb1e4d90bf6af3f633a363c064da26445313c28e84dda"
+    },
+    "blind_freeze_consumed": {
+      "path": "docs/phase10/blind_massive_freeze.json",
+      "sha256": "0d67207a35a74d3316a4d1cd0055ad71ef8d8da4e93c94b74fc31c26b44f61ce"
+    },
+    "blind_harness": {
+      "path": "research/veyabench/run_phase10_blind_massive.py",
+      "sha256": "8e350a22838cd72d4e628bc808cf62f6f83e34d6e0e4e5861ff740b98a5d4ab3"
+    },
+    "unchanged_release_manifest": {
+      "path": "artifacts/release/manifest.json",
+      "sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648"
+    }
+  },
+  "promotion_decision": "KEEP AS RESEARCH",
+  "automation": "DISABLED",
+  "calibration_refit": false
+}

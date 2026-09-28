@@ -5,7 +5,7 @@
   </picture>
 </p>
 
-**Multilingual, non-autoregressive System 1 decision engine.** Typed decisions over 100+ languages in a single forward pass — 33 ms — trained with reinforcement learning against strictly proper scoring rules (RLCD), with a router that picks the right checkpoint per request.
+**Non-autoregressive typed-decision research system.** The audited release path serves English Choice; Noul, categorical Score, the multilingual checkpoints, ordinal Score, and Phase 9 remain research-only.
 
 <div align="center">
 
@@ -14,8 +14,8 @@
 [![Hugging Face Model](https://img.shields.io/badge/%F0%9F%A4%97%20Model-veyadynamics%2Fveya-blue)](https://huggingface.co/veyadynamics/veya)
 [![Multilingual](https://img.shields.io/badge/%F0%9F%A4%97%20Model-veya--multilingual-blue)](https://huggingface.co/veyadynamics/veya-multilingual)
 [![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-veya--demo-orange)](https://huggingface.co/spaces/veyadynamics/veya-demo)
-[![Dev.to Article](https://img.shields.io/badge/dev.to-Read%20Article-0A0A0A?logo=devdotto&logoColor=white)](https://dev.to/nandakishor_m_6cc0adfde9f/i-built-non-autoregressive-decision-models-a-year-ago-then-a-frontier-lab-called-it-a-18me)
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-nandakishorm-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/nandakishorm)
+[![Dev.to Article](https://img.shields.io/badge/dev.to-Read%20Article-0A0A0A?logo=devdotto&logoColor=white)](https://dev.to/BenchBrex/i-built-non-autoregressive-decision-models-a-year-ago-then-a-frontier-lab-called-it-a-18me)
+[![beguardit.com](https://img.shields.io/badge/beguardit.com-BenchBrex-FFDD00)](https://beguardit.com)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
 </div>
@@ -24,15 +24,34 @@
   <img src="https://raw.githubusercontent.com/benchbrex-USA/veya/main/assets/veya_vs_jev_full.png" alt="Veya versus TypeSafe Jev: accuracy on shared public datasets, every application workflow, all 51 languages, speed, calibration, and the cost of not preloading" width="100%" />
 </p>
 
-Veya evaluates typed questions (`choice`, `score`, `noul`) over any state (text, email, ticket or JSON document) in **a single forward pass** — 33 ms for one question, 7.2 ms/question batched, measured on a T4. No text generation, so nothing to parse and nothing to hallucinate.
+## Audited release status
+
+The Phase 1–9 forensic audit does **not** support a release-candidate or global production-ready claim. Current status:
+
+| Scope | Status |
+|---|---|
+| English Choice | **RESEARCH RELEASE** |
+| English Noul / categorical Score | **RESEARCH ONLY** |
+| Multilingual Choice / Noul / Score | **RESEARCH ONLY** |
+| Ordinal Score | **RESEARCH ONLY, not served** |
+| Phase-9 hypothesis scorer | **RESEARCH ONLY, not served** |
+| Automatic execution | **DISABLED** |
+
+On the sealed cross-domain CLINC150 blind set (3,000 examples, 150 labels), the K=8 route reached 35.6% Recall@8, 98.03% conditional accuracy when the target was retrieved, and 34.9% end-to-end accuracy. The bottleneck is retrieval. End-to-end ECE was 0.267, so probabilities must not be treated as a production risk guarantee. See the [full audited verdict](docs/audit/release_verdict.md) and [Phase 1–9 matrix](docs/audit/phase_1_9_matrix.md).
+
+Phase 10 trained an **experimental, non-served** multi-schema retriever. On the untouched MASSIVE English blind test it improved Recall@8 from 28.51% to 34.97% and end-to-end accuracy from 22.93% to 27.34%, but failed the robustness gate: irrelevant or long suffixes sharply reduced retrieval. The decision is **KEEP AS RESEARCH**; the audited production manifest still uses the original retriever. See the [Phase-10 report](docs/phase10/final_report.md).
+
+The benchmark sections below are historical capability measurements, often on training-mix or development-exposed data. They are retained for reproducibility, not release certification.
+
+Veya's base API evaluates typed questions (`choice`, `score`, `noul`) without text generation. Historical T4 measurements were 33 ms for one question and 7.2 ms/question batched. The audited high-cardinality route is multi-stage: learned retrieval followed by a packed rerank.
 
 Three checkpoints, and a `Router` that picks between them per request:
 
-| | encoder | params | context | use it for |
-|---|---|---|---|---|
-| [`veya`](https://huggingface.co/veyadynamics/veya) | ModernBERT-large | 421M | 512 | English |
-| [`veya-multilingual`](https://huggingface.co/veyadynamics/veya-multilingual) | mmBERT-base | 322M | 1024 | 100+ languages, 2x faster |
-| [`veya-typed-decisions`](https://huggingface.co/veyadynamics/veya-typed-decisions) | ModernBERT-large | 421M | 1024 | the typed-decisions workflows |
+| | encoder | params | context | audited status |
+|---|---|---:|---:|---|
+| [`veya`](https://huggingface.co/veyadynamics/veya) | ModernBERT-large | 421M | 512 | English Choice research release |
+| [`veya-multilingual`](https://huggingface.co/veyadynamics/veya-multilingual) | mmBERT-base | 322M | 1024 | research only; release calibration unvalidated |
+| [`veya-typed-decisions`](https://huggingface.co/veyadynamics/veya-typed-decisions) | ModernBERT-large | 421M | 1024 | research only; benchmark-specialized |
 
 ---
 
@@ -46,18 +65,18 @@ Python 3.10 or newer. The dependencies set that floor: `huggingface_hub` 1.x, `t
 
 ---
 
-## Quickstart: Route Mode (Recommended)
+## Quickstart: Route Mode (Experimental)
 
-Veya ships three checkpoints. The built-in **`Router`** is the recommended entry point: it evaluates any state in any language, automatically detects scripts and languages in sub-milliseconds, and dispatches to the optimal checkpoint in a single forward pass.
+Veya ships three checkpoints. The built-in `Router` detects scripts/languages and dispatches between them, but the multilingual and typed-decisions checkpoints are not audited production routes. Use this API for research/evaluation, not as an implied multilingual guarantee.
 
 ```python
 import veya
 from veya import Router
 
-# Preload checkpoints into memory for instant sub-35ms routing
+# Preload checkpoints (high memory use; latency depends on hardware)
 router = Router(preload=True)
 
-# 1. State in any language or schema
+# 1. State payload
 state = {
     "from": "user@acme.com",
     "subject": "Duplicate charge on invoice #4411",
@@ -293,7 +312,7 @@ failure for anything branching on confidence.
 
 #### Where Jev leads
 
-* **High-cardinality label spaces (>20 options at default settings):** On Banking77, Jev scores 0.870 (on 72 labels) while Veya scores 0.425 (on 77 labels at default 256-token head budget). This is an architectural token-budget constraint: options share a fixed `head_max_len` budget (192 tokens on English, 256 on multilingual), so 77 options receive only ~3 to 4 tokens per label, causing text to become indistinguishable. Jev supports up to 255 options out-of-the-box. While `veya-multilingual` supports 1,024 context (and up to 8,192 in the encoder) and you can raise `agent.cfg["head_max_len"] = 512` at runtime, Jev is currently better suited for 50+ options in a single prompt without tuning. `predict_shortlist` (see [Honest limits](#honest-limits)) keeps the top `k` labels with a caller-supplied embedding, then runs one forward pass on that shortlist.
+* **High-cardinality label spaces (20+ options):** The audited release routes 20+ candidates through the learned K=8 shortlist and keeps packed Choice through 19. This fixes packed token-budget collapse but does not solve cross-domain retrieval: sealed CLINC150 Recall@8 was only 35.6%, despite 98.03% conditional accuracy after retrieval. The public `predict_shortlist` helper remains available for caller-supplied retrieval, but its quality is the caller's responsibility.
 * **Soft distribution matching:** On typed-decisions, while Veya achieves higher argmax accuracy (0.766 vs 0.727), Jev achieves higher soft accuracy (0.580 vs 0.471) against the teacher's full probability distributions.
 * **Out-of-the-box raw calibration:** Before temperature scaling, the base checkpoint has higher raw ECE (0.213 vs 0.144). Veya achieves its 0.081 ECE after domain temperature fitting.
 
@@ -359,6 +378,9 @@ temperatures at all, so fit them before relying on its probabilities.
 
 ### Honest limits
 
+* **Not a release candidate:** the audited English Choice path is a research release. Noul, Score, multilingual routes, and Phase 9 are research-only.
+* **Automation is disabled:** frozen 2%/5%/10% development thresholds observed 5.23%/9.48%/14.25% risk on the sealed blind set.
+* **High-N retrieval is domain-specific:** Recall@8 was 35.6% on sealed CLINC150, making end-to-end accuracy 34.9% even though conditional reranking accuracy was 98.03%.
 * **The base checkpoints are near chance on typed-decisions zero-shot** -- 0.362 and 0.352
   against a 0.318 random baseline and a 0.461 majority-class baseline. The 0.766 figure comes
   from the checkpoint fine-tuned on that benchmark's own training split. Veya is a fast base to
@@ -399,7 +421,7 @@ result["shortlist"]["intent"]["labels"]  # the top 20 labels sent to the model
 
 [Issue #102](https://github.com/benchbrex-USA/veya/issues/102) reports that a top-20 zero-shot shortlist moved a BANKING77 run from 54.3% to 60.8% on the reporter's setup. Those figures are the reporter's; this repository has not remeasured them.
 
-* Ordinal `score` questions are the weakest primitive (SST-5 0.372).
+* Served `score` behavior is categorical. The separate ordinal head is **RESEARCH ONLY** and is not loaded by the audited manifest.
 * `veya` collapses outside English; `veya-multilingual` is weaker on English. Route, or pick
   deliberately.
 
@@ -409,7 +431,7 @@ result["shortlist"]["intent"]["labels"]  # the top 20 labels sent to the model
 
 * **Hugging Face Model:** [veyadynamics/veya](https://huggingface.co/veyadynamics/veya)
 * **Interactive Web Demo:** [veyadynamics/veya-demo](https://huggingface.co/spaces/veyadynamics/veya-demo)
-* **Engineering Writeup:** [Read the full story on Dev.to](https://dev.to/nandakishor_m_6cc0adfde9f/i-built-non-autoregressive-decision-models-a-year-ago-then-a-frontier-lab-called-it-a-18me)
+* **Engineering Writeup:** [Read the full story on Dev.to](https://dev.to/BenchBrex/i-built-non-autoregressive-decision-models-a-year-ago-then-a-frontier-lab-called-it-a-18me)
 
 ---
 
@@ -436,9 +458,7 @@ Runtime on 2xT4 is roughly 4-5 hours for 4 epochs over ~30k questions.
 If Veya helps your research or products, consider supporting independent research:
 
 <p align="left">
-  <a href="https://www.buymeacoffee.com/nandakishorm" target="_blank">
-    <img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=nandakishorm&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me A Coffee" />
-  </a>
+  <a href="https://beguardit.com" target="_blank">beguardit.com</a>
 </p>
 
 ---

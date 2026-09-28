@@ -1,0 +1,50 @@
+{
+  "format": "veya-data-lineage-v1",
+  "audit_date": "2026-09-23",
+  "taint_rule": "Any labels or errors inspected before a later architecture, loss, K, routing, candidate-text, negative-mining, calibration, or automation decision make that set DEVELOPMENT-EXPOSED.",
+  "datasets": [
+    {
+      "dataset": "banking77",
+      "source_files": {
+        "train": {
+          "path": "research/data/banking77/train.csv",
+          "sha256": "b06e26ac675513959a63135f11b94ea7786ed02da65db93a5650d8838cbc664b"
+        },
+        "test": {
+          "path": "research/data/banking77/test.csv",
+          "sha256": "d12d6e3bc4c3103966ae786dc435913c0c563dfa328f5a3646d0e62cfeeb474d"
+        }
+      },
+      "shuffle_seed": 17,
+      "roles": [
+        {"source_split": "train", "range": [0, 800], "role": "shortlist_training", "status": "DEVELOPMENT-EXPOSED"},
+        {"source_split": "train", "range": [800, 8600], "role": "reranker_and_phase9_training", "status": "DEVELOPMENT-EXPOSED", "ids_hash": "0edfdf32fde2f1d813690129f213d4d4f959988b8bb86d49678bf64a8500a746"},
+        {"source_split": "train", "range": [8600, 9300], "role": "phase6_and_phase9_calibration", "status": "DEVELOPMENT-EXPOSED", "ids_hash": "a673102e447c1409904115424fe82a98a2973b7bdce8e897193b1b7af20a8d45"},
+        {"source_split": "train", "range": [9300, 10003], "role": "reranker_phase7_phase8_phase9_validation_and_error_analysis", "status": "DEVELOPMENT-EXPOSED", "ids_hash": "e26dd91d4e9d1c659a939b7251e44d47db499b1f3b30bd1466ba4d281cf9a479"},
+        {"source_split": "test", "range": [0, 80], "role": "packed_choice_calibration", "status": "DEVELOPMENT-EXPOSED", "ids_hash": "0c8495708da64a089db326662e89bd2942c55c4d4c73dd821be51e9a3d4eaa4c"},
+        {"source_split": "test", "range": [80, 1300], "role": "temperature_check_K_selection_crossover_recall_policy_validation_and_route_calibration", "status": "DEVELOPMENT-EXPOSED"},
+        {"source_split": "test", "range": [1300, 3080], "role": "formerly_locked_release_test_used_by_phase5_phase6_and_phase9_reporting", "status": "DEVELOPMENT-EXPOSED", "reason": "Aggregate and detailed error evidence influenced later Phase 6-9 research. It is regression data, not a blind release test."}
+      ]
+    },
+    {
+      "dataset": "ag_news",
+      "source_file": "research/data/ag_news/data/test-00000-of-00001.parquet",
+      "source_file_sha256": "71de87ec66bc5737752a2502204dfa6d7fe9856ade3ea444dc6317789a4f13fb",
+      "shuffle_seed": 17,
+      "roles": [
+        {"source_split": "test", "range": [0, 400], "role": "packed_choice_calibration", "status": "DEVELOPMENT-EXPOSED", "ids_hash": "c10d7eb80cfc1330ff0b89204309af3ee815e3de001923a288d6ea06605d541c"},
+        {"source_split": "test", "range": [400, 800], "role": "phase3_phase6_phase7_phase9_validation_and_transfer_checks", "status": "DEVELOPMENT-EXPOSED"},
+        {"source_split": "test", "range": [800, 7600], "role": "unused_local_rows", "status": "UNUSED_BUT_NOT_CHOSEN_AS_BLIND", "reason": "AG News is documented as part of the base checkpoint training mix, so it cannot certify unseen-domain release readiness."}
+      ]
+    },
+    {
+      "dataset": "clinc150",
+      "source_file": "research/data/clinc150/data_full.json",
+      "source_file_sha256": "36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0",
+      "roles": [
+        {"source_split": "test", "range": [0, 4500], "role": "failed_first_blind_high_cardinality_choice", "status": "DEVELOPMENT-EXPOSED", "ids_hash": "ddfaf6f7c47fd358a9ce5e20f7cbe3490ff89af8f648aadce0b839bf3d94f26d", "reason": "All rows were scored once, but aggregate persistence failed on final optional RSS collection. The partition was not rerun and no per-example output was written."},
+        {"source_split": "val", "range": [0, 3000], "role": "replacement_fresh_blind_high_cardinality_choice", "status": "SEALED_BLIND_EVALUATED", "ids_hash": "4c1f6a7b2cd8905c1220c837be7cdb20f81d7a93c528228dea467a4fe86865ec", "result": "artifacts/release/blind_clinc150_val_result.json", "result_hash": "406d728226f81f9586c091f60d9f003328453331ad740595eb639d1542137e8d", "per_example_outputs_written": false}
+      ]
+    }
+  ]
+}

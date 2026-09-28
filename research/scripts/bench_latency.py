@@ -90,7 +90,7 @@ def main():
         per = {}
         for n in (1, 5, 10, 50):
             q = qs(n)
-            r = timed(lambda: ag.system_one(STATE_EN, q), warmup=2, reps=10)
+            r = timed(lambda agent=ag, questions=q: agent.system_one(STATE_EN, questions), warmup=2, reps=10)
             r["ms_per_question"] = round(r["p50_ms"] / n, 2)
             per["%d_questions" % n] = r
             print("   %-16s %2dq  p50 %8.1f ms  p95 %8.1f ms  %6.2f ms/q"

@@ -1,0 +1,260 @@
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:100_00117:4:0", "schema": "sgd:Calendar_1", "text": "That is great. I want to find something to do on that day, show me things in Phoenix, AZ."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:102_00101:2:0", "schema": "sgd:Calendar_1", "text": "Cool, am I available that day?"}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:102_00125:10:0", "schema": "sgd:Calendar_1", "text": "Good. I'd like a cab for 1 passenger."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:103_00008:8:0", "schema": "sgd:Calendar_1", "text": "That should be enough options. Can you tell me what my schedule looks like?"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:107_00062:2:0", "schema": "sgd:Media_1", "text": "i want to watch drama movie"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:107_00088:2:0", "schema": "sgd:Media_1", "text": "JT LeRoy seems nice. Now I want to search for some songs to listen to."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:107_00116:4:0", "schema": "sgd:Media_1", "text": "Have you got anything else?"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:108_00009:4:0", "schema": "sgd:Media_1", "text": "Ash Is Purest White sounds good. I'll watch it now."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:108_00021:4:0", "schema": "sgd:Media_1", "text": "Fighting with My Family sounds good. Can you put that on now?"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:108_00024:2:0", "schema": "sgd:Media_1", "text": "Romance please."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:108_00061:10:0", "schema": "sgd:Media_1", "text": "Yes, who is the director?"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:108_00068:6:0", "schema": "sgd:Media_1", "text": "Try again please but now be movies directed by Orson Welles."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:109_00056:12:0", "schema": "sgd:Services_3", "text": "Works for me."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:109_00069:4:0", "schema": "sgd:Services_3", "text": "What is the address?"}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:109_00075:8:0", "schema": "sgd:Services_3", "text": "Let's keep looking for someone else."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:109_00091:0:0", "schema": "sgd:Services_3", "text": "I need to see a doctor."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:109_00104:14:0", "schema": "sgd:Services_3", "text": "How about today at 12 in the afternoon?"}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:109_00110:10:0", "schema": "sgd:Calendar_1", "text": "Seems fine to me."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:111_00040:6:1", "schema": "sgd:Services_3", "text": "Yeah, that sounds good. Can you tell me when I'm free on the 13th of this month?"}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:111_00057:20:0", "schema": "sgd:Services_3", "text": "Thanks a lot for helping"}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:111_00062:14:0", "schema": "sgd:Calendar_1", "text": "The 9th of March."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:111_00069:2:0", "schema": "sgd:Services_3", "text": "I need a general practitioner in Petaluma."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:111_00077:10:0", "schema": "sgd:Calendar_1", "text": "Okay, that sounds good."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:112_00086:0:0", "schema": "sgd:Services_3", "text": "I need to find a doctor."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:112_00095:14:0", "schema": "sgd:Services_3", "text": "Okay. Make an appointment on that day at twelve in the afternoon"}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:112_00102:20:0", "schema": "sgd:Services_3", "text": "And what's their phone and address please?"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:113_00072:10:0", "schema": "sgd:Media_1", "text": "Can you find me a movie to watch online? Something with drama."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:113_00108:10:0", "schema": "sgd:Media_1", "text": "Mystery movies."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:117_00041:30:0", "schema": "sgd:Flights_1", "text": "Is the ticket refundable? How many stops are there?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:117_00068:22:0", "schema": "sgd:Flights_1", "text": "Fine that's all the info I need."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:121_00102:16:0", "schema": "sgd:Hotels_3", "text": "Sure, that is all the help I need."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:123_00002:12:0", "schema": "sgd:Calendar_1", "text": "Sounds great. I want to book tickets for the event."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:123_00016:8:0", "schema": "sgd:Calendar_1", "text": "Fine, I'm glad."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:123_00081:12:0", "schema": "sgd:Hotels_3", "text": "Okay, that sounds great."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:124_00014:10:0", "schema": "sgd:Hotels_3", "text": "Perfect. Reserve a room for 1, checking in next Monday and checking out the 5th of March."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:124_00037:16:0", "schema": "sgd:Hotels_3", "text": "That is ok, please make a reservation there for next Wednesday. I will be checking out on 13th of this month."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:124_00037:18:0", "schema": "sgd:Hotels_3", "text": "Yes, go ahead."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:124_00048:14:0", "schema": "sgd:Hotels_3", "text": "Yes, I want to book"}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:124_00093:0:0", "schema": "sgd:Calendar_1", "text": "What events do I have on my calendar?"}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:124_00109:2:0", "schema": "sgd:Calendar_1", "text": "Yes, that is the one. I need a Cab to go there that is to the address 949 Geneva Avenue. Book it for me."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:124_00115:0:0", "schema": "sgd:Calendar_1", "text": "What do I have going on in my calendar on the 8th?"}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:124_00117:0:0", "schema": "sgd:Calendar_1", "text": "Get out my calendar please."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00002:4:0", "schema": "sgd:Calendar_1", "text": "Alright! I am going to need a cab for 1 when I go I'll be wanting it to take me to 1 Tennis Place Forest Hills."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00005:0:0", "schema": "sgd:Calendar_1", "text": "I would like to check some calendar events."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00020:0:0", "schema": "sgd:Calendar_1", "text": "Can you help me to find the events on later today in my Calendar? I need to check it now."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00038:6:0", "schema": "sgd:Calendar_1", "text": "That sounds very good."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00041:4:0", "schema": "sgd:Calendar_1", "text": "Ok. I need a taxi to get there."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00049:0:0", "schema": "sgd:Calendar_1", "text": "I need to see what events I have scheduled."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00081:2:0", "schema": "sgd:Calendar_1", "text": "Good. I need a cab for 2 people to 26100 Gading Road. I don't mind a shared ride."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00096:2:0", "schema": "sgd:Calendar_1", "text": "On 9th of this month"}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00101:0:0", "schema": "sgd:Calendar_1", "text": "Can you check my calendar for the 4th?"}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:125_00103:0:0", "schema": "sgd:Calendar_1", "text": "I need to check my calendar events."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:16_00051:6:0", "schema": "sgd:Flights_1", "text": "Yes that's correct."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:16_00072:6:0", "schema": "sgd:Flights_1", "text": "Thanks for your help. That's all I need."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:16_00082:6:0", "schema": "sgd:Flights_1", "text": "Yes, that's right."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:17_00044:14:0", "schema": "sgd:Flights_1", "text": "That sounds good! Is the ticket refundable and at which airport does the flight depart from?"}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:17_00044:2:0", "schema": "sgd:Flights_1", "text": "I plan to visit Sydney, Australia and I will be departing from Portland on March 11th."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:17_00113:10:0", "schema": "sgd:Flights_1", "text": "No I want ticket for Premium Economy class."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:17_00120:0:0", "schema": "sgd:Flights_1", "text": "I'm planning on travelling soon. Could you please find me oneway flights for the 4th of this month?"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:17_00123:10:0", "schema": "sgd:Flights_1", "text": "Yes, that sounds good. Which airport does the flight arrive? Is the ticket refundable?"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:17_00125:8:0", "schema": "sgd:Flights_1", "text": "That is all correct. Could you tell me the departure and landing airports?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:18_00053:2:0", "schema": "sgd:Flights_1", "text": "On March 10th. I'm leaving on the 6th of March."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:18_00067:14:0", "schema": "sgd:Flights_1", "text": "Yes, that works. Is the ticket refundable?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:18_00075:0:0", "schema": "sgd:Flights_1", "text": "I want to go to London, England. Can you find me a flight?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:18_00115:2:0", "schema": "sgd:Flights_1", "text": "I want to fly from Las Vegas to LA on March 3rd. I would like a fight on American Airlines if possible."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:18_00122:4:0", "schema": "sgd:Flights_1", "text": "I am the one and only person in my group and I am going to Seattle on the 1st."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:19_00075:2:0", "schema": "sgd:Flights_1", "text": "I'm heading to NYC and I want to leave around 7:15 in the morning."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:19_00092:4:0", "schema": "sgd:Flights_1", "text": "I'm leaving from Philly and want to get back Friday next week."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:19_00097:8:0", "schema": "sgd:Flights_1", "text": "I'll be heading to Chicago from NY."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:19_00098:12:0", "schema": "sgd:Flights_1", "text": "No I want to leave from Vegas next Friday."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:19_00098:8:0", "schema": "sgd:Flights_1", "text": "To San Diego at 7:45 in the morning."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:19_00116:6:0", "schema": "sgd:Flights_1", "text": "Please book for Delta Airlines. I am leaving from NYC on the 1st of this month and there is two people in my travel group."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:19_00122:12:0", "schema": "sgd:Flights_1", "text": "Gret. Thank you, that is all I wanted."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:20_00004:4:0", "schema": "sgd:Media_1", "text": "Yes I am interested to play the movie"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:20_00114:6:0", "schema": "sgd:Media_1", "text": "Yes. Who is the director of it?"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:21_00032:4:0", "schema": "sgd:Media_1", "text": "I love Gloria Bell! I would like to watch the movie with subtitles."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:21_00043:8:0", "schema": "sgd:Media_1", "text": "Thank you"}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:21_00103:4:0", "schema": "sgd:Flights_1", "text": "to SFO."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:30_00015:16:0", "schema": "sgd:Services_3", "text": "Thank you, that's all."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:30_00030:2:0", "schema": "sgd:Services_3", "text": "Can you find one in San Jose?"}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:30_00048:4:0", "schema": "sgd:Services_3", "text": "Can you give me their address?"}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:30_00059:6:0", "schema": "sgd:Services_3", "text": "Can you search again?"}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:30_00066:8:0", "schema": "sgd:Services_3", "text": "Yea, that works fine."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:30_00071:14:0", "schema": "sgd:Services_3", "text": "Thanks."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:33_00106:2:0", "schema": "sgd:Services_3", "text": "No thank you. Just a General Practitioner will do."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:33_00119:4:0", "schema": "sgd:Services_3", "text": "Great. That's all."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:36_00058:4:0", "schema": "sgd:Services_3", "text": "Yes."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:36_00076:12:0", "schema": "sgd:Services_3", "text": "That's all I need, thank you!"}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:36_00076:6:0", "schema": "sgd:Services_3", "text": "Could you help to book an appointment with Dr. Jennifer Falk instead?"}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:36_00124:18:0", "schema": "sgd:Flights_1", "text": "Yes, I would."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:37_00014:8:0", "schema": "sgd:Flights_1", "text": "Which airport is it flying in to?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:38_00000:8:0", "schema": "sgd:Flights_1", "text": "That sounds like a good option."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:38_00013:10:0", "schema": "sgd:Flights_1", "text": "That sounds good to me."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:38_00066:12:0", "schema": "sgd:Flights_1", "text": "Which airport does it depart from? And what time does the departing flight arrive?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:38_00074:4:0", "schema": "sgd:Flights_1", "text": "I am going to Chi-town and return on the 8th of this month."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:38_00087:2:0", "schema": "sgd:Calendar_1", "text": "Look for the 9th of this month."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:38_00095:0:0", "schema": "sgd:Calendar_1", "text": "Please check Saturday this week on my calendar."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:38_00113:2:0", "schema": "sgd:Calendar_1", "text": "On the 11th."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:38_00121:8:0", "schema": "sgd:Calendar_1", "text": "That sounds good, that is all I needed."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:38_00123:6:0", "schema": "sgd:Calendar_1", "text": "Sounds great."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:39_00014:0:0", "schema": "sgd:Calendar_1", "text": "Can you check my calendar for events?"}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:39_00034:4:0", "schema": "sgd:Calendar_1", "text": "That sounds good."}
+{"candidate_id": "sgd:Calendar_1:GetEvents", "dataset": "sgd", "id": "sgd:train:39_00039:6:0", "schema": "sgd:Calendar_1", "text": "Do I have other schedule?"}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:39_00046:4:0", "schema": "sgd:Calendar_1", "text": "Ok. That's perfect."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:39_00056:0:0", "schema": "sgd:Calendar_1", "text": "Hello, could you show me what time am I available on the 6th of March?"}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:39_00059:6:0", "schema": "sgd:Calendar_1", "text": "Alright. That sounds great."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:39_00064:12:0", "schema": "sgd:Calendar_1", "text": "That will be all, thanks for your help."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:39_00103:2:0", "schema": "sgd:Calendar_1", "text": "The 9th."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:39_00110:10:0", "schema": "sgd:Calendar_1", "text": "That is perfect."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:41_00052:0:0", "schema": "sgd:Hotels_3", "text": "Can you look for hotels for me?"}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:41_00052:14:0", "schema": "sgd:Hotels_3", "text": "Actually no, I want one room and to check out on the 10th."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:41_00067:14:0", "schema": "sgd:Hotels_3", "text": "Yeah, that's right. Can you give me their phone number?"}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:41_00070:6:0", "schema": "sgd:Hotels_3", "text": "That one sounds perfect."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:41_00074:14:0", "schema": "sgd:Hotels_3", "text": "Thank you for your help."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:41_00094:18:0", "schema": "sgd:Hotels_3", "text": "No. I want to check out on the 13th."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:43_00069:0:0", "schema": "sgd:Hotels_3", "text": "My family and I are looking to make a hotel reservation for 3."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:46_00061:0:0", "schema": "sgd:Hotels_3", "text": "Please find me 1 room at a San Fran hotel."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:46_00100:14:0", "schema": "sgd:Hotels_3", "text": "I want to check out on 13th of March 2019."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:46_00103:0:0", "schema": "sgd:Hotels_3", "text": "I am interested in find one room at a hotel in London, England."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:46_00116:0:0", "schema": "sgd:Hotels_3", "text": "Can you help me find a hotel?"}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:46_00120:8:0", "schema": "sgd:Hotels_3", "text": "That would be great, first can you give me the weather for March 6th?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:48_00094:4:0", "schema": "sgd:Flights_1", "text": "I need to be back on March 11th because I need to meet our boss."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:48_00107:8:0", "schema": "sgd:Flights_1", "text": "I want to come back on March 14th"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:48_00110:8:1", "schema": "sgd:Flights_1", "text": "That sounds very good. Can you find a house for me to stay in?"}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:51_00073:18:0", "schema": "sgd:Hotels_3", "text": "I'd like to check in on March 4th."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:51_00076:12:0", "schema": "sgd:Hotels_3", "text": "Can you tell me their phone number?"}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:51_00111:14:0", "schema": "sgd:Hotels_3", "text": "Is there anything else available? I would like to book 1 room."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:51_00114:14:0", "schema": "sgd:Hotels_3", "text": "That is excellent."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:51_00118:22:0", "schema": "sgd:Hotels_3", "text": "Thanks"}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:52_00088:0:0", "schema": "sgd:Hotels_3", "text": "I would like to make a hotel reservation in Sydney, NSW on March 9th."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:52_00111:24:0", "schema": "sgd:Flights_1", "text": "thank you"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:52_00118:16:0", "schema": "sgd:Flights_1", "text": "Go ahead and book me 2 economy seats."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:53_00012:8:0", "schema": "sgd:Hotels_3", "text": "Do they allow pets by the way? And what's their rating?"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00015:24:0", "schema": "sgd:Flights_1", "text": "Yes, I would."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00044:14:0", "schema": "sgd:Flights_1", "text": "Yeah, that's perfect. When does the flight get in?"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00053:20:0", "schema": "sgd:Flights_1", "text": "That is confirmed to proceed."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00062:10:0", "schema": "sgd:Flights_1", "text": "I'll be heading out of Los Angeles and I want to get an Economy class."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00067:16:0", "schema": "sgd:Flights_1", "text": "That is perfect. I need to buy a one way ticket in economy for one person."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00087:16:0", "schema": "sgd:Flights_1", "text": "What is the departure airport?"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00088:14:0", "schema": "sgd:Flights_1", "text": "Yes, I would like to buy the ticket."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00095:26:0", "schema": "sgd:Flights_1", "text": "Thanks for the great service."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:53_00115:10:1", "schema": "sgd:Flights_1", "text": "That flight sounds good. Is there a bus that can get me there?"}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:54_00004:2:0", "schema": "sgd:Flights_1", "text": "Leaving from Vegas."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:54_00034:4:0", "schema": "sgd:Flights_1", "text": "I'm leaving from New York City and I want Premium Economy."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:55_00012:10:0", "schema": "sgd:Flights_1", "text": "I would like to take that flight, could you purchase a one way ticket for me?"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:55_00021:8:1", "schema": "sgd:Flights_1", "text": "Thanks I need to get a bus there on the 4th."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:55_00031:2:0", "schema": "sgd:Flights_1", "text": "I am going to Los Angeles and would prefer to have Southwest Airlines."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:56_00019:6:0", "schema": "sgd:Flights_1", "text": "Are there any alternative flights available?"}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:56_00053:18:1", "schema": "sgd:Flights_1", "text": "No, we will continue with the tickets booking for the flight that you have found for me."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:56_00060:2:0", "schema": "sgd:Flights_1", "text": "I like Southwest Airlines best and will be heading out on the 2nd."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:56_00079:8:0", "schema": "sgd:Flights_1", "text": "Yes, is it refundable and what's the departure airport?"}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:56_00084:14:0", "schema": "sgd:Hotels_3", "text": "Anything else? I need 3 rooms."}
+{"candidate_id": "sgd:Flights_1:ReserveOnewayFlight", "dataset": "sgd", "id": "sgd:train:56_00088:6:0", "schema": "sgd:Flights_1", "text": "yes please"}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:56_00091:4:0", "schema": "sgd:Flights_1", "text": "Search for something on the 2nd of March."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:56_00100:18:0", "schema": "sgd:Hotels_3", "text": "Great, that works."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:56_00104:18:0", "schema": "sgd:Hotels_3", "text": "That'd be great."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:56_00127:12:0", "schema": "sgd:Hotels_3", "text": "What is the street address?"}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:57_00004:4:0", "schema": "sgd:Flights_1", "text": "I'd like to leave Washington on the 12th of March."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:57_00011:14:0", "schema": "sgd:Hotels_3", "text": "Thanks. Can you find me a hotel there?"}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:57_00025:16:0", "schema": "sgd:Hotels_3", "text": "Thank you. I would also like to book 2 rooms at a hotel."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:57_00033:2:0", "schema": "sgd:Flights_1", "text": "I am traveling from London to Chicago. I will be leaving on the 14th of this month."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:57_00044:4:0", "schema": "sgd:Flights_1", "text": "On March 4th, preferably via Delta Airlines."}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:57_00063:6:0", "schema": "sgd:Flights_1", "text": "any other flights?"}
+{"candidate_id": "sgd:Flights_1:SearchOnewayFlight", "dataset": "sgd", "id": "sgd:train:57_00074:2:0", "schema": "sgd:Flights_1", "text": "I will leave on 6th of March."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:58_00005:8:0", "schema": "sgd:Flights_1", "text": "Yup, sounds good to me."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:58_00022:10:0", "schema": "sgd:Flights_1", "text": "ok that sounds good to me. Is the ticket refundable?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:58_00038:4:0", "schema": "sgd:Flights_1", "text": "I'm going to Paris."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:58_00050:10:0", "schema": "sgd:Flights_1", "text": "That's fine."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:58_00082:4:0", "schema": "sgd:Flights_1", "text": "I want to fly from Chicago to Seattle, WA, returning on the 13th of March."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:58_00089:12:0", "schema": "sgd:Flights_1", "text": "That is okay for me. I want to book tickets to that flight and I want it for three persons."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:59_00004:0:0", "schema": "sgd:Flights_1", "text": "I need to search for round trip flights. I need 3 tickets and want to leave on the 8th."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:59_00038:8:0", "schema": "sgd:Flights_1", "text": "That works for me. Can you get me tickets. I would prefer three tickets in economy."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:60_00053:12:0", "schema": "sgd:Flights_1", "text": "Yes."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:60_00071:4:0", "schema": "sgd:Flights_1", "text": "Which airport would the flight be leaving from and what time does the onward flight arrive?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:60_00079:6:0", "schema": "sgd:Flights_1", "text": "When does mt return and onward flight arrive?"}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:61_00079:20:0", "schema": "sgd:Calendar_1", "text": "name it as Dentist appointment"}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:61_00105:18:0", "schema": "sgd:Calendar_1", "text": "Yes, that's correct."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:61_00106:18:0", "schema": "sgd:Calendar_1", "text": "That is correct."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:61_00111:20:0", "schema": "sgd:Calendar_1", "text": "That is correct."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:62_00033:14:0", "schema": "sgd:Services_3", "text": "Super."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:62_00048:10:0", "schema": "sgd:Services_3", "text": "8th of March is best for me."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:62_00054:10:0", "schema": "sgd:Calendar_1", "text": "Thanks. Please can you add this event in my calendar under the event title Doctor appointment?"}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:62_00072:18:0", "schema": "sgd:Services_3", "text": "No. Please make it at 3:30 in the afternoon of the 12th."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:62_00074:14:0", "schema": "sgd:Services_3", "text": "Sure. That will work."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:62_00079:22:0", "schema": "sgd:Calendar_1", "text": "Yes, that's all correct."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:62_00089:0:0", "schema": "sgd:Services_3", "text": "Will you find a doctor?"}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:62_00091:16:0", "schema": "sgd:Calendar_1", "text": "Thank you very much."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:62_00092:18:0", "schema": "sgd:Calendar_1", "text": "Thank you very much."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:62_00109:18:0", "schema": "sgd:Calendar_1", "text": "Call it property visit appointment."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:63_00093:14:0", "schema": "sgd:Calendar_1", "text": "That's great, can you put movie show in my calendar at 18:45, please?"}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:64_00000:12:0", "schema": "sgd:Calendar_1", "text": "Thank you very much."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:64_00012:16:0", "schema": "sgd:Calendar_1", "text": "Add this event to my calendar for me."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:64_00038:10:0", "schema": "sgd:Calendar_1", "text": "great, please add it t my calendar"}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:64_00063:8:0", "schema": "sgd:Calendar_1", "text": "No, not now, may be later, Please add this to may calendar and give Movie show as Title."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:64_00071:16:0", "schema": "sgd:Calendar_1", "text": "Yes, all the details you have are correct."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:64_00099:12:0", "schema": "sgd:Media_1", "text": "I need to find a romantic movie by George Sidney to watch online."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:64_00106:14:0", "schema": "sgd:Media_1", "text": "Suburban Birds it's great. Thanks a lot."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:65_00014:22:0", "schema": "sgd:Media_1", "text": "Can you tell me the kind of movie it is?"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:65_00030:18:0", "schema": "sgd:Media_1", "text": "What is the name of the director?"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:65_00052:18:0", "schema": "sgd:Media_1", "text": "Correct. What is the genre and who is the director?"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:65_00072:16:0", "schema": "sgd:Media_1", "text": "Thanks. That would be all."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:65_00076:8:0", "schema": "sgd:Media_1", "text": "Yes, please. I want to watch a movie online"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:65_00077:10:0", "schema": "sgd:Media_1", "text": "Yes, thank you."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:65_00116:18:0", "schema": "sgd:Media_1", "text": "Thank you."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:65_00125:26:0", "schema": "sgd:Calendar_1", "text": "Thank you for your assistance."}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:66_00037:20:0", "schema": "sgd:Calendar_1", "text": "I see, that is all the help I need for now, thanks!"}
+{"candidate_id": "sgd:Calendar_1:AddEvent", "dataset": "sgd", "id": "sgd:train:66_00084:10:0", "schema": "sgd:Calendar_1", "text": "Can you add this event to my calendar?"}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:66_00094:14:0", "schema": "sgd:Hotels_3", "text": "What's the phone number?"}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:66_00109:14:1", "schema": "sgd:Flights_1", "text": "Okay. Thank you for helping me book my flight. Moving on, I'll be needing somewhere to stay. Help me find a hotel there."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:68_00105:20:0", "schema": "sgd:Media_1", "text": "Great. That's all."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:68_00123:20:0", "schema": "sgd:Media_1", "text": "Yeah that right. Can you tell me who directed this movie?"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:69_00010:14:0", "schema": "sgd:Media_1", "text": "Some fantasy movie is great for me."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:69_00018:16:0", "schema": "sgd:Media_1", "text": "Who directed it?"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:69_00066:10:0", "schema": "sgd:Media_1", "text": "A Madea Family Funeral souonds good. Please play this one without subtitles."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:69_00074:18:0", "schema": "sgd:Media_1", "text": "Do you happen to know who directed it?"}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:69_00084:10:0", "schema": "sgd:Media_1", "text": "Yes, I want to watch the movie now."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:69_00093:8:0", "schema": "sgd:Media_1", "text": "I like Action movies."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:69_00114:10:0", "schema": "sgd:Media_1", "text": "dumbo is good"}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:70_00064:22:1", "schema": "sgd:Hotels_3", "text": "Thank you for helping. I would like to find a hotel there."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:72_00077:10:0", "schema": "sgd:Flights_1", "text": "Sure."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:72_00083:20:1", "schema": "sgd:Flights_1", "text": "Thanks. Now let's find 3 rooms at destination in a pet friendly hotel."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:72_00092:22:0", "schema": "sgd:Hotels_3", "text": "Yup, that sounds great."}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:72_00097:8:0", "schema": "sgd:Flights_1", "text": "That sounds great! Do you know which airport does the flight depart from and when does it arrive?"}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:72_00102:22:0", "schema": "sgd:Hotels_3", "text": "I'd like to check in on the 9th of March."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:74_00104:2:0", "schema": "sgd:Flights_1", "text": "I'm from Chi-town."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:74_00119:6:0", "schema": "sgd:Flights_1", "text": "Is it a refundable ticket?"}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:74_00124:0:0", "schema": "sgd:Flights_1", "text": "I am going to atlanta"}
+{"candidate_id": "sgd:Flights_1:ReserveRoundtripFlights", "dataset": "sgd", "id": "sgd:train:75_00022:14:1", "schema": "sgd:Flights_1", "text": "I'd also like a rental car for the 11th, and I'll need it until March 12th. I'll pick it up half past 3 in the afternoon."}
+{"candidate_id": "sgd:Flights_1:SearchRoundtripFlights", "dataset": "sgd", "id": "sgd:train:75_00051:0:0", "schema": "sgd:Flights_1", "text": "I need to find a roundtrip flight please."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:78_00044:22:0", "schema": "sgd:Calendar_1", "text": "that works"}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:78_00051:0:0", "schema": "sgd:Services_3", "text": "I want to find a dermatologist."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:78_00073:18:0", "schema": "sgd:Calendar_1", "text": "That sounds great to me."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:78_00080:12:1", "schema": "sgd:Services_3", "text": "Thanks, am I free that day?"}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:78_00084:2:0", "schema": "sgd:Services_3", "text": "I would also like to find a General Practitioner in Castro Valley."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:78_00088:10:0", "schema": "sgd:Services_3", "text": "around 4:30 pm would suit."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:78_00107:2:0", "schema": "sgd:Services_3", "text": "I want to see an ophthalmologist in los altos."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:78_00120:8:0", "schema": "sgd:Services_3", "text": "Yes that is great. What is the rating? And their phone number please?"}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:78_00127:14:0", "schema": "sgd:Services_3", "text": "That will work."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:78_00127:2:0", "schema": "sgd:Services_3", "text": "I will be needing a Dermatologist in San Francisco."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:79_00012:6:0", "schema": "sgd:Services_3", "text": "Sure, book it please."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:79_00015:2:0", "schema": "sgd:Services_3", "text": "I need to locate an Ophthalmologist please."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:79_00023:12:0", "schema": "sgd:Calendar_1", "text": "On the 9th of March."}
+{"candidate_id": "sgd:Services_3:BookAppointment", "dataset": "sgd", "id": "sgd:train:79_00042:12:0", "schema": "sgd:Services_3", "text": "Yup, that sounds good. Please can I've their address and what about their rating?"}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:79_00059:2:0", "schema": "sgd:Services_3", "text": "I just need a general practitioner."}
+{"candidate_id": "sgd:Services_3:FindProvider", "dataset": "sgd", "id": "sgd:train:79_00127:0:0", "schema": "sgd:Services_3", "text": "i am looking for a dermatologist in danville"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:80_00083:20:0", "schema": "sgd:Media_1", "text": "Can you suggest some other movie? I would also like watching an Adventure movie directed by Joel Coen."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:80_00086:22:0", "schema": "sgd:Media_1", "text": "Mmmm... look for more titles"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:80_00089:20:1", "schema": "sgd:Media_1", "text": "Thank you very much, I am interested ti watch action movies online, I likes the director Michael Schultz."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:80_00098:28:0", "schema": "sgd:Media_1", "text": "I prefer drama films."}
+{"candidate_id": "sgd:Media_1:PlayMovie", "dataset": "sgd", "id": "sgd:train:80_00105:32:0", "schema": "sgd:Media_1", "text": "Yes, play with subtitles."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:80_00123:22:0", "schema": "sgd:Media_1", "text": "I like Comedy movies."}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:81_00021:16:1", "schema": "sgd:Media_1", "text": "Thanks. Can you find me a movie to watch?"}
+{"candidate_id": "sgd:Media_1:FindMovies", "dataset": "sgd", "id": "sgd:train:81_00044:26:0", "schema": "sgd:Media_1", "text": "Find me an Adventure movie."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:86_00050:8:0", "schema": "sgd:Calendar_1", "text": "Okay, let's pick that."}
+{"candidate_id": "sgd:Calendar_1:GetAvailableTime", "dataset": "sgd", "id": "sgd:train:87_00004:10:0", "schema": "sgd:Calendar_1", "text": "Sorry, the 12th."}
+{"candidate_id": "sgd:Hotels_3:SearchHotel", "dataset": "sgd", "id": "sgd:train:92_00101:6:0", "schema": "sgd:Hotels_3", "text": "That sounds perfect."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:92_00102:20:0", "schema": "sgd:Hotels_3", "text": "OK thanks, that's it for now"}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:93_00036:20:0", "schema": "sgd:Hotels_3", "text": "Cool. Thank you for all the help."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:93_00042:22:0", "schema": "sgd:Hotels_3", "text": "Thanks for your help."}
+{"candidate_id": "sgd:Hotels_3:ReserveHotel", "dataset": "sgd", "id": "sgd:train:94_00008:14:0", "schema": "sgd:Hotels_3", "text": "Yes, and I plan to check out on March 14th."}

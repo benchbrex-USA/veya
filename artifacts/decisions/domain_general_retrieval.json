@@ -1,0 +1,49 @@
+{
+  "format": "veya-phase10-decision-v1",
+  "decision": "KEEP AS RESEARCH",
+  "retriever_id": "phase10-domain-general-k8-v1",
+  "artifact": "artifacts/experiments/phase10/domain_general_k8.pt",
+  "artifact_sha256": "a82e369346d9ee3bbd9bc0df09bbebebea5c92c1a42b6c667b08675e918d713f",
+  "served": false,
+  "default_retriever": "current",
+  "evidence": {
+    "schema_held_out_clinc150_train_recall_at_8": {
+      "current": 0.35533333333333333,
+      "phase10": 0.431,
+      "delta": 0.07566666666666666,
+      "bootstrap_ci95": [0.056325, 0.09600833333333329]
+    },
+    "matched_validation_end_to_end_accuracy": {
+      "current": 0.357,
+      "phase10": 0.418,
+      "delta": 0.061,
+      "bootstrap_ci95": [0.027975000000000003, 0.09502499999999986]
+    },
+    "massive_blind_recall_at_8": {
+      "current": 0.285137861466039,
+      "phase10": 0.3496973772696705
+    },
+    "massive_blind_end_to_end_accuracy": {
+      "current": 0.2293207800941493,
+      "phase10": 0.27336919973100204,
+      "delta": 0.04404841963685272,
+      "bootstrap_ci95": [0.02453765971755212, 0.06254203093476798]
+    }
+  },
+  "promotion_blockers": [
+    "Blind Recall@8 remains only 0.3497.",
+    "Distractor Recall@8 fell from 0.4267 to 0.1400 on the frozen development sample.",
+    "Long irrelevant suffixes reduced Recall@8 to 0.0533 under the 96-token query window.",
+    "Blind conditional scorer accuracy fell from 0.8042 to 0.7817 because the improved retriever produced harder shortlists.",
+    "The SGD training source is CC-BY-SA-4.0 and requires licensing review before any distributable release artifact."
+  ],
+  "unchanged": [
+    "K=8",
+    "base decision head",
+    "calibration",
+    "automation policy (disabled)",
+    "production serving architecture",
+    "artifacts/release/manifest.json"
+  ],
+  "next_bottleneck": "Noise-robust query encoding and truncation: retrieval misses remain 1934 of 2161 blind Phase-10 errors and irrelevant/long state content causes severe Recall@8 collapse."
+}

@@ -1,0 +1,33 @@
+{
+  "datasets": [
+    {
+      "name": "ag_news",
+      "version": "fancyzhx/ag_news test parquet, hub sha eb185aade064a813bc0b7f42de02595523103ca4",
+      "source": "https://huggingface.co/datasets/fancyzhx/ag_news",
+      "license": "unknown (dataset card: academic research use)",
+      "domain": "news topic",
+      "languages": ["en"],
+      "task_type": "choice",
+      "number_of_examples_used": 800,
+      "number_of_labels": 4,
+      "label_cardinality": 4,
+      "split_role": "public test only; rows 0:400 calibration, 400:800 evaluation after seed 17 shuffle",
+      "used_for_training_weights": false,
+      "known_contamination_risk": "Veya BENCHMARKS.md reports AG News accuracy 0.953. This file's train split is not used. The public test split may overlap data the original checkpoint saw."
+    },
+    {
+      "name": "banking77",
+      "version": "PolyAI task-specific-datasets banking_data test.csv and train.csv",
+      "source": "https://github.com/PolyAI-LDN/task-specific-datasets",
+      "license": "cc-by-4.0",
+      "domain": "banking intent",
+      "languages": ["en"],
+      "task_type": "choice",
+      "number_of_labels": 77,
+      "label_cardinality": 77,
+      "split_role": "train.csv seed-17 shuffle rows 0:800 train the shortlist projection only. test.csv seed-17 shuffle: rows 0:80 fit packed choice:11+, 80:160 check that temperature, 200:296 selected K and must not fit a temperature or a threshold, 296:400 cardinality crossover, 400:700 earlier recall, 800:880 earlier packed curve, 880:1100 hierarchical automation-threshold validation, 1100:1300 hierarchical temperature fit, 1300:end untouched test. Final-test rows do not train the projection, choose K, fit a temperature, or choose an automation threshold.",
+      "used_for_training_weights": false,
+      "known_contamination_risk": "Not listed in Veya BENCHMARKS.md. Treated as unseen schema relative to the published theme table."
+    }
+  ]
+}

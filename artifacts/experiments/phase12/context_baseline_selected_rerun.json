@@ -1,0 +1,82 @@
+{
+  "batch_size": 4,
+  "device": "cpu",
+  "format": "veya-phase12-context-baselines-v1",
+  "inventory_sha256": "81a526a57fa2e5b8d941a78c018c33ddc06815fd0b8565c2c2eec6da4f3b4301",
+  "modes": {
+    "full_context": {
+      "accuracy": 0.761118752865658,
+      "batch_throughput_decisions_per_second": 2.981600326982107,
+      "by_service": {
+        "Alarm_1": {
+          "accuracy": 0.8733624454148472,
+          "n": 229
+        },
+        "Banks_2": {
+          "accuracy": 0.6023676880222841,
+          "n": 1436
+        },
+        "Flights_3": {
+          "accuracy": 0.764425622022234,
+          "n": 1889
+        },
+        "Hotels_4": {
+          "accuracy": 0.7190721649484536,
+          "n": 1940
+        },
+        "Media_2": {
+          "accuracy": 0.7610619469026548,
+          "n": 1017
+        },
+        "Restaurants_2": {
+          "accuracy": 0.774294670846395,
+          "n": 2552
+        },
+        "Services_4": {
+          "accuracy": 0.8935939196525515,
+          "n": 1842
+        }
+      },
+      "by_slice": {
+        "initial": {
+          "accuracy": 0.87,
+          "n": 1000
+        },
+        "later": {
+          "accuracy": 0.7501261988894498,
+          "n": 9905
+        },
+        "same_service": {
+          "accuracy": 0.7687543701927879,
+          "n": 10011
+        },
+        "transition": {
+          "accuracy": 0.6756152125279642,
+          "n": 894
+        }
+      },
+      "context": {
+        "dropped_prior_turns_total": 2906,
+        "raw_tokens_p50": 159.0,
+        "raw_tokens_p95": 449.0,
+        "raw_tokens_p99": 611.9599999999991,
+        "truncated_decisions": 508
+      },
+      "correct": 8300,
+      "elapsed_s_including_preprocessing": 3657.431850042,
+      "n": 10905,
+      "none_correct": 0,
+      "none_rows": 749,
+      "over_budget_deferred": 0,
+      "wilson95": [
+        0.7530246888602359,
+        0.7690289152275864
+      ]
+    }
+  },
+  "n_matched": 10905,
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "release_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false
+}

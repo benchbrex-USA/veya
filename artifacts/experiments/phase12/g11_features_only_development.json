@@ -1,0 +1,233 @@
+{
+  "active_intent_accuracy": 0.942103190232375,
+  "additions": [
+    "stagepos speaker/turn-position tokens (frozen-input derivable only)",
+    "sibling-pair per-direction hashed features",
+    "hard negatives: duplicated sibling-intent errors from TRAIN"
+  ],
+  "caveat": "Development-only research candidate; no calibration, deferral policy, robustness, or sealed evaluation. Trained inside the frozen previous_turn input representation on TRAIN services only.",
+  "dev_services": [
+    "Alarm_1",
+    "Banks_2",
+    "Flights_3",
+    "Hotels_4",
+    "Media_2",
+    "Restaurants_2",
+    "Services_4"
+  ],
+  "development": {
+    "accuracy": 0.9436955524988537,
+    "by_service": {
+      "Alarm_1": {
+        "accuracy": 0.9301310043668122,
+        "n": 229
+      },
+      "Banks_2": {
+        "accuracy": 0.9770194986072424,
+        "n": 1436
+      },
+      "Flights_3": {
+        "accuracy": 0.8602435150873478,
+        "n": 1889
+      },
+      "Hotels_4": {
+        "accuracy": 0.9536082474226805,
+        "n": 1940
+      },
+      "Media_2": {
+        "accuracy": 0.9449360865290068,
+        "n": 1017
+      },
+      "Restaurants_2": {
+        "accuracy": 0.9568965517241379,
+        "n": 2552
+      },
+      "Services_4": {
+        "accuracy": 0.9755700325732899,
+        "n": 1842
+      }
+    },
+    "by_slice": {
+      "initial": {
+        "accuracy": 0.957,
+        "n": 1000
+      },
+      "later": {
+        "accuracy": 0.9423523472993438,
+        "n": 9905
+      },
+      "same_service": {
+        "accuracy": 0.9453601038857257,
+        "n": 10011
+      },
+      "transition": {
+        "accuracy": 0.9250559284116331,
+        "n": 894
+      }
+    },
+    "confusion": {
+      "AddAlarm": {
+        "AddAlarm": 138,
+        "GetAlarms": 4,
+        "NONE": 2
+      },
+      "BookAppointment": {
+        "BookAppointment": 953,
+        "FindProvider": 15,
+        "NONE": 3
+      },
+      "CheckBalance": {
+        "CheckBalance": 738,
+        "NONE": 2,
+        "TransferMoney": 13
+      },
+      "FindMovies": {
+        "FindMovies": 478,
+        "NONE": 1,
+        "RentMovie": 4
+      },
+      "FindProvider": {
+        "BookAppointment": 23,
+        "FindProvider": 764,
+        "NONE": 1
+      },
+      "FindRestaurants": {
+        "FindRestaurants": 1046,
+        "NONE": 24,
+        "ReserveRestaurant": 31
+      },
+      "GetAlarms": {
+        "AddAlarm": 10,
+        "GetAlarms": 54
+      },
+      "NONE": {
+        "BookAppointment": 3,
+        "FindMovies": 6,
+        "NONE": 723,
+        "RentMovie": 4,
+        "ReserveHotel": 10,
+        "SearchHotel": 1,
+        "TransferMoney": 2
+      },
+      "RentMovie": {
+        "FindMovies": 34,
+        "NONE": 7,
+        "RentMovie": 407
+      },
+      "ReserveHotel": {
+        "NONE": 1,
+        "ReserveHotel": 667,
+        "SearchHotel": 22
+      },
+      "ReserveRestaurant": {
+        "FindRestaurants": 53,
+        "NONE": 2,
+        "ReserveRestaurant": 1242
+      },
+      "SearchHotel": {
+        "NONE": 3,
+        "ReserveHotel": 53,
+        "SearchHotel": 1002
+      },
+      "SearchOnewayFlight": {
+        "NONE": 6,
+        "SearchOnewayFlight": 1037,
+        "SearchRoundtripFlights": 174
+      },
+      "SearchRoundtripFlights": {
+        "NONE": 7,
+        "SearchOnewayFlight": 77,
+        "SearchRoundtripFlights": 491
+      },
+      "TransferMoney": {
+        "CheckBalance": 12,
+        "NONE": 4,
+        "TransferMoney": 551
+      }
+    },
+    "correct": 10291,
+    "n": 10905,
+    "wilson95": [
+      0.9392108906063101,
+      0.9478677269104336
+    ]
+  },
+  "development_evaluation_seconds": 0.9449948749970645,
+  "epochs": 5,
+  "feature_dimension": 524288,
+  "format": "veya-phase12-g11-scorer-diagnostic-v1",
+  "hard_epochs": 0,
+  "hard_weight": 4.0,
+  "inventory_sha256": "81a526a57fa2e5b8d941a78c018c33ddc06815fd0b8565c2c2eec6da4f3b4301",
+  "lr": 0.2,
+  "mode": "previous_turn",
+  "n_active_intent": 10156,
+  "n_dev": 10905,
+  "n_hard_negatives": 6857,
+  "n_train_sampled": 158042,
+  "n_train_upsampled": 178613,
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false,
+  "train_services": [
+    "Banks_1",
+    "Buses_1",
+    "Buses_2",
+    "Calendar_1",
+    "Events_1",
+    "Events_2",
+    "Flights_1",
+    "Flights_2",
+    "Homes_1",
+    "Hotels_1",
+    "Hotels_2",
+    "Hotels_3",
+    "Media_1",
+    "Movies_1",
+    "Music_1",
+    "Music_2",
+    "RentalCars_1",
+    "RentalCars_2",
+    "Restaurants_1",
+    "Services_1",
+    "Services_2",
+    "Services_3"
+  ],
+  "training_history": {
+    "pass1": [
+      {
+        "epoch": 1,
+        "seconds": 26.924691542008077,
+        "train_online_accuracy": 0.8926740992900621,
+        "train_online_nll": 0.30964965621554774
+      },
+      {
+        "epoch": 2,
+        "seconds": 25.417833250001422,
+        "train_online_accuracy": 0.9289745763784311,
+        "train_online_nll": 0.20393567309254768
+      },
+      {
+        "epoch": 3,
+        "seconds": 26.493386916001327,
+        "train_online_accuracy": 0.9393136001822301,
+        "train_online_nll": 0.17600185240574426
+      },
+      {
+        "epoch": 4,
+        "seconds": 26.25931304099504,
+        "train_online_accuracy": 0.9448690854329862,
+        "train_online_nll": 0.15965574186879047
+      },
+      {
+        "epoch": 5,
+        "seconds": 25.426941792000434,
+        "train_online_accuracy": 0.949665278849926,
+        "train_online_nll": 0.14806926700306552
+      }
+    ],
+    "pass2": []
+  },
+  "weights_path": "artifacts/experiments/phase12/g11_scorer_previous_turn_158042_5+0.npz",
+  "weights_sha256": "a545a18fb5cc4be04925b1618ead5bed3f9be281bf7f546126587504f4230ac8",
+  "workflow": "schema_guided_service_intent_routing"
+}

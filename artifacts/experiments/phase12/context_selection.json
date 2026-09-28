@@ -1,0 +1,21 @@
+{
+  "chosen_accuracy": 0.7880788629069234,
+  "chosen_mode": "previous_turn",
+  "control_artifact_sha256": {
+    "full_context": "675fece80596e087a78c70c45d5e7ef58b01a72284a11e527caf639d5a481e7c",
+    "utterance_and_previous": "d209f51bffa879b3f48b9278ef1ecfe0832cd4a14119c48d1700a4094e714184"
+  },
+  "control_metrics": {
+    "full_context": 0.761118752865658,
+    "previous_turn": 0.7880788629069234,
+    "utterance_only": 0.6725355341586429
+  },
+  "format": "veya-phase12-context-selection-v1",
+  "n_matched": 10905,
+  "note": "This freezes the input formulation for subsequent scorer work; it does not qualify a finalist or authorize sealed evaluation.",
+  "release_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "selection_rule": "Highest raw all-turn development accuracy among the two context-bearing modes; ties favor fewer dropped contexts, then shorter input. Current-only is diagnostic.",
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false,
+  "workflow": "schema_guided_service_intent_routing"
+}

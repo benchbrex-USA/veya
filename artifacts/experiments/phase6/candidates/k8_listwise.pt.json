@@ -1,0 +1,19 @@
+{
+  "format": "veya-k8-reranker-v1",
+  "route": "shortlist_k8_packed_rerank",
+  "k": 8,
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+  "training_manifest": {
+    "variant": "listwise_shortlist_80_random_20",
+    "learning_rate": 1e-05,
+    "batch_size": 4,
+    "best_epoch": 2,
+    "trainable_rows": 6605,
+    "target_absent_rows": 1195,
+    "init": "phase5_decision_head",
+    "encoder": "frozen",
+    "split": "banking77_train_seed17_800_8600"
+  },
+  "file_sha256": "a47806ae8bac606ddd41526bbf319a8f1b927e7a76d1c903420bd1c875772dd3"
+}

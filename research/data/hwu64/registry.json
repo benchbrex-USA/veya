@@ -1,0 +1,20 @@
+{
+  "candidate_count": 60,
+  "data_sha256": "5f6dbf6d38fc111217924945ac59c554e0b926d5aa836ecdd0d089d2ca48e1d9",
+  "dataset": {
+    "base_checkpoint_exposure": "cannot be independently excluded",
+    "data_url": "https://raw.githubusercontent.com/xliuhw/NLU-Evaluation-Data/f6071b496b17d71e6eb43f543af0707f4ff30557/AnnotatedData/NLU-Data-Home-Domain-Annotated-All.csv",
+    "license": "CC-BY-4.0",
+    "license_url": "https://raw.githubusercontent.com/xliuhw/NLU-Evaluation-Data/f6071b496b17d71e6eb43f543af0707f4ff30557/LICENSE",
+    "name": "HWU64 / NLU Evaluation Data",
+    "prior_phase10_exposure": "none",
+    "source_commit": "f6071b496b17d71e6eb43f543af0707f4ff30557",
+    "source_repository": "https://github.com/xliuhw/NLU-Evaluation-Data"
+  },
+  "examples_evaluated": 3000,
+  "format": "veya-dataset-registry-entry-v1",
+  "license_sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+  "protocol_sha256": "a27fc39e5c718b60b08e9aa3f69754b95f8e6901245f27a4042044be3b7ffa10",
+  "result_sha256": "a1c4611b1a2d92925d2c6bd1a4181a9158925995ffee426ee07e8393a990df89",
+  "role": "ONE_SHOT_BLIND_CONSUMED"
+}

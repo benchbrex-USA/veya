@@ -1,0 +1,36 @@
+[
+  {
+    "steps": 1651,
+    "first20": 1.7995297372341157,
+    "last20": 0.9687617376446724,
+    "mean_loss": 1.0390582511101092,
+    "max_loss": 4.01438570022583,
+    "mean_head_grad": 2.5496540759023203,
+    "mean_encoder_grad": 0.0,
+    "max_encoder_grad": 0.0,
+    "lr_head": 0.001,
+    "lr_encoder": 0.0,
+    "start_layer": null,
+    "variant": "H0",
+    "batch_groups": 4,
+    "aborted": false,
+    "conditional_accuracy": 0.6817420435510888
+  },
+  {
+    "steps": 1651,
+    "first20": 0.8344961147755384,
+    "last20": 0.9061486128717661,
+    "mean_loss": 0.9073158770665382,
+    "max_loss": 4.123431205749512,
+    "mean_head_grad": 2.304021595370105,
+    "mean_encoder_grad": 0.0,
+    "max_encoder_grad": 0.0,
+    "lr_head": 0.001,
+    "lr_encoder": 0.0,
+    "start_layer": null,
+    "variant": "H0",
+    "batch_groups": 4,
+    "aborted": false,
+    "conditional_accuracy": 0.7051926298157454
+  }
+]

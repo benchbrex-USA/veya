@@ -1,0 +1,69 @@
+{
+  "format": "veya-route-cutoff-audit-v1",
+  "status": "DEVELOPMENT-EXPOSED / ROUTING-SELECTION ONLY",
+  "protocol": {
+    "dataset": "Banking77 train",
+    "rows": [
+      9300,
+      9600
+    ],
+    "seed": 17,
+    "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "shortlist_hash": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "route_calibration_hash": "b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50",
+    "packed_scorer": "base_decision_head",
+    "hierarchical_scorer": "shortlist_k8_packed_rerank/base_decision_head",
+    "device": "cpu",
+    "platform": "macOS-27.0-arm64-arm-64bit"
+  },
+  "table": [
+    {
+      "n_candidates": 20,
+      "examples": 300,
+      "packed_accuracy": 0.7233333333333334,
+      "hierarchical_accuracy": 0.7766666666666666,
+      "source": "frozen_phase6_validation"
+    },
+    {
+      "n_candidates": 21,
+      "examples": 300,
+      "packed_accuracy": 0.6666666666666666,
+      "hierarchical_accuracy": 0.7233333333333334,
+      "seconds": 151.289,
+      "source": "fresh_gap_measurement"
+    },
+    {
+      "n_candidates": 24,
+      "examples": 300,
+      "packed_accuracy": 0.5933333333333334,
+      "hierarchical_accuracy": 0.7066666666666667,
+      "source": "frozen_phase6_validation"
+    },
+    {
+      "n_candidates": 28,
+      "examples": 300,
+      "packed_accuracy": 0.6166666666666667,
+      "hierarchical_accuracy": 0.6933333333333334,
+      "source": "frozen_phase6_validation"
+    },
+    {
+      "n_candidates": 31,
+      "examples": 300,
+      "packed_accuracy": 0.51,
+      "hierarchical_accuracy": 0.68,
+      "seconds": 149.684,
+      "source": "fresh_gap_measurement"
+    },
+    {
+      "n_candidates": 32,
+      "examples": 300,
+      "packed_accuracy": 0.51,
+      "hierarchical_accuracy": 0.6633333333333333,
+      "source": "frozen_phase6_validation"
+    }
+  ],
+  "decision_rule": "use shortlist when its accuracy lead is >=0.05 at this and every larger measured count",
+  "first_supported_shortlist_count": 20,
+  "recommended_packed_max_candidates": 19,
+  "decision": "shortlist at 20+; packed at <=19"
+}

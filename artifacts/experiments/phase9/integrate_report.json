@@ -1,0 +1,104 @@
+{
+  "fingerprint_max_abs": 0.0,
+  "permutation": {
+    "trials": 72,
+    "max_logit_delta": 0.0,
+    "flips": 0
+  },
+  "temperature_refit": 1.6203480178935838,
+  "temperature_served": 1.6203480178935838,
+  "calibration_rows": 589,
+  "encoder_checksum_unchanged": true,
+  "anchors_before": {
+    "noul": 0.8488,
+    "score": 0.956
+  },
+  "anchors_after": {
+    "noul": 0.8488,
+    "score": 0.956
+  },
+  "ag_news": {
+    "n": 120,
+    "temperature": 1.2076712505429734,
+    "accuracy": 0.9583333333333334,
+    "nll": 0.12989458888749109,
+    "brier": 0.06201988213965061,
+    "ece": 0.031088909948051545
+  },
+  "high_n_route": "shortlist_k8_hypothesis_hce2",
+  "high_n_k": 8,
+  "high_n_temperature": 1.6203480178935838,
+  "security": {
+    "candidate_trials": 48,
+    "candidate_top1": 5,
+    "candidate_rate": 0.10416666666666667,
+    "candidate_rejected": 8,
+    "state_trials": 16,
+    "state_flips": 1,
+    "state_flip_rate": 0.0625
+  },
+  "latency_ms": {
+    "n": 12,
+    "packed_p50": 100.37941698101349,
+    "packed_p90": 108.11108397319913,
+    "packed_p95": 108.11108397319913,
+    "packed_p99": 108.11558400746435,
+    "hypothesis_p50": 242.22783400909975,
+    "hypothesis_p90": 248.75812500249594,
+    "hypothesis_p95": 248.75812500249594,
+    "hypothesis_p99": 315.46933299978264,
+    "packed_tokens_mean": 152.0,
+    "hypothesis_tokens_mean": 439.1666666666667
+  },
+  "http": {
+    "health": "ok",
+    "version_reranker_id": "hypothesis_hce2_h0",
+    "version_template": "phase9-h0-v1",
+    "version_adaptation": "modernbert-layers-26-27+final_norm",
+    "version_temperature": 1.6203480178935838,
+    "version_calibration": "80e35211cf5a649c196d6935777dcb2c78934aa0e87d06ed637b05436e36983e",
+    "small_route": "packed",
+    "small_reranker": "base_decision_head",
+    "high_route": "shortlist_k8_hypothesis_hce2",
+    "high_reranker": "hypothesis_hce2_h0",
+    "high_temperature": 1.6203480178935838,
+    "high_calibration": "hypothesis_hce2_h0:80e35211cf5a649c",
+    "high_candidate_count": 77,
+    "noul_answer": 0.8231,
+    "score_answer": 1.2313,
+    "systemone_routes": {
+      "wide": "shortlist_k8_hypothesis_hce2",
+      "ask": "noul"
+    },
+    "systemone_wide": {
+      "type": "choice",
+      "choice": "reverted_card_payment?",
+      "probabilities": {
+        "reverted_card_payment?": 0.9137,
+        "pending_card_payment": 0.0033,
+        "card_payment_not_recognised": 0.037,
+        "card_payment_fee_charged": 0.0008,
+        "declined_card_payment": 0.0446,
+        "balance_not_updated_after_cheque_or_cash_deposit": 0.0001,
+        "card_delivery_estimate": 0.0004,
+        "card_about_to_expire": 0.0001
+      },
+      "confidence": 0.8208,
+      "max_probability": 0.9137,
+      "route": "shortlist_k8_hypothesis_hce2",
+      "automation": null,
+      "shortlist": [
+        "reverted_card_payment?",
+        "pending_card_payment",
+        "card_payment_not_recognised",
+        "card_payment_fee_charged",
+        "declined_card_payment",
+        "balance_not_updated_after_cheque_or_cash_deposit",
+        "card_delivery_estimate",
+        "card_about_to_expire"
+      ]
+    },
+    "unsupported_language": "unsupported_language"
+  },
+  "test_integrity": "DEVELOPMENT-EXPOSED"
+}

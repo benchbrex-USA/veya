@@ -1,0 +1,26 @@
+{
+  "decision": "Disable automatic execution for the K=8 route. Preserve validation thresholds for descriptive research only; do not ship a 1% or 5% risk guarantee.",
+  "status": "RESEARCH_ONLY_THRESHOLDS",
+  "score": "max_probability",
+  "why_this_score": "On validation rows 880:1100, margin and negative entropy did not beat max probability by more than 0.02 coverage at epsilon 0.05.",
+  "thresholds_fit_on_validation": {
+    "0.02": 0.9796500892257723,
+    "0.05": 0.9541679372957224,
+    "0.10": 0.896261827143334
+  },
+  "combined_test_n1780_rows_1300_3080": {
+    "0.02": {"accepted": 228, "incorrect": 10, "coverage": 0.12808988764044943, "observed_risk": 0.043859649122807015, "wilson95": [0.02399519068415856, 0.07884053853786198]},
+    "0.05": {"accepted": 372, "incorrect": 26, "coverage": 0.20898876404494382, "observed_risk": 0.06989247311827956, "wilson95": [0.04813935902288899, 0.10043812681156894]},
+    "0.10": {"accepted": 622, "incorrect": 71, "coverage": 0.349438202247191, "observed_risk": 0.11414790996784566, "wilson95": [0.0914903425957228, 0.14154242480101142]}
+  },
+  "packed_77_locked_test": {
+    "0.05_coverage": 0.0,
+    "0.10_accepted": 9,
+    "0.10_incorrect": 1
+  },
+  "supports_1pct_claim": false,
+  "supports_5pct_claim": false,
+  "artifact": "artifacts/release/selective_policy.json",
+  "runtime": "The HTTP automation field is always defer for this policy. The prediction remains available, but no risk guarantee is asserted.",
+  "revisit": "A 1% claim needs a Wilson upper bound at or below 0.01. This test does not provide one."
+}

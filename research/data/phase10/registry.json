@@ -1,0 +1,78 @@
+{
+  "datasets": [
+    {
+      "blind_role": null,
+      "candidate_representation": "raw and deterministic naturalized labels; no definitions",
+      "domain": "online banking support",
+      "language": "en",
+      "license": "CC-BY-4.0",
+      "name": "banking77",
+      "num_examples": 3075,
+      "num_labels": 77,
+      "previous_exposure": "all train rows are development data; production retriever previously used a subset",
+      "source": "https://github.com/PolyAI-LDN/task-specific-datasets",
+      "source_sha256": "b06e26ac675513959a63135f11b94ea7786ed02da65db93a5650d8838cbc664b",
+      "task_type": "single-label intent classification",
+      "training_role": "TRAIN",
+      "validation_role": null,
+      "version": "PolyAI task-specific-datasets local train.csv"
+    },
+    {
+      "blind_role": null,
+      "candidate_representation": "intent name plus authoritative dataset definition",
+      "domain": "20 task-oriented service/API domains",
+      "language": "en",
+      "license": "CC-BY-SA-4.0",
+      "name": "schema_guided_dialogue",
+      "num_examples": 1820,
+      "num_labels": 53,
+      "previous_exposure": "new in Phase 10",
+      "source": "https://github.com/google-research-datasets/dstc8-schema-guided-dialogue",
+      "source_sha256": {
+        "license": "71a43a169b52bb1b39510b65ec5b43b4bbb59196d449a835fe58b50af6a72742",
+        "train_schema": "97b6c21673aa7e5c2d1ceef52aa35170c565223cdcbf33bb24c69739bda04a82"
+      },
+      "task_type": "active-intent retrieval by service schema",
+      "training_role": "TRAIN except frozen development services",
+      "validation_role": "DEVELOPMENT for ['Calendar_1', 'Flights_1', 'Hotels_3', 'Media_1', 'Services_3']",
+      "version": "GitHub master archive f703636bd043057c7f492b78f82ea8a80d004ff49d60b9d66d5593b417ccc708"
+    },
+    {
+      "blind_role": null,
+      "candidate_representation": "raw and deterministic naturalized labels; no authoritative definitions",
+      "domain": "150 assistant intents across 10 domains",
+      "language": "en",
+      "license": "dataset repository license recorded locally",
+      "name": "clinc150",
+      "num_examples": 3000,
+      "num_labels": 150,
+      "previous_exposure": "validation/test partitions consumed in Phase 1-9; their examples and errors are prohibited; train partition newly designated development data",
+      "source": "https://github.com/clinc/oos-eval",
+      "source_sha256": "36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0",
+      "task_type": "single-label intent classification",
+      "training_role": null,
+      "validation_role": "SCHEMA-HELD-OUT VALIDATION using train partition only",
+      "version": "local data_full.json sha256:36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0"
+    },
+    {
+      "blind_role": "FUTURE BLIND CANDIDATE; data absent and untouched",
+      "candidate_representation": "not inspected before finalist freeze",
+      "domain": "general voice-assistant intents",
+      "language": "en-US",
+      "license": "CC-BY-4.0",
+      "name": "amazon_massive_en_us",
+      "num_examples": null,
+      "num_labels": 60,
+      "previous_exposure": "none known; base-checkpoint provenance cannot independently exclude pretraining exposure",
+      "source": "https://huggingface.co/datasets/AmazonScience/massive",
+      "source_sha256": null,
+      "task_type": "single-label intent classification",
+      "training_role": null,
+      "validation_role": null,
+      "version": "UNFROZEN"
+    }
+  ],
+  "format": "veya-phase10-dataset-registry-v1",
+  "seed": 20260923,
+  "taint_rule": "Whole candidate schemas, not only rows, are excluded from retriever training when used for validation or blind evaluation."
+}

@@ -1,0 +1,24 @@
+{
+  "format": "veya-phase10-graph-v1",
+  "status": "COMPLETE_KEEP_AS_RESEARCH",
+  "nodes": {
+    "P10-G0": "done: audited release preserved; production manifest is immutable",
+    "P10-G1": "done: architecture decision recorded",
+    "P10-G2": "done: contamination-aware registry; Banking77 CC-BY-4.0, SGD CC-BY-SA-4.0, CLINC local license, MASSIVE CC-BY-4.0",
+    "P10-G3": "done: 22 train schemas, 5 development schemas, CLINC150 whole-schema validation, MASSIVE one-shot blind",
+    "P10-G4": "done: current CLINC150-train Recall@8 0.3553",
+    "P10-G5": "done: raw 0.3130, naturalized 0.3487, production-prefixed 0.3553; definitions finalist 0.4263",
+    "P10-G6": "done: frozen backbone; shared and dual 128-d projections compared; shared selected",
+    "P10-G7": "done: one refresh improved Recall@8 from 0.3673 to 0.4310",
+    "P10-G8": "done: schema episodes with 8/16/32/50/77/100 candidates",
+    "P10-G9": "done: CLINC150 train-only held-out Recall@8 0.4310, CI-positive delta",
+    "P10-G10": "done: accuracy through 250 real candidates; latency through 1000 candidates",
+    "P10-G11": "done: score diagnostics only; cosine explicitly not calibrated confidence",
+    "P10-G12": "done: B3 shared projection plus one hard-negative refresh",
+    "P10-G13": "done: opt-in phase10_domain_general feature flag; default remains current",
+    "P10-G14": "done: matched validation end-to-end 0.357 to 0.418; blind 0.2293 to 0.2734",
+    "P10-G15": "done: exact rank <=0.063 ms at 1000; projected cache 0.512 MB; no ANN",
+    "P10-G16": "done: focused cache/artifact/security/permutation tests plus full regression suite",
+    "P10-G17": "done: KEEP AS RESEARCH; production manifest unchanged"
+  }
+}

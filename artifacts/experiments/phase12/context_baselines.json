@@ -1,0 +1,151 @@
+{
+  "batch_size": 4,
+  "device": "cpu",
+  "format": "veya-phase12-context-baselines-v1",
+  "inventory_sha256": "cd81ea8be4df25e4220ed42fc59c5a303850feaef1957d18715099c2523eb5f8",
+  "modes": {
+    "previous_turn": {
+      "accuracy": 0.7880788629069234,
+      "batch_throughput_decisions_per_second": 8.877129057983392,
+      "by_service": {
+        "Alarm_1": {
+          "accuracy": 0.8296943231441049,
+          "n": 229
+        },
+        "Banks_2": {
+          "accuracy": 0.8746518105849582,
+          "n": 1436
+        },
+        "Flights_3": {
+          "accuracy": 0.7114875595553203,
+          "n": 1889
+        },
+        "Hotels_4": {
+          "accuracy": 0.7288659793814433,
+          "n": 1940
+        },
+        "Media_2": {
+          "accuracy": 0.767944936086529,
+          "n": 1017
+        },
+        "Restaurants_2": {
+          "accuracy": 0.8068181818181818,
+          "n": 2552
+        },
+        "Services_4": {
+          "accuracy": 0.8414766558089034,
+          "n": 1842
+        }
+      },
+      "by_slice": {
+        "initial": {
+          "accuracy": 0.87,
+          "n": 1000
+        },
+        "later": {
+          "accuracy": 0.7798081776880363,
+          "n": 9905
+        },
+        "same_service": {
+          "accuracy": 0.7810408550594347,
+          "n": 10011
+        },
+        "transition": {
+          "accuracy": 0.8668903803131991,
+          "n": 894
+        }
+      },
+      "context": {
+        "dropped_prior_turns_total": 0,
+        "raw_tokens_p50": 27.0,
+        "raw_tokens_p95": 51.0,
+        "raw_tokens_p99": 63.0,
+        "truncated_decisions": 0
+      },
+      "correct": 8594,
+      "elapsed_s_including_preprocessing": 1228.4376997079817,
+      "n": 10905,
+      "none_correct": 0,
+      "none_rows": 749,
+      "over_budget_deferred": 0,
+      "wilson95": [
+        0.7803078883621565,
+        0.795646948246059
+      ]
+    },
+    "utterance_only": {
+      "accuracy": 0.6725355341586429,
+      "batch_throughput_decisions_per_second": 11.46560890510381,
+      "by_service": {
+        "Alarm_1": {
+          "accuracy": 0.5502183406113537,
+          "n": 229
+        },
+        "Banks_2": {
+          "accuracy": 0.7186629526462396,
+          "n": 1436
+        },
+        "Flights_3": {
+          "accuracy": 0.7173107464266808,
+          "n": 1889
+        },
+        "Hotels_4": {
+          "accuracy": 0.5747422680412371,
+          "n": 1940
+        },
+        "Media_2": {
+          "accuracy": 0.6804326450344149,
+          "n": 1017
+        },
+        "Restaurants_2": {
+          "accuracy": 0.6833855799373041,
+          "n": 2552
+        },
+        "Services_4": {
+          "accuracy": 0.6894679695982627,
+          "n": 1842
+        }
+      },
+      "by_slice": {
+        "initial": {
+          "accuracy": 0.87,
+          "n": 1000
+        },
+        "later": {
+          "accuracy": 0.6525996971226653,
+          "n": 9905
+        },
+        "same_service": {
+          "accuracy": 0.6512835880531416,
+          "n": 10011
+        },
+        "transition": {
+          "accuracy": 0.9105145413870246,
+          "n": 894
+        }
+      },
+      "context": {
+        "dropped_prior_turns_total": 0,
+        "raw_tokens_p50": 11.0,
+        "raw_tokens_p95": 24.0,
+        "raw_tokens_p99": 32.0,
+        "truncated_decisions": 0
+      },
+      "correct": 7334,
+      "elapsed_s_including_preprocessing": 951.1051781249698,
+      "n": 10905,
+      "none_correct": 0,
+      "none_rows": 749,
+      "over_budget_deferred": 0,
+      "wilson95": [
+        0.6636681660618288,
+        0.68128138831613
+      ]
+    }
+  },
+  "n_matched": 10905,
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "release_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false
+}

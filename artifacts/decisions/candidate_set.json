@@ -1,0 +1,10 @@
+{
+  "decision": "RESEARCH / NOT PROMOTED",
+  "status": "RESEARCH",
+  "evidence": "On Banking77 test rows 200:296 (n=96) the frozen-encoder candidate-set scorer reached accuracy 0.531. Learned K=8 then packed rerank reached 0.688 on the same rows.",
+  "revisit_only_if": [
+    "The K=8 reranker ceiling is shown to be stuck while retrieval recall is already high.",
+    "A product requirement appears for candidate counts where packing eight rerank labels is not enough.",
+    "A candidate-interaction training run beats K=8 end-to-end on a split that did not choose K."
+  ]
+}

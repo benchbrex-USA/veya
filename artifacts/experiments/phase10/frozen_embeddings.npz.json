@@ -1,0 +1,13 @@
+{
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "count": 8569,
+  "file_sha256": "3ffee198b5a9434008d140d669c2e7fd0bfd7f314028c0adb0982630f4e2e108",
+  "format": "veya-phase10-embedding-cache-v1",
+  "max_length": 96,
+  "seconds": 147.35110345800058,
+  "shape": [
+    8569,
+    1024
+  ],
+  "texts_sha256": "b68ad1ace39de61f67ba8345ffa61e306b06cdc3b44387daebc105e8af7a4620"
+}

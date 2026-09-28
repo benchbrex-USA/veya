@@ -1,0 +1,52 @@
+{
+  "ag_news_reloaded_temperature": 1.2076712505429734,
+  "ag_news_before": {
+    "n": 400,
+    "temperature": 1.7601518630981445,
+    "accuracy": 0.955,
+    "nll": 0.16898593025083222,
+    "brier": 0.07722072570300487,
+    "ece": 0.04014599601972611
+  },
+  "ag_news_after": {
+    "n": 400,
+    "temperature": 1.2076712505429734,
+    "accuracy": 0.955,
+    "nll": 0.16053748283281735,
+    "brier": 0.07658389978438858,
+    "ece": 0.018575354475151216
+  },
+  "shipped_choice_3_5": true,
+  "choice_11plus_n80": {
+    "before_clamped_0.5": {
+      "n": 80,
+      "temperature": 0.5,
+      "accuracy": 0.7,
+      "nll": 2.2227436355016117,
+      "brier": 0.5227240352592059,
+      "ece": 0.2666583696838346
+    },
+    "fitted": {
+      "n": 80,
+      "temperature": 1.8768868409628021,
+      "accuracy": 0.7,
+      "nll": 1.048563893613493,
+      "brier": 0.41411895385900327,
+      "ece": 0.11468988658701725
+    },
+    "temperature": 1.8768868409628021,
+    "shipped": false,
+    "reason": "80 calibration rows is enough to fit but too small to replace the production bucket"
+  },
+  "honest_shortlist8": {
+    "n": 40,
+    "retrieval_misses": 9,
+    "correct": 24,
+    "accuracy": 0.6
+  },
+  "http_health": {
+    "status": "ok"
+  },
+  "http_choice_answer": "billing",
+  "http_choice_decision": "answer"
+}

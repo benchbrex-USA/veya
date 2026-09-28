@@ -1,0 +1,19 @@
+{
+  "P7-G0": "done: control.json points at the Phase-6 manifest hashes; weights on disk were not overwritten",
+  "P7-G1": "done: train 800:8600, calibration 8600:9300 unused, val 9300:10003, release test 1300:3080 sealed",
+  "P7-G2": "done: 6605 target-present hard K=8 rows, 1195 target-absent rows excluded",
+  "P7-G3": "done: full-epoch run moved 0 of 597 validation decisions",
+  "P7-G4": "done: linear probe on 161 hits, 33 held out; lower layer ~0.52, upper layers 0.61-0.76 and noisy",
+  "P7-G5": "done: top layer, not promoted",
+  "P7-G6": "done: top 2 layers, 300-step screen, delta 0",
+  "P7-G7": "skipped: top 2 did not beat top 1",
+  "P7-G8": "not run: ordinary fine-tuning did not move accuracy, so an adapter was not added",
+  "P7-G9": "done: AG News accuracy unchanged, ECE 0.031 to 0.043; 4-way Choice unchanged; Noul and Score anchors moved by less than 0.01",
+  "P7-G10": "not required",
+  "P7-G11": "no finalist",
+  "P7-G12": "calibration not refit",
+  "P7-G13": "SAC unchanged because no decision changed",
+  "P7-G14": "AG News and small Choice measured inside the full run",
+  "P7-G15": "server not switched; control reranker_id remains base_decision_head",
+  "P7-G16": "DO NOT PROMOTE"
+}

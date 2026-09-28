@@ -1,0 +1,1830 @@
+{
+  "cold_load": {
+    "process_enter_minus_shell_s": 0.044,
+    "import_to_ready_s": 34.183,
+    "ready_wall_s": 34.227,
+    "first_inference_s": 0.463,
+    "stages_s": {
+      "checkpoint_hash_s": 10.257,
+      "checkpoint_load_s": 23.461,
+      "shortlist_load_s": 0.055,
+      "route_calibration_load_s": 0.0
+    },
+    "device": "mps",
+    "hardware": "macOS-27.0-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.11.0",
+    "torch": "2.14.0",
+    "rss_mb_after_load": 598.6
+  },
+  "split_hashes": {
+    "k_selection": "d550c0c7368862ee245f4f74b1f3027c776e17f8c3d0b8f085988d141f2d2507",
+    "crossover": "110b873be062227d5a39d7faad14fa1b6520a5c2f6fd8ebad3fa71798c1b2b2e",
+    "policy_validation": "0bc7c16b40ef60f9cc29a7ffd41302984d2e97bca89f67c62bcffd3591156ef3",
+    "temperature_fit": "089e594c6bd1d708c9e866a1d8e7db08c13750ab72ad43b50332cd7f1b5f4e22",
+    "locked_test": "32393a1a7de5865dc4470b10bb340cf5dcdacb958f8d092a8891468919ff8fd5",
+    "expanded_test": "8c1375ccb42b18713ecaecca16f7c81a00703636cb75335e4bbefc51de9c0b36"
+  },
+  "split_ranges": {
+    "k_selection": [
+      200,
+      296
+    ],
+    "crossover": [
+      296,
+      400
+    ],
+    "policy_validation": [
+      880,
+      1100
+    ],
+    "temperature_fit": [
+      1100,
+      1300
+    ],
+    "locked_test": [
+      1300,
+      1500
+    ],
+    "expanded_test": [
+      1500,
+      3080
+    ]
+  },
+  "reproduction": {
+    "accuracy_abs": 0.0,
+    "retrieval_failures_abs": 0,
+    "nll_on_hits_abs": 0.0,
+    "ece_zeroed_abs": 0.0,
+    "pass": true
+  },
+  "k8_temperature_1": {
+    "n": 200,
+    "recall": 0.895,
+    "retrieval_failures": 21,
+    "rerank_accuracy_given_hit": 0.7597765363128491,
+    "end_to_end_accuracy": 0.68,
+    "nll_on_hits": 1.1086024237173646,
+    "brier_on_hits": 0.38213304759523614,
+    "ece_e2e_misses_zeroed": 0.13571491016611037,
+    "ece_e2e_honest": 0.193687272763941,
+    "mean_max_probability": 0.865916452360137,
+    "mean_max_probability_correct": 0.9267423905447044,
+    "mean_max_probability_incorrect": 0.7366613337179311,
+    "mean_input_tokens": 141.775,
+    "seconds": 17.432
+  },
+  "k8_route_temperature": {
+    "n": 200,
+    "recall": 0.895,
+    "retrieval_failures": 21,
+    "rerank_accuracy_given_hit": 0.7597765363128491,
+    "end_to_end_accuracy": 0.68,
+    "nll_on_hits": 0.8285726472868604,
+    "brier_on_hits": 0.36415039999258914,
+    "ece_e2e_misses_zeroed": 0.08058820773727987,
+    "ece_e2e_honest": 0.08801733927572629,
+    "mean_max_probability": 0.7332255041974497,
+    "mean_max_probability_correct": 0.8151921792791578,
+    "mean_max_probability_incorrect": 0.5590463196488201,
+    "mean_input_tokens": 141.775,
+    "seconds": 17.432,
+    "candidate_count": 8
+  },
+  "fingerprint_rows": [
+    {
+      "prediction": "cash_withdrawal_charge",
+      "shortlist": [
+        "cash_withdrawal_charge",
+        "card_payment_fee_charged",
+        "transfer_fee_charged",
+        "transaction_charged_twice",
+        "top_up_by_card_charge",
+        "wrong_exchange_rate_for_cash_withdrawal",
+        "top_up_by_bank_transfer_charge",
+        "declined_cash_withdrawal"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_by_card_charge",
+      "shortlist": [
+        "top_up_by_card_charge",
+        "top_up_by_bank_transfer_charge",
+        "exchange_charge",
+        "extra_charge_on_statement",
+        "top_up_by_cash_or_cheque",
+        "card_payment_fee_charged",
+        "cash_withdrawal_charge",
+        "automatic_top_up"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "balance_not_updated_after_bank_transfer",
+      "shortlist": [
+        "transfer_timing",
+        "transfer_not_received_by_recipient",
+        "card_delivery_estimate",
+        "pending_transfer",
+        "balance_not_updated_after_bank_transfer",
+        "card_about_to_expire",
+        "cancel_transfer",
+        "balance_not_updated_after_cheque_or_cash_deposit"
+      ],
+      "correct": false,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_reverted",
+      "shortlist": [
+        "top_up_failed",
+        "getting_spare_card",
+        "beneficiary_not_allowed",
+        "failed_transfer",
+        "top_up_by_card_charge",
+        "card_swallowed",
+        "top_up_reverted",
+        "card_linking"
+      ],
+      "correct": false,
+      "hit": false
+    },
+    {
+      "prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+      "shortlist": [
+        "extra_charge_on_statement",
+        "card_payment_fee_charged",
+        "reverted_card_payment?",
+        "top_up_by_card_charge",
+        "balance_not_updated_after_cheque_or_cash_deposit",
+        "verify_top_up",
+        "card_delivery_estimate",
+        "pending_card_payment"
+      ],
+      "correct": false,
+      "hit": false
+    },
+    {
+      "prediction": "top_up_limits",
+      "shortlist": [
+        "automatic_top_up",
+        "top_up_limits",
+        "top_up_reverted",
+        "topping_up_by_card",
+        "top_up_failed",
+        "pending_top_up",
+        "disposable_card_limits",
+        "verify_top_up"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "balance_not_updated_after_bank_transfer",
+      "shortlist": [
+        "declined_transfer",
+        "pending_transfer",
+        "transfer_not_received_by_recipient",
+        "failed_transfer",
+        "declined_cash_withdrawal",
+        "pending_card_payment",
+        "pending_cash_withdrawal",
+        "balance_not_updated_after_bank_transfer"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "request_refund",
+      "shortlist": [
+        "request_refund",
+        "getting_spare_card",
+        "get_physical_card",
+        "cancel_transfer",
+        "getting_virtual_card",
+        "transaction_charged_twice",
+        "visa_or_mastercard",
+        "beneficiary_not_allowed"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "Refund_not_showing_up",
+      "shortlist": [
+        "transfer_not_received_by_recipient",
+        "Refund_not_showing_up",
+        "pending_top_up",
+        "balance_not_updated_after_cheque_or_cash_deposit",
+        "pending_transfer",
+        "declined_transfer",
+        "pending_cash_withdrawal",
+        "pending_card_payment"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+      "shortlist": [
+        "reverted_card_payment?",
+        "card_payment_not_recognised",
+        "Refund_not_showing_up",
+        "wrong_amount_of_cash_received",
+        "extra_charge_on_statement",
+        "balance_not_updated_after_cheque_or_cash_deposit",
+        "pending_card_payment",
+        "declined_transfer"
+      ],
+      "correct": false,
+      "hit": false
+    },
+    {
+      "prediction": "card_payment_wrong_exchange_rate",
+      "shortlist": [
+        "card_payment_wrong_exchange_rate",
+        "wrong_exchange_rate_for_cash_withdrawal",
+        "top_up_reverted",
+        "wrong_amount_of_cash_received",
+        "transfer_timing",
+        "exchange_charge",
+        "beneficiary_not_allowed",
+        "failed_transfer"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "cancel_transfer",
+      "shortlist": [
+        "cancel_transfer",
+        "request_refund",
+        "beneficiary_not_allowed",
+        "failed_transfer",
+        "terminate_account",
+        "extra_charge_on_statement",
+        "exchange_charge",
+        "transfer_timing"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_by_card_charge",
+      "shortlist": [
+        "top_up_by_card_charge",
+        "disposable_card_limits",
+        "supported_cards_and_currencies",
+        "top_up_by_bank_transfer_charge",
+        "extra_charge_on_statement",
+        "card_payment_fee_charged",
+        "top_up_limits",
+        "topping_up_by_card"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "cash_withdrawal_charge",
+      "shortlist": [
+        "transfer_fee_charged",
+        "card_payment_fee_charged",
+        "wrong_exchange_rate_for_cash_withdrawal",
+        "wrong_amount_of_cash_received",
+        "transaction_charged_twice",
+        "extra_charge_on_statement",
+        "card_payment_wrong_exchange_rate",
+        "cash_withdrawal_charge"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "topping_up_by_card",
+      "shortlist": [
+        "topping_up_by_card",
+        "beneficiary_not_allowed",
+        "apple_pay_or_google_pay",
+        "extra_charge_on_statement",
+        "top_up_by_card_charge",
+        "top_up_by_bank_transfer_charge",
+        "automatic_top_up",
+        "wrong_amount_of_cash_received"
+      ],
+      "correct": false,
+      "hit": false
+    },
+    {
+      "prediction": "pending_top_up",
+      "shortlist": [
+        "extra_charge_on_statement",
+        "pending_top_up",
+        "failed_transfer",
+        "declined_transfer",
+        "contactless_not_working",
+        "top_up_reverted",
+        "request_refund",
+        "beneficiary_not_allowed"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "card_payment_fee_charged",
+      "shortlist": [
+        "card_payment_fee_charged",
+        "transfer_fee_charged",
+        "extra_charge_on_statement",
+        "transaction_charged_twice",
+        "wrong_amount_of_cash_received",
+        "reverted_card_payment?",
+        "wrong_exchange_rate_for_cash_withdrawal",
+        "top_up_by_card_charge"
+      ],
+      "correct": false,
+      "hit": true
+    },
+    {
+      "prediction": "pending_card_payment",
+      "shortlist": [
+        "pending_card_payment",
+        "declined_card_payment",
+        "card_payment_not_recognised",
+        "card_arrival",
+        "reverted_card_payment?",
+        "card_linking",
+        "card_acceptance",
+        "card_about_to_expire"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "pending_top_up",
+      "shortlist": [
+        "pending_top_up",
+        "top_up_failed",
+        "extra_charge_on_statement",
+        "top_up_reverted",
+        "request_refund",
+        "cancel_transfer",
+        "edit_personal_details",
+        "top_up_limits"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "passcode_forgotten",
+      "shortlist": [
+        "passcode_forgotten",
+        "getting_spare_card",
+        "lost_or_stolen_card",
+        "pin_blocked",
+        "card_swallowed",
+        "get_disposable_virtual_card",
+        "getting_virtual_card",
+        "compromised_card"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "lost_or_stolen_card",
+      "shortlist": [
+        "lost_or_stolen_phone",
+        "lost_or_stolen_card",
+        "contactless_not_working",
+        "compromised_card",
+        "getting_spare_card",
+        "passcode_forgotten",
+        "getting_virtual_card",
+        "transfer_not_received_by_recipient"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+      "shortlist": [
+        "failed_transfer",
+        "declined_transfer",
+        "reverted_card_payment?",
+        "declined_cash_withdrawal",
+        "balance_not_updated_after_cheque_or_cash_deposit",
+        "wrong_amount_of_cash_received",
+        "direct_debit_payment_not_recognised",
+        "card_payment_not_recognised"
+      ],
+      "correct": false,
+      "hit": false
+    },
+    {
+      "prediction": "compromised_card",
+      "shortlist": [
+        "compromised_card",
+        "card_swallowed",
+        "contactless_not_working",
+        "failed_transfer",
+        "lost_or_stolen_phone",
+        "top_up_failed",
+        "lost_or_stolen_card",
+        "declined_card_payment"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_reverted",
+      "shortlist": [
+        "failed_transfer",
+        "top_up_reverted",
+        "beneficiary_not_allowed",
+        "extra_charge_on_statement",
+        "wrong_amount_of_cash_received",
+        "declined_transfer",
+        "top_up_failed",
+        "reverted_card_payment?"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_limits",
+      "shortlist": [
+        "top_up_limits",
+        "top_up_failed",
+        "verify_top_up",
+        "country_support",
+        "extra_charge_on_statement",
+        "pending_top_up",
+        "automatic_top_up",
+        "disposable_card_limits"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "country_support",
+      "shortlist": [
+        "country_support",
+        "fiat_currency_support",
+        "supported_cards_and_currencies",
+        "transfer_into_account",
+        "receiving_money",
+        "atm_support",
+        "exchange_charge",
+        "exchange_rate"
+      ],
+      "correct": false,
+      "hit": true
+    },
+    {
+      "prediction": "exchange_rate",
+      "shortlist": [
+        "exchange_rate",
+        "exchange_charge",
+        "transfer_timing",
+        "fiat_currency_support",
+        "exchange_via_app",
+        "wrong_exchange_rate_for_cash_withdrawal",
+        "card_payment_wrong_exchange_rate",
+        "transfer_into_account"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_limits",
+      "shortlist": [
+        "top_up_limits",
+        "disposable_card_limits",
+        "automatic_top_up",
+        "verify_top_up",
+        "age_limit",
+        "contactless_not_working",
+        "beneficiary_not_allowed",
+        "extra_charge_on_statement"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "declined_transfer",
+      "shortlist": [
+        "failed_transfer",
+        "declined_transfer",
+        "beneficiary_not_allowed",
+        "contactless_not_working",
+        "cancel_transfer",
+        "extra_charge_on_statement",
+        "transfer_not_received_by_recipient",
+        "pending_transfer"
+      ],
+      "correct": false,
+      "hit": true
+    },
+    {
+      "prediction": "topping_up_by_card",
+      "shortlist": [
+        "topping_up_by_card",
+        "passcode_forgotten",
+        "card_swallowed",
+        "card_linking",
+        "pin_blocked",
+        "getting_spare_card",
+        "disposable_card_limits",
+        "get_disposable_virtual_card"
+      ],
+      "correct": false,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_limits",
+      "shortlist": [
+        "top_up_limits",
+        "disposable_card_limits",
+        "automatic_top_up",
+        "pending_top_up",
+        "top_up_failed",
+        "age_limit",
+        "contactless_not_working",
+        "country_support"
+      ],
+      "correct": true,
+      "hit": true
+    },
+    {
+      "prediction": "top_up_failed",
+      "shortlist": [
+        "top_up_failed",
+        "top_up_limits",
+        "contactless_not_working",
+        "pending_top_up",
+        "failed_transfer",
+        "top_up_reverted",
+        "extra_charge_on_statement",
+        "beneficiary_not_allowed"
+      ],
+      "correct": true,
+      "hit": true
+    }
+  ],
+  "probe_scores": [
+    -0.8018167614936829,
+    0.3453490138053894,
+    4.252270698547363,
+    1.7579834461212158,
+    2.7245147228240967,
+    4.1999359130859375,
+    4.589817523956299,
+    4.527831554412842,
+    7.327942371368408,
+    3.8276498317718506,
+    3.0787577629089355,
+    1.2836400270462036,
+    -1.5814262628555298,
+    1.3365364074707031,
+    0.5371270179748535,
+    0.6980753540992737,
+    11.296802520751953,
+    3.60052490234375,
+    6.655076503753662,
+    4.393800258636475,
+    11.981441497802734,
+    5.177179336547852,
+    4.138848304748535,
+    3.2479937076568604,
+    0.21791629493236542,
+    1.223597526550293,
+    4.756300926208496,
+    7.599967956542969,
+    3.678032636642456,
+    5.53077507019043,
+    4.522718906402588,
+    -2.832582712173462,
+    7.335122585296631,
+    2.082888126373291,
+    0.9362587928771973,
+    6.871922492980957,
+    5.074404716491699,
+    2.901916742324829,
+    4.138466835021973,
+    2.4112472534179688,
+    6.997535705566406,
+    6.248493194580078,
+    2.605375051498413,
+    1.9342354536056519,
+    2.415820598602295,
+    -0.6999134421348572,
+    2.179417371749878,
+    4.323756217956543,
+    -1.3924305438995361,
+    1.4496427774429321,
+    -0.679248571395874,
+    5.648343086242676,
+    2.2365224361419678,
+    4.664207935333252,
+    3.7733209133148193,
+    0.9831742644309998,
+    7.730269908905029,
+    8.623579978942871,
+    4.021557331085205,
+    1.5533778667449951,
+    2.902902126312256,
+    2.6509499549865723,
+    3.1959216594696045,
+    9.228760719299316,
+    10.445137023925781,
+    5.574112892150879,
+    1.5217854976654053,
+    4.7797441482543945,
+    0.7511999011039734,
+    -1.1567896604537964,
+    0.7125698328018188,
+    0.038913920521736145,
+    3.002523422241211,
+    6.302956581115723,
+    2.297882080078125,
+    7.434571743011475,
+    8.514996528625488
+  ],
+  "packed_77_locked": {
+    "n": 200,
+    "accuracy": 0.405,
+    "nll": 2.703161820192596,
+    "brier": 0.8100897189579689,
+    "ece": 0.15145483057812242,
+    "mean_max_probability": 0.44671758788893146,
+    "seconds": 29.651,
+    "temperature": 1.8768868409628021,
+    "candidate_count": 77
+  },
+  "k8_expanded": {
+    "n": 1580,
+    "recall": 0.8493670886075949,
+    "retrieval_failures": 238,
+    "rerank_accuracy_given_hit": 0.6915052160953801,
+    "end_to_end_accuracy": 0.5873417721518988,
+    "nll_on_hits": 0.9784688028547619,
+    "brier_on_hits": 0.43966337621305746,
+    "ece_e2e_misses_zeroed": 0.05399174627747168,
+    "ece_e2e_honest": 0.10901685774588785,
+    "mean_max_probability": 0.6963586298977865,
+    "mean_max_probability_correct": 0.8003905871535675,
+    "mean_max_probability_incorrect": 0.5482886048466139,
+    "mean_input_tokens": 145.59430379746834,
+    "seconds": 243.181,
+    "rows": [
+      1500,
+      3080
+    ]
+  },
+  "k8_combined_test": {
+    "n": 1780,
+    "recall": 0.854494382022472,
+    "retrieval_failures": 259,
+    "rerank_accuracy_given_hit": 0.6995397764628534,
+    "end_to_end_accuracy": 0.597752808988764,
+    "nll_on_hits": 0.9608281639023264,
+    "brier_on_hits": 0.4307765762502279,
+    "ece_e2e_misses_zeroed": 0.048141409521760825,
+    "ece_e2e_honest": 0.10329875061063776,
+    "mean_max_probability": 0.7005009753247151,
+    "mean_max_probability_correct": 0.8022825199816505,
+    "mean_max_probability_incorrect": 0.5492501882926212,
+    "mean_input_tokens": 145.16516853932583,
+    "seconds": 260.613
+  },
+  "error_decomposition_locked": {
+    "n": 200,
+    "correct": 136,
+    "retrieval_miss": 21,
+    "reranker_miss_target_present": 43,
+    "calibration_overconfidence_maxprob_ge_0.7": 20,
+    "routing_mistake": 0,
+    "invalid_or_ambiguous_label": 0,
+    "error_share_retrieval": 0.328125,
+    "error_share_reranker": 0.671875
+  },
+  "error_decomposition_combined": {
+    "n": 1780,
+    "correct": 1064,
+    "retrieval_miss": 259,
+    "reranker_miss_target_present": 457,
+    "calibration_overconfidence_maxprob_ge_0.7": 210,
+    "routing_mistake": 0,
+    "invalid_or_ambiguous_label": 0,
+    "error_share_retrieval": 0.361731843575419,
+    "error_share_reranker": 0.638268156424581
+  },
+  "selective": {
+    "validation_rows": [
+      880,
+      1100
+    ],
+    "validation_seconds": 22.905,
+    "scores_compared_on_validation": {
+      "max_probability": {
+        "0.02": {
+          "n": 220,
+          "threshold": 0.9796500892257723,
+          "accepted": 37,
+          "deferred": 183,
+          "incorrect": 0,
+          "coverage": 0.16818181818181818,
+          "observed_risk": 0.0,
+          "wilson95": [
+            0.0,
+            0.09406095745514377
+          ],
+          "supports_1pct_claim": false
+        },
+        "0.05": {
+          "n": 220,
+          "threshold": 0.9541679372957224,
+          "accepted": 50,
+          "deferred": 170,
+          "incorrect": 2,
+          "coverage": 0.22727272727272727,
+          "observed_risk": 0.04,
+          "wilson95": [
+            0.011038652660826577,
+            0.13460337877954667
+          ],
+          "supports_1pct_claim": false
+        },
+        "0.10": {
+          "n": 220,
+          "threshold": 0.896261827143334,
+          "accepted": 76,
+          "deferred": 144,
+          "incorrect": 7,
+          "coverage": 0.34545454545454546,
+          "observed_risk": 0.09210526315789473,
+          "wilson95": [
+            0.04533342778112863,
+            0.17812902788108254
+          ],
+          "supports_1pct_claim": false
+        }
+      },
+      "neg_entropy": {
+        "0.02": {
+          "n": 220,
+          "threshold": -0.13208629116627338,
+          "accepted": 37,
+          "deferred": 183,
+          "incorrect": 0,
+          "coverage": 0.16818181818181818,
+          "observed_risk": 0.0,
+          "wilson95": [
+            0.0,
+            0.09406095745514377
+          ],
+          "supports_1pct_claim": false
+        },
+        "0.05": {
+          "n": 220,
+          "threshold": -0.27333927377763356,
+          "accepted": 50,
+          "deferred": 170,
+          "incorrect": 2,
+          "coverage": 0.22727272727272727,
+          "observed_risk": 0.04,
+          "wilson95": [
+            0.011038652660826577,
+            0.13460337877954667
+          ],
+          "supports_1pct_claim": false
+        },
+        "0.10": {
+          "n": 220,
+          "threshold": -0.5040390939849346,
+          "accepted": 80,
+          "deferred": 140,
+          "incorrect": 8,
+          "coverage": 0.36363636363636365,
+          "observed_risk": 0.1,
+          "wilson95": [
+            0.05154699917768554,
+            0.18510878983397458
+          ],
+          "supports_1pct_claim": false
+        }
+      },
+      "margin": {
+        "0.02": {
+          "n": 220,
+          "threshold": 0.9671316260083496,
+          "accepted": 40,
+          "deferred": 180,
+          "incorrect": 0,
+          "coverage": 0.18181818181818182,
+          "observed_risk": 0.0,
+          "wilson95": [
+            0.0,
+            0.08762453925039232
+          ],
+          "supports_1pct_claim": false
+        },
+        "0.05": {
+          "n": 220,
+          "threshold": 0.943849055752155,
+          "accepted": 49,
+          "deferred": 171,
+          "incorrect": 2,
+          "coverage": 0.22272727272727272,
+          "observed_risk": 0.04081632653061224,
+          "wilson95": [
+            0.011265396927928273,
+            0.13713283476831106
+          ],
+          "supports_1pct_claim": false
+        },
+        "0.10": {
+          "n": 220,
+          "threshold": 0.8501349778312096,
+          "accepted": 77,
+          "deferred": 143,
+          "incorrect": 7,
+          "coverage": 0.35,
+          "observed_risk": 0.09090909090909091,
+          "wilson95": [
+            0.04473514189357164,
+            0.17596311247051816
+          ],
+          "supports_1pct_claim": false
+        }
+      }
+    },
+    "chosen_score": "max_probability",
+    "choice_rule": "highest validation coverage at epsilon 0.05; keep max_probability unless another score gains more than 0.02 coverage",
+    "locked_test": {
+      "0.02": {
+        "n": 200,
+        "threshold": 0.9796500892257723,
+        "accepted": 36,
+        "deferred": 164,
+        "incorrect": 1,
+        "coverage": 0.18,
+        "observed_risk": 0.027777777777777776,
+        "wilson95": [
+          0.004920280295569679,
+          0.141700337350308
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.05": {
+        "n": 200,
+        "threshold": 0.9541679372957224,
+        "accepted": 55,
+        "deferred": 145,
+        "incorrect": 3,
+        "coverage": 0.275,
+        "observed_risk": 0.05454545454545454,
+        "wilson95": [
+          0.01872287596750008,
+          0.14853294304489928
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.10": {
+        "n": 200,
+        "threshold": 0.896261827143334,
+        "accepted": 85,
+        "deferred": 115,
+        "incorrect": 9,
+        "coverage": 0.425,
+        "observed_risk": 0.10588235294117647,
+        "wilson95": [
+          0.056711765159551245,
+          0.18913702639755714
+        ],
+        "supports_1pct_claim": false
+      }
+    },
+    "expanded_test": {
+      "0.02": {
+        "n": 1580,
+        "threshold": 0.9796500892257723,
+        "accepted": 192,
+        "deferred": 1388,
+        "incorrect": 9,
+        "coverage": 0.12151898734177215,
+        "observed_risk": 0.046875,
+        "wilson95": [
+          0.024853950810733074,
+          0.08667291579983383
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.05": {
+        "n": 1580,
+        "threshold": 0.9541679372957224,
+        "accepted": 317,
+        "deferred": 1263,
+        "incorrect": 23,
+        "coverage": 0.20063291139240505,
+        "observed_risk": 0.07255520504731862,
+        "wilson95": [
+          0.0488304928100995,
+          0.10651594605568351
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.10": {
+        "n": 1580,
+        "threshold": 0.896261827143334,
+        "accepted": 537,
+        "deferred": 1043,
+        "incorrect": 62,
+        "coverage": 0.33987341772151897,
+        "observed_risk": 0.1154562383612663,
+        "wilson95": [
+          0.09111621745920694,
+          0.145259090949022
+        ],
+        "supports_1pct_claim": false
+      }
+    },
+    "combined_test": {
+      "0.02": {
+        "n": 1780,
+        "threshold": 0.9796500892257723,
+        "accepted": 228,
+        "deferred": 1552,
+        "incorrect": 10,
+        "coverage": 0.12808988764044943,
+        "observed_risk": 0.043859649122807015,
+        "wilson95": [
+          0.02399519068415856,
+          0.07884053853786198
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.05": {
+        "n": 1780,
+        "threshold": 0.9541679372957224,
+        "accepted": 372,
+        "deferred": 1408,
+        "incorrect": 26,
+        "coverage": 0.20898876404494382,
+        "observed_risk": 0.06989247311827956,
+        "wilson95": [
+          0.04813935902288899,
+          0.10043812681156894
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.10": {
+        "n": 1780,
+        "threshold": 0.896261827143334,
+        "accepted": 622,
+        "deferred": 1158,
+        "incorrect": 71,
+        "coverage": 0.349438202247191,
+        "observed_risk": 0.11414790996784566,
+        "wilson95": [
+          0.0914903425957228,
+          0.14154242480101142
+        ],
+        "supports_1pct_claim": false
+      }
+    }
+  },
+  "risk_coverage_deciles": [
+    {
+      "accepted": 178,
+      "coverage": 0.1,
+      "incorrect": 7,
+      "risk": 0.03932584269662921
+    },
+    {
+      "accepted": 356,
+      "coverage": 0.2,
+      "incorrect": 23,
+      "risk": 0.06460674157303371
+    },
+    {
+      "accepted": 534,
+      "coverage": 0.3,
+      "incorrect": 49,
+      "risk": 0.09176029962546817
+    },
+    {
+      "accepted": 712,
+      "coverage": 0.4,
+      "incorrect": 99,
+      "risk": 0.13904494382022473
+    },
+    {
+      "accepted": 890,
+      "coverage": 0.5,
+      "incorrect": 167,
+      "risk": 0.18764044943820224
+    },
+    {
+      "accepted": 1068,
+      "coverage": 0.6,
+      "incorrect": 256,
+      "risk": 0.2397003745318352
+    },
+    {
+      "accepted": 1246,
+      "coverage": 0.7,
+      "incorrect": 344,
+      "risk": 0.27608346709470305
+    },
+    {
+      "accepted": 1424,
+      "coverage": 0.8,
+      "incorrect": 449,
+      "risk": 0.31530898876404495
+    },
+    {
+      "accepted": 1602,
+      "coverage": 0.9,
+      "incorrect": 579,
+      "risk": 0.36142322097378277
+    },
+    {
+      "accepted": 1780,
+      "coverage": 1.0,
+      "incorrect": 716,
+      "risk": 0.40224719101123596
+    }
+  ],
+  "packed_selective": {
+    "validation_rows": [
+      880,
+      1100
+    ],
+    "validation_seconds": 55.765,
+    "thresholds": {
+      "0.02": 0.9967143326278638,
+      "0.05": 0.9967143326278638,
+      "0.10": 0.9868200791763249
+    },
+    "locked_test": {
+      "0.02": {
+        "n": 200,
+        "threshold": 0.9967143326278638,
+        "accepted": 0,
+        "deferred": 200,
+        "incorrect": 0,
+        "coverage": 0.0,
+        "observed_risk": null,
+        "wilson95": null,
+        "supports_1pct_claim": false
+      },
+      "0.05": {
+        "n": 200,
+        "threshold": 0.9967143326278638,
+        "accepted": 0,
+        "deferred": 200,
+        "incorrect": 0,
+        "coverage": 0.0,
+        "observed_risk": null,
+        "wilson95": null,
+        "supports_1pct_claim": false
+      },
+      "0.10": {
+        "n": 200,
+        "threshold": 0.9868200791763249,
+        "accepted": 9,
+        "deferred": 191,
+        "incorrect": 1,
+        "coverage": 0.045,
+        "observed_risk": 0.1111111111111111,
+        "wilson95": [
+          0.019890371327130535,
+          0.4350062147680601
+        ],
+        "supports_1pct_claim": false
+      }
+    }
+  },
+  "crossover": {
+    "rows": [
+      296,
+      400
+    ],
+    "table": [
+      {
+        "n_candidates": 2,
+        "examples": 104,
+        "packed_accuracy": 0.9326923076923077,
+        "hierarchical_accuracy": 0.9326923076923077,
+        "packed_seconds": 7.403,
+        "hierarchical_seconds": 7.201,
+        "packed_mean_input_tokens": 56.125,
+        "hierarchical_mean_rerank_tokens": 56.125
+      },
+      {
+        "n_candidates": 4,
+        "examples": 104,
+        "packed_accuracy": 0.8942307692307693,
+        "hierarchical_accuracy": 0.8942307692307693,
+        "packed_seconds": 10.292,
+        "hierarchical_seconds": 10.031,
+        "packed_mean_input_tokens": 85.9326923076923,
+        "hierarchical_mean_rerank_tokens": 85.9326923076923
+      },
+      {
+        "n_candidates": 8,
+        "examples": 104,
+        "packed_accuracy": 0.875,
+        "hierarchical_accuracy": 0.875,
+        "packed_seconds": 13.67,
+        "hierarchical_seconds": 13.497,
+        "packed_mean_input_tokens": 145.47115384615384,
+        "hierarchical_mean_rerank_tokens": 145.47115384615384
+      },
+      {
+        "n_candidates": 12,
+        "examples": 104,
+        "packed_accuracy": 0.8076923076923077,
+        "hierarchical_accuracy": 0.8269230769230769,
+        "packed_seconds": 15.218,
+        "hierarchical_seconds": 17.341,
+        "packed_mean_input_tokens": 188.70192307692307,
+        "hierarchical_mean_rerank_tokens": 145.03846153846155
+      },
+      {
+        "n_candidates": 16,
+        "examples": 104,
+        "packed_accuracy": 0.7788461538461539,
+        "hierarchical_accuracy": 0.8173076923076923,
+        "packed_seconds": 13.855,
+        "hierarchical_seconds": 10.398,
+        "packed_mean_input_tokens": 200.57692307692307,
+        "hierarchical_mean_rerank_tokens": 145.7596153846154
+      },
+      {
+        "n_candidates": 20,
+        "examples": 104,
+        "packed_accuracy": 0.8173076923076923,
+        "hierarchical_accuracy": 0.7596153846153846,
+        "packed_seconds": 12.094,
+        "hierarchical_seconds": 10.28,
+        "packed_mean_input_tokens": 187.2403846153846,
+        "hierarchical_mean_rerank_tokens": 145.7403846153846
+      },
+      {
+        "n_candidates": 32,
+        "examples": 104,
+        "packed_accuracy": 0.5288461538461539,
+        "hierarchical_accuracy": 0.6826923076923077,
+        "packed_seconds": 12.014,
+        "hierarchical_seconds": 10.19,
+        "packed_mean_input_tokens": 187.2403846153846,
+        "hierarchical_mean_rerank_tokens": 146.85576923076923
+      },
+      {
+        "n_candidates": 50,
+        "examples": 104,
+        "packed_accuracy": 0.375,
+        "hierarchical_accuracy": 0.6634615384615384,
+        "packed_seconds": 14.848,
+        "hierarchical_seconds": 10.631,
+        "packed_mean_input_tokens": 225.2403846153846,
+        "hierarchical_mean_rerank_tokens": 146.30769230769232
+      },
+      {
+        "n_candidates": 77,
+        "examples": 104,
+        "packed_accuracy": 0.375,
+        "hierarchical_accuracy": 0.6153846153846154,
+        "packed_seconds": 21.528,
+        "hierarchical_seconds": 10.408,
+        "packed_mean_input_tokens": 333.24038461538464,
+        "hierarchical_mean_rerank_tokens": 145.04807692307693
+      }
+    ],
+    "recommended_packed_max": 20,
+    "reason": "hierarchical leads by >= 0.05 from 32 candidates upward"
+  },
+  "ag_news_400_800": {
+    "n": 400,
+    "temperature": 1.2076712505429734,
+    "accuracy": 0.955,
+    "nll": 0.16053748283281735,
+    "brier": 0.07658389978438858,
+    "ece": 0.018575354475151216,
+    "regression_vs_phase3_0.955": false
+  },
+  "latency": {
+    "warmup": 4,
+    "repeats": 30,
+    "packed_small_ms": {
+      "n": 30,
+      "p50": 73.71360399702098,
+      "p90": 77.21254588395823,
+      "p95": 81.21740654023597,
+      "p99": 82.30483606050257,
+      "mean": 73.28200836491305,
+      "std": 4.246202780616865
+    },
+    "hierarchical_77_ms": {
+      "n": 30,
+      "p50": 111.33437500393484,
+      "p90": 117.4481465248391,
+      "p95": 119.885672860255,
+      "p99": 126.24738028709544,
+      "mean": 111.72789440412696,
+      "std": 5.3616067612906395
+    },
+    "noul_ms": {
+      "n": 30,
+      "p50": 60.068500009947456,
+      "p90": 61.97748358536046,
+      "p95": 62.96566858218284,
+      "p99": 64.59770892601227,
+      "mean": 60.087404132355005,
+      "std": 1.7390900565025313
+    },
+    "score_ms": {
+      "n": 30,
+      "p50": 42.48829201969784,
+      "p90": 45.781917017302476,
+      "p95": 46.074537659296766,
+      "p99": 46.7680374905467,
+      "mean": 42.96197080208609,
+      "std": 1.9895393644050767
+    },
+    "systemone_mixed_ms": {
+      "n": 30,
+      "p50": 203.38556250499096,
+      "p90": 227.58053750440013,
+      "p95": 236.10841685003834,
+      "p99": 241.43967949028593,
+      "mean": 208.08535143150948,
+      "std": 13.253814072971617
+    },
+    "hierarchical_cold_stages_ms": {
+      "state_embed": 40.58820797945373,
+      "candidate_embed": 536.8605419935193,
+      "shortlist_score": 0.03350002225488424,
+      "reranker": 106.35779099538922,
+      "calibration": 0.03666599513962865
+    },
+    "hierarchical_warm_stage_mean_ms": {
+      "state_embed": 0.03201660147169605,
+      "candidate_embed": 0.136606051819399,
+      "shortlist_score": 0.016816696734167635,
+      "reranker": 108.32118130201707,
+      "calibration": 0.019481156778056175
+    },
+    "state_reuse": {
+      "one_question_input_tokens": 66,
+      "three_question_input_tokens": 234,
+      "token_ratio": 3.5454545454545454,
+      "implemented_cache": false,
+      "reason": "Each question is a separate sequence, and the state tokens attend to that question. A hidden-state cache would change the forward."
+    },
+    "rss_mb": 595.7
+  },
+  "http": {
+    "cases": [
+      {
+        "name": "health",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "status": "ok"
+        }
+      },
+      {
+        "name": "version",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model_version": "0.3.5",
+          "checkpoint": "rl-agent",
+          "encoder": "answerdotai/ModernBERT-large",
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80",
+          "max_len": 512,
+          "head_max_len": 192,
+          "architecture_version": "veya-shortlist-v1",
+          "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+          "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+          "route_calibration_temperature": 1.971127355603397,
+          "choice_router_version": 1
+        }
+      },
+      {
+        "name": "version_matches_loaded_artifacts",
+        "ok": true,
+        "body": {
+          "model_version": "0.3.5",
+          "checkpoint": "rl-agent",
+          "encoder": "answerdotai/ModernBERT-large",
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80",
+          "max_len": 512,
+          "head_max_len": 192,
+          "architecture_version": "veya-shortlist-v1",
+          "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+          "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+          "route_calibration_temperature": 1.971127355603397,
+          "choice_router_version": 1
+        }
+      },
+      {
+        "name": "small_choice",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "answer",
+          "reason": null,
+          "route": "packed",
+          "calibration": "packed",
+          "temperature": 1.2076712505429734,
+          "primitive": "choice",
+          "answer": "apple_pay_or_google_pay",
+          "probabilities": {
+            "Refund_not_showing_up": 0.12,
+            "activate_my_card": 0.0808,
+            "age_limit": 0.0106,
+            "apple_pay_or_google_pay": 0.7885
+          },
+          "confidence": 0.4998,
+          "max_probability": 0.7885,
+          "automation": null,
+          "deferred": false,
+          "defer_reason": null,
+          "shortlist": null,
+          "candidate_count": 4,
+          "usage": {
+            "input_tokens": 80,
+            "output_tokens": 0
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80"
+        }
+      },
+      {
+        "name": "small_choice_route",
+        "ok": true,
+        "body": "packed"
+      },
+      {
+        "name": "large_choice",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "answer",
+          "reason": null,
+          "route": "shortlist_k8_packed_rerank",
+          "calibration": "shortlist_k8_packed_rerank",
+          "temperature": 1.971127355603397,
+          "primitive": "choice",
+          "answer": "transaction_charged_twice",
+          "probabilities": {
+            "transaction_charged_twice": 0.6038,
+            "card_payment_fee_charged": 0.0268,
+            "transfer_fee_charged": 0.2889,
+            "wrong_amount_of_cash_received": 0.0085,
+            "extra_charge_on_statement": 0.0082,
+            "wrong_exchange_rate_for_cash_withdrawal": 0.0168,
+            "cash_withdrawal_charge": 0.0108,
+            "card_payment_wrong_exchange_rate": 0.0363
+          },
+          "confidence": 0.4816,
+          "max_probability": 0.6038,
+          "automation": "defer",
+          "deferred": false,
+          "defer_reason": null,
+          "shortlist": [
+            "transaction_charged_twice",
+            "card_payment_fee_charged",
+            "transfer_fee_charged",
+            "wrong_amount_of_cash_received",
+            "extra_charge_on_statement",
+            "wrong_exchange_rate_for_cash_withdrawal",
+            "cash_withdrawal_charge",
+            "card_payment_wrong_exchange_rate"
+          ],
+          "candidate_count": 77,
+          "usage": {
+            "input_tokens": 157,
+            "output_tokens": 0
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80"
+        }
+      },
+      {
+        "name": "large_choice_route",
+        "ok": true,
+        "body": {
+          "route": "shortlist_k8_packed_rerank",
+          "shortlist_n": 8
+        }
+      },
+      {
+        "name": "noul",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "model_version": "0.3.5",
+          "primitive": "noul",
+          "decision": "answer",
+          "answer": 0.8181,
+          "probabilities": null,
+          "confidence": 0.8181,
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80",
+          "deferred": false,
+          "defer_reason": null,
+          "usage": {
+            "input_tokens": 36,
+            "output_tokens": 0
+          }
+        }
+      },
+      {
+        "name": "score",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "model_version": "0.3.5",
+          "primitive": "score",
+          "decision": "answer",
+          "answer": 0.806,
+          "probabilities": {
+            "0": 0.3356,
+            "1": 0.5227,
+            "2": 0.1416
+          },
+          "confidence": 0.1058,
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80",
+          "deferred": false,
+          "defer_reason": null,
+          "usage": {
+            "input_tokens": 31,
+            "output_tokens": 0
+          }
+        }
+      },
+      {
+        "name": "systemone_mixed",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "answer",
+          "reason": null,
+          "answers": {
+            "n": {
+              "type": "noul",
+              "noul": 0.8181,
+              "confidence": 0.8181,
+              "action": {
+                "act_probability": 1.0
+              }
+            },
+            "s": {
+              "type": "score",
+              "score": 0.806,
+              "legend": {
+                "0": "low",
+                "1": "medium",
+                "2": "high"
+              },
+              "probabilities": {
+                "0": 0.3356,
+                "1": 0.5227,
+                "2": 0.1416
+              },
+              "confidence": 0.1058,
+              "action": {
+                "act_probability": 1.0
+              }
+            },
+            "c": {
+              "type": "choice",
+              "choice": "Refund_not_showing_up",
+              "probabilities": {
+                "Refund_not_showing_up": 0.9937,
+                "activate_my_card": 0.0008,
+                "age_limit": 0.0007,
+                "apple_pay_or_google_pay": 0.0047
+              },
+              "confidence": 0.9693,
+              "action": {
+                "act_probability": 1.0
+              }
+            }
+          },
+          "routes": {
+            "n": "noul",
+            "s": "score",
+            "c": "packed"
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80",
+          "usage": {
+            "input_tokens": 146,
+            "output_tokens": 0
+          }
+        }
+      },
+      {
+        "name": "empty_questions",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "defer",
+          "reason": "invalid_schema",
+          "answers": {},
+          "routes": {},
+          "usage": {
+            "input_tokens": 0,
+            "output_tokens": 0
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80"
+        }
+      },
+      {
+        "name": "empty_questions_reason",
+        "ok": true,
+        "body": "invalid_schema"
+      },
+      {
+        "name": "malformed_json",
+        "status": 400,
+        "expect": 400,
+        "ok": true,
+        "body": {
+          "decision": "invalid",
+          "defer_reason": "invalid_json"
+        }
+      },
+      {
+        "name": "missing_instructions",
+        "status": 400,
+        "expect": 400,
+        "ok": true,
+        "body": {
+          "decision": "invalid",
+          "defer_reason": "invalid_schema"
+        }
+      },
+      {
+        "name": "unsupported_language",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "defer",
+          "reason": "unsupported_language",
+          "route": null,
+          "primitive": "choice",
+          "answer": null,
+          "probabilities": null,
+          "confidence": null,
+          "max_probability": null,
+          "automation": null,
+          "deferred": true,
+          "defer_reason": "unsupported_language",
+          "shortlist": null,
+          "usage": {
+            "input_tokens": 0,
+            "output_tokens": 0
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80"
+        }
+      },
+      {
+        "name": "unsupported_language_reason",
+        "ok": true,
+        "body": "unsupported_language"
+      },
+      {
+        "name": "invalid_primitive",
+        "status": 404,
+        "expect": 404,
+        "ok": true,
+        "body": {
+          "decision": "invalid",
+          "defer_reason": "not_found"
+        }
+      },
+      {
+        "name": "invalid_question_type",
+        "status": 400,
+        "expect": 400,
+        "ok": true,
+        "body": {
+          "decision": "invalid",
+          "defer_reason": "invalid_schema",
+          "detail": "'madeup'"
+        }
+      },
+      {
+        "name": "duplicate_candidates",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "answer",
+          "reason": null,
+          "route": "packed",
+          "calibration": "packed",
+          "temperature": 1.9063563346862793,
+          "primitive": "choice",
+          "answer": "sales",
+          "probabilities": {
+            "billing": 0.4374,
+            "sales": 0.5626
+          },
+          "confidence": 0.0114,
+          "max_probability": 0.5626,
+          "automation": null,
+          "deferred": false,
+          "defer_reason": null,
+          "shortlist": null,
+          "candidate_count": 2,
+          "usage": {
+            "input_tokens": 19,
+            "output_tokens": 0
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80"
+        }
+      },
+      {
+        "name": "duplicate_collapsed_to_packed",
+        "ok": true,
+        "body": "packed"
+      },
+      {
+        "name": "very_large_choice",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "answer",
+          "reason": null,
+          "route": "shortlist_k8_packed_rerank",
+          "calibration": "shortlist_k8_packed_rerank",
+          "temperature": 1.971127355603397,
+          "primitive": "choice",
+          "answer": "opt-8",
+          "probabilities": {
+            "opt-113": 0.1414,
+            "opt-94": 0.1265,
+            "opt-14": 0.1206,
+            "opt-84": 0.1124,
+            "opt-13": 0.1334,
+            "opt-98": 0.0943,
+            "opt-4": 0.1089,
+            "opt-8": 0.1625
+          },
+          "confidence": 0.006,
+          "max_probability": 0.1625,
+          "automation": "defer",
+          "deferred": false,
+          "defer_reason": null,
+          "shortlist": [
+            "opt-113",
+            "opt-94",
+            "opt-14",
+            "opt-84",
+            "opt-13",
+            "opt-98",
+            "opt-4",
+            "opt-8"
+          ],
+          "candidate_count": 120,
+          "usage": {
+            "input_tokens": 80,
+            "output_tokens": 0
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80"
+        }
+      },
+      {
+        "name": "very_large_uses_shortlist",
+        "ok": true,
+        "body": "shortlist_k8_packed_rerank"
+      },
+      {
+        "name": "empty_state",
+        "status": 200,
+        "expect": 200,
+        "ok": true,
+        "body": {
+          "model": "veya-rl-agent",
+          "decision": "answer",
+          "reason": null,
+          "route": "packed",
+          "calibration": "packed",
+          "temperature": 1.2076712505429734,
+          "primitive": "choice",
+          "answer": "apple_pay_or_google_pay",
+          "probabilities": {
+            "Refund_not_showing_up": 0.0014,
+            "activate_my_card": 0.0009,
+            "age_limit": 0.0003,
+            "apple_pay_or_google_pay": 0.9975
+          },
+          "confidence": 0.9856,
+          "max_probability": 0.9975,
+          "automation": null,
+          "deferred": false,
+          "defer_reason": null,
+          "shortlist": null,
+          "candidate_count": 4,
+          "usage": {
+            "input_tokens": 75,
+            "output_tokens": 0
+          },
+          "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80"
+        }
+      }
+    ],
+    "failed": [],
+    "concurrency": {
+      "1": {
+        "requests": 4,
+        "errors": 0,
+        "error_rate": 0.0,
+        "throughput_rps": 18.32040085452135,
+        "latency_ms": {
+          "n": 4,
+          "p50": 54.60018750454765,
+          "p90": 55.08599180029705,
+          "p95": 55.15245439892169,
+          "p99": 55.2056244778214,
+          "mean": 54.571020998992026,
+          "std": 0.49546258536645277
+        },
+        "rss_mb": 601.8
+      },
+      "2": {
+        "requests": 8,
+        "errors": 0,
+        "error_rate": 0.0,
+        "throughput_rps": 18.86148724512298,
+        "latency_ms": {
+          "n": 8,
+          "p50": 105.20356251799967,
+          "p90": 106.75202119746245,
+          "p95": 107.15211460192222,
+          "p99": 107.47218932549004,
+          "mean": 99.3061406261404,
+          "std": 16.365402824172495
+        },
+        "rss_mb": 601.8
+      },
+      "4": {
+        "requests": 16,
+        "errors": 0,
+        "error_rate": 0.0,
+        "throughput_rps": 17.392119603346046,
+        "latency_ms": {
+          "n": 16,
+          "p50": 223.75458350870758,
+          "p90": 239.8563124879729,
+          "p95": 241.9767812389182,
+          "p99": 242.06205624213908,
+          "mean": 207.25932812638348,
+          "std": 49.68088307681905
+        },
+        "rss_mb": 601.9
+      },
+      "8": {
+        "requests": 32,
+        "errors": 0,
+        "error_rate": 0.0,
+        "throughput_rps": 14.749329947629056,
+        "latency_ms": {
+          "n": 32,
+          "p50": 549.7243124991655,
+          "p90": 569.0528205188457,
+          "p95": 570.1381252889405,
+          "p99": 571.744986261474,
+          "mean": 480.01622400079214,
+          "std": 139.01777585744972
+        },
+        "rss_mb": 591.2
+      }
+    }
+  }
+}

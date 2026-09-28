@@ -1,0 +1,226 @@
+{
+  "format": "veya-phase12-wf98-graph-v1",
+  "workflow": "schema_guided_service_intent_routing",
+  "scope": "all eligible USER frames with causal dialogue context and known current service schema",
+  "sealed_test_status": "UNOPENED",
+  "nodes": [
+    {
+      "id": "WF98-G0",
+      "name": "Freeze workflow contract",
+      "depends_on": [],
+      "status": "complete",
+      "evidence": [
+        "docs/commercialization/workflows/schema_guided_service_intent_routing/contract.md"
+      ],
+      "note": "All-turn causal input and 98%/95% gates frozen before contextual scoring; NONE is an automated no-route outcome, distinct from defer."
+    },
+    {
+      "id": "WF98-G1",
+      "name": "Dataset provenance",
+      "depends_on": [
+        "WF98-G0"
+      ],
+      "status": "complete",
+      "evidence": [
+        "artifacts/experiments/phase12/sgd_inventory.json"
+      ],
+      "note": "Official checkout pinned to e852981ae34990f4358979625854259302feaa78; source files hashed."
+    },
+    {
+      "id": "WF98-G2",
+      "name": "Label-quality audit",
+      "depends_on": [
+        "WF98-G1"
+      ],
+      "status": "active",
+      "evidence": [
+        "docs/commercialization/workflows/schema_guided_service_intent_routing/data_quality.md",
+        "artifacts/experiments/phase12/context_audit.json",
+        "artifacts/experiments/phase12/context_regression.json"
+      ],
+      "note": "All-turn collisions, class diversity, NONE and transitions measured; human disagreement and semantic ambiguity unmeasured."
+    },
+    {
+      "id": "WF98-G3",
+      "name": "Whole-service held-out split",
+      "depends_on": [
+        "WF98-G1"
+      ],
+      "status": "complete",
+      "evidence": [
+        "artifacts/experiments/phase12/sgd_inventory.json"
+      ],
+      "note": "22 train, 7 dev-only validation, 9 test-only sealed services; test dialogue contents unopened."
+    },
+    {
+      "id": "WF98-G4",
+      "name": "Candidate-access ceiling",
+      "depends_on": [
+        "WF98-G3"
+      ],
+      "status": "complete",
+      "evidence": [
+        "docs/commercialization/workflows/schema_guided_service_intent_routing/contract.md"
+      ],
+      "note": "Two to four official intents per selected service; full scoring yields 100% candidate access for active intents."
+    },
+    {
+      "id": "WF98-G5",
+      "name": "Full candidate scoring baseline",
+      "depends_on": [
+        "WF98-G2",
+        "WF98-G4"
+      ],
+      "status": "active",
+      "evidence": [
+        "artifacts/experiments/phase12/sgd_dev_baseline.json"
+      ],
+      "note": "Initial-turn 82.2% is diagnostic only; matched all-turn contextual baselines running on 10,905 decisions."
+    },
+    {
+      "id": "WF98-G6",
+      "name": "Current K8 control",
+      "depends_on": [
+        "WF98-G4"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        "docs/commercialization/workflows/schema_guided_service_intent_routing/contract.md"
+      ],
+      "note": "Current served router chooses packed Choice at <=19 candidates; K8 retrieval is not invoked for 2-4 candidates."
+    },
+    {
+      "id": "WF98-G7",
+      "name": "Larger-K baseline",
+      "depends_on": [
+        "WF98-G4"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        "docs/commercialization/workflows/schema_guided_service_intent_routing/contract.md"
+      ],
+      "note": "K8, K16, K32 and all produce the same candidate set at <=4 candidates."
+    },
+    {
+      "id": "WF98-G8",
+      "name": "Strong retriever candidate",
+      "depends_on": [
+        "WF98-G4"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        "docs/commercialization/workflows/schema_guided_service_intent_routing/contract.md"
+      ],
+      "note": "No retrieval ceiling exists in this frozen workflow."
+    },
+    {
+      "id": "WF98-G9",
+      "name": "Late-interaction candidate",
+      "depends_on": [
+        "WF98-G8"
+      ],
+      "status": "not_applicable",
+      "evidence": [
+        "docs/commercialization/workflows/schema_guided_service_intent_routing/contract.md"
+      ],
+      "note": "Cannot improve candidate access beyond 100%; would add latency."
+    },
+    {
+      "id": "WF98-G10",
+      "name": "Candidate-access architecture",
+      "depends_on": [
+        "WF98-G5",
+        "WF98-G6",
+        "WF98-G7",
+        "WF98-G8",
+        "WF98-G9"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "All-candidate scoring has 100% candidate access for active intents; no retrieval required at 2-4 schema intents. Select after matched contextual baseline."
+    },
+    {
+      "id": "WF98-G11",
+      "name": "Scorer optimization",
+      "depends_on": [
+        "WF98-G10"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Only train on official train services after label audit is sufficient."
+    },
+    {
+      "id": "WF98-G12",
+      "name": "Calibration",
+      "depends_on": [
+        "WF98-G11"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Requires separate service-disjoint calibration allocation; never use sealed test."
+    },
+    {
+      "id": "WF98-G13",
+      "name": "Selective deferral",
+      "depends_on": [
+        "WF98-G12"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Fit coverage/risk policy and confidence intervals."
+    },
+    {
+      "id": "WF98-G14",
+      "name": "Robustness",
+      "depends_on": [
+        "WF98-G11"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Noise, length, paraphrase, field order, and schema variants."
+    },
+    {
+      "id": "WF98-G15",
+      "name": "Latency and cost",
+      "depends_on": [
+        "WF98-G10",
+        "WF98-G13"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Requires named production hardware and dated price source."
+    },
+    {
+      "id": "WF98-G16",
+      "name": "Freeze finalist",
+      "depends_on": [
+        "WF98-G13",
+        "WF98-G14",
+        "WF98-G15"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Bind source, taxonomy, model, calibration, threshold and runtime hashes."
+    },
+    {
+      "id": "WF98-G17",
+      "name": "Sealed test",
+      "depends_on": [
+        "WF98-G16"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Open official test-only service dialogues exactly once, after finalist freeze."
+    },
+    {
+      "id": "WF98-G18",
+      "name": "Commercial decision",
+      "depends_on": [
+        "WF98-G17"
+      ],
+      "status": "pending",
+      "evidence": [],
+      "note": "Public SGD can pass a research quality gate only; paid pilot also needs customer and license evidence."
+    }
+  ]
+}

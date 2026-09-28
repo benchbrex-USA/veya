@@ -1,0 +1,17 @@
+{
+  "format": "veya-phase7-update-audit-v1",
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "process_isolated": true,
+  "weights_written": false,
+  "start_layer": 27,
+  "trainable_parameter_count": 38506497,
+  "trainable_tensor_count": 38,
+  "tensors_with_nonzero_delta": 38,
+  "max_abs_parameter_delta": 5.245208740234375e-06,
+  "parameter_delta_l2": 0.02117396074946055,
+  "gradient_norm_before_clip": 34.08136749267578,
+  "loss": 3.499556303024292,
+  "encoder_learning_rate": 1e-06,
+  "head_learning_rate": 5e-06,
+  "conclusion": "TRAINING PATH UPDATES PARAMETERS"
+}

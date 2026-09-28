@@ -1,0 +1,255 @@
+{
+  "cardinality": {
+    "protocol": "Each CLINC150-train query keeps its truth plus deterministic hashed distractors drawn from the combined CLINC150 and training/development candidate pool.",
+    "rows": [
+      {
+        "candidates": 8,
+        "current_mrr": 0.6077150793650794,
+        "current_recall_at_8": 1.0,
+        "phase10_mrr": 0.6731285714285714,
+        "phase10_recall_at_8": 1.0
+      },
+      {
+        "candidates": 16,
+        "current_mrr": 0.47861783725533724,
+        "current_recall_at_8": 0.8486666666666667,
+        "phase10_mrr": 0.558930994005994,
+        "phase10_recall_at_8": 0.872
+      },
+      {
+        "candidates": 32,
+        "current_mrr": 0.3678989397623783,
+        "current_recall_at_8": 0.637,
+        "phase10_mrr": 0.4479940101561468,
+        "phase10_recall_at_8": 0.7196666666666667
+      },
+      {
+        "candidates": 50,
+        "current_mrr": 0.3069048450831859,
+        "current_recall_at_8": 0.513,
+        "phase10_mrr": 0.38187414302712525,
+        "phase10_recall_at_8": 0.6193333333333333
+      },
+      {
+        "candidates": 77,
+        "current_mrr": 0.25581941263238167,
+        "current_recall_at_8": 0.4206666666666667,
+        "phase10_mrr": 0.32830911525575235,
+        "phase10_recall_at_8": 0.5243333333333333
+      },
+      {
+        "candidates": 100,
+        "current_mrr": 0.22722384775488816,
+        "current_recall_at_8": 0.37533333333333335,
+        "phase10_mrr": 0.29518931126928744,
+        "phase10_recall_at_8": 0.478
+      },
+      {
+        "candidates": 150,
+        "current_mrr": 0.18942237461891007,
+        "current_recall_at_8": 0.31466666666666665,
+        "phase10_mrr": 0.2537075605684135,
+        "phase10_recall_at_8": 0.41733333333333333
+      },
+      {
+        "candidates": 250,
+        "current_mrr": 0.14977157661220072,
+        "current_recall_at_8": 0.252,
+        "phase10_mrr": 0.20967510991455166,
+        "phase10_recall_at_8": 0.3393333333333333
+      }
+    ]
+  },
+  "format": "veya-phase10-diagnostics-v1",
+  "query_representation": {
+    "decision": "state_only remains frozen; diagnostics did not alter the artifact",
+    "n": 600,
+    "results": {
+      "question_only": {
+        "candidate_count": 150,
+        "mean_rank": 75.43333333333334,
+        "median_rank": 74.0,
+        "mrr": 0.03245869052192819,
+        "n": 600,
+        "recall_at_1": 0.005,
+        "recall_at_16": 0.095,
+        "recall_at_32": 0.19833333333333333,
+        "recall_at_4": 0.018333333333333333,
+        "recall_at_8": 0.043333333333333335
+      },
+      "state_only": {
+        "candidate_count": 150,
+        "mean_rank": 29.491666666666667,
+        "median_rank": 12.5,
+        "mrr": 0.2672241580984493,
+        "n": 600,
+        "recall_at_1": 0.16666666666666666,
+        "recall_at_16": 0.5383333333333333,
+        "recall_at_32": 0.68,
+        "recall_at_4": 0.335,
+        "recall_at_8": 0.42833333333333334
+      },
+      "state_plus_question": {
+        "candidate_count": 150,
+        "mean_rank": 35.035,
+        "median_rank": 21.5,
+        "mrr": 0.18260463377720246,
+        "n": 600,
+        "recall_at_1": 0.09333333333333334,
+        "recall_at_16": 0.44333333333333336,
+        "recall_at_32": 0.6216666666666667,
+        "recall_at_4": 0.22166666666666668,
+        "recall_at_8": 0.31333333333333335
+      },
+      "structured_text_field": {
+        "candidate_count": 150,
+        "mean_rank": 31.991666666666667,
+        "median_rank": 18.0,
+        "mrr": 0.23065772824209413,
+        "n": 600,
+        "recall_at_1": 0.13833333333333334,
+        "recall_at_16": 0.48333333333333334,
+        "recall_at_32": 0.6366666666666667,
+        "recall_at_4": 0.27166666666666667,
+        "recall_at_8": 0.36833333333333335
+      }
+    }
+  },
+  "runtime": {
+    "environment": {
+      "device": "cpu",
+      "platform": "macOS-27.0-arm64-arm-64bit",
+      "python": "3.11.0",
+      "torch": "2.14.0"
+    },
+    "rows": [
+      {
+        "candidate_encoding_and_projection": {
+          "mean_ms": 447.24311132449657,
+          "n": 3,
+          "p50_ms": 447.62120899395086,
+          "p95_ms": 448.54873368749395,
+          "p99_ms": 448.63118032692
+        },
+        "candidates": 50,
+        "exact_score_and_top8": {
+          "mean_ms": 0.023832990943143766,
+          "n": 3,
+          "p50_ms": 0.018165999790653586,
+          "p95_ms": 0.03511659160722047,
+          "p99_ms": 0.036623310879804194
+        },
+        "projected_cache_bytes": 25600,
+        "query_encoding_and_projection": {
+          "mean_ms": 78.69511067595643,
+          "n": 3,
+          "p50_ms": 78.64866600721143,
+          "p95_ms": 78.97934130742215,
+          "p99_ms": 79.00873466744088
+        }
+      },
+      {
+        "candidate_encoding_and_projection": {
+          "mean_ms": 850.7134306613201,
+          "n": 3,
+          "p50_ms": 846.2920839956496,
+          "p95_ms": 858.7840830907226,
+          "p99_ms": 859.8944830102846
+        },
+        "candidates": 100,
+        "exact_score_and_top8": {
+          "mean_ms": 0.018582999473437667,
+          "n": 3,
+          "p50_ms": 0.018082995666190982,
+          "p95_ms": 0.020145808230154216,
+          "p99_ms": 0.020329169346950948
+        },
+        "projected_cache_bytes": 51200,
+        "query_encoding_and_projection": {
+          "mean_ms": 79.11340299566898,
+          "n": 3,
+          "p50_ms": 79.0976669813972,
+          "p95_ms": 79.5820542058209,
+          "p99_ms": 79.62511084799189
+        }
+      },
+      {
+        "candidate_encoding_and_projection": {
+          "mean_ms": 1261.4047780031494,
+          "n": 3,
+          "p50_ms": 1255.2467499917839,
+          "p95_ms": 1275.5341378040612,
+          "p99_ms": 1277.3374611651525
+        },
+        "candidates": 150,
+        "exact_score_and_top8": {
+          "mean_ms": 0.024138328929742176,
+          "n": 3,
+          "p50_ms": 0.024290988221764565,
+          "p95_ms": 0.025678795645944774,
+          "p99_ms": 0.025802156305871904
+        },
+        "projected_cache_bytes": 76800,
+        "query_encoding_and_projection": {
+          "mean_ms": 79.81990299109991,
+          "n": 3,
+          "p50_ms": 80.17937498516403,
+          "p95_ms": 80.5110249959398,
+          "p99_ms": 80.54050499689765
+        }
+      },
+      {
+        "candidate_encoding_and_projection": {
+          "mean_ms": 4117.3079443397,
+          "n": 3,
+          "p50_ms": 4130.463917012094,
+          "p95_ms": 4162.532078899676,
+          "p99_ms": 4165.382582178572
+        },
+        "candidates": 500,
+        "exact_score_and_top8": {
+          "mean_ms": 0.03983299635971586,
+          "n": 3,
+          "p50_ms": 0.03970798570662737,
+          "p95_ms": 0.0406079925596714,
+          "p99_ms": 0.04068799316883087
+        },
+        "projected_cache_bytes": 256000,
+        "query_encoding_and_projection": {
+          "mean_ms": 77.38754166833435,
+          "n": 3,
+          "p50_ms": 77.30249999440275,
+          "p95_ms": 78.0676503025461,
+          "p99_ms": 78.13566366326995
+        }
+      },
+      {
+        "candidate_encoding_and_projection": {
+          "mean_ms": 8223.618277998563,
+          "n": 3,
+          "p50_ms": 8238.402084010886,
+          "p95_ms": 8242.417133395793,
+          "p99_ms": 8242.774026674451
+        },
+        "candidates": 1000,
+        "exact_score_and_top8": {
+          "mean_ms": 0.06202733493410051,
+          "n": 3,
+          "p50_ms": 0.062000006437301636,
+          "p95_ms": 0.06259939109440893,
+          "p99_ms": 0.06265266973059624
+        },
+        "projected_cache_bytes": 512000,
+        "query_encoding_and_projection": {
+          "mean_ms": 77.63204132788815,
+          "n": 3,
+          "p50_ms": 78.58220799244009,
+          "p95_ms": 78.6245827039238,
+          "p99_ms": 78.62834934494458
+        }
+      }
+    ],
+    "rss_mb_after_model_load": null
+  },
+  "status": "POST_SELECTION_DIAGNOSTIC_NO_RETUNING"
+}

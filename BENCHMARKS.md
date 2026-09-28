@@ -1,5 +1,7 @@
 # Veya benchmarks
 
+> **Audit note (2026-09-23):** These are historical capability measurements, not release certification. Some datasets were in the training mix and the Phase 1–9 audit found Banking77/AG News evaluation reuse. The audited English Choice path is a **research release**; all other primitive/language scopes are **research only**. See [`docs/audit/release_verdict.md`](docs/audit/release_verdict.md).
+
 Every checkpoint answered **byte-identical questions** in each run (fixed seed). Jev figures are **third-party published, never measured here** — no TypeSafe API access — so sample sizes and prompts differ; treat them as indicative.
 
 | run | what | where |
@@ -119,7 +121,7 @@ Each is real labelled data, 400 cases, all three checkpoints. *held out* means t
 | Support triage (10-way queue) | 0.502 | **0.522** | 0.505 | in training |
 | Model routing (domain) | 0.639 | 0.123 | **0.659** | held out |
 
-**Where it is strong:** email spam 0.993 and phishing 0.993, both with ECE around 0.01 — production-grade, though both were in the training mix.
+**Where it measured strongly:** email spam 0.993 and phishing 0.993, both with ECE around 0.01. Both were in the training mix, so these figures are not production-grade generalization evidence.
 
 **Where it is weak:** moderation on held-out toxic-chat is 0.530 with macro-F1 0.400 — barely above chance on a balanced split. The demo Space has a Moderation tab; hand-picked examples work, real traffic does not. Guardrails at 0.708–0.762 is the honest jailbreak-detection number, consistent across two unrelated datasets (deepset prompt-injections measured 0.698 separately).
 
@@ -131,7 +133,7 @@ Each is real labelled data, 400 cases, all three checkpoints. *held out* means t
 | DAIR Emotion (6 labels) | 0.595 | 0.530 | **0.600** | 0.480 |
 | banking77 (77 labels) | 0.425 | 0.425 | **0.492** | 0.870 |
 
-banking77 is the one clear loss, and it is architectural: a choice question's options share a fixed `head_max_len` budget, so 77 labels get roughly 4 tokens each and stop being distinguishable. Both checkpoints score **exactly 0.425**, which is what you would expect from a budget ceiling rather than a capability gap. Keep choice questions under ~20 options.
+The historical packed Banking77 result is a clear loss caused by the shared option-token budget. The audited release now keeps packed Choice through 19 candidates and routes 20+ through K=8 retrieval plus reranking. That route is still domain-specific: sealed CLINC150 Recall@8 was 35.6%, conditional accuracy was 98.03%, and end-to-end accuracy was 34.9%.
 
 ---
 
@@ -196,7 +198,7 @@ At 20 options both are less order-stable than Jev — worth fixing with more agg
 
 - **Near chance on typed-decisions zero-shot** — the 0.766 belongs to the fine-tuned checkpoint, on that benchmark's own training split.
 - **Moderation does not hold up on held-out data** (0.530, macro-F1 0.400).
-- **Keep `choice` questions under ~20 options.**
+- **Treat 20+ candidate Choice as retrieval-dependent.** The audited K=8 retriever does not generalize reliably across schemas.
 - **Both checkpoints ship over-confident.** Fit temperatures on your own data.
-- **Ordinal `score` is the weakest primitive** (SST-5 0.372).
+- **Served Score is categorical.** The separate ordinal implementation is research-only and not loaded by the audited manifest.
 - `veya` collapses outside English; `veya-multilingual` is weaker on English. Route.

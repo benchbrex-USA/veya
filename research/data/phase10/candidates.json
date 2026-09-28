@@ -1,0 +1,2242 @@
+[
+  {
+    "candidate_id": "banking77:Refund_not_showing_up",
+    "definition": null,
+    "name_definition": "refund not showing up",
+    "naturalized": "refund not showing up",
+    "raw": "Refund_not_showing_up",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:activate_my_card",
+    "definition": null,
+    "name_definition": "activate my card",
+    "naturalized": "activate my card",
+    "raw": "activate_my_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:age_limit",
+    "definition": null,
+    "name_definition": "age limit",
+    "naturalized": "age limit",
+    "raw": "age_limit",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:apple_pay_or_google_pay",
+    "definition": null,
+    "name_definition": "apple pay or google pay",
+    "naturalized": "apple pay or google pay",
+    "raw": "apple_pay_or_google_pay",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:atm_support",
+    "definition": null,
+    "name_definition": "atm support",
+    "naturalized": "atm support",
+    "raw": "atm_support",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:automatic_top_up",
+    "definition": null,
+    "name_definition": "automatic top up",
+    "naturalized": "automatic top up",
+    "raw": "automatic_top_up",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:balance_not_updated_after_bank_transfer",
+    "definition": null,
+    "name_definition": "balance not updated after bank transfer",
+    "naturalized": "balance not updated after bank transfer",
+    "raw": "balance_not_updated_after_bank_transfer",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:balance_not_updated_after_cheque_or_cash_deposit",
+    "definition": null,
+    "name_definition": "balance not updated after cheque or cash deposit",
+    "naturalized": "balance not updated after cheque or cash deposit",
+    "raw": "balance_not_updated_after_cheque_or_cash_deposit",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:beneficiary_not_allowed",
+    "definition": null,
+    "name_definition": "beneficiary not allowed",
+    "naturalized": "beneficiary not allowed",
+    "raw": "beneficiary_not_allowed",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:cancel_transfer",
+    "definition": null,
+    "name_definition": "cancel transfer",
+    "naturalized": "cancel transfer",
+    "raw": "cancel_transfer",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_about_to_expire",
+    "definition": null,
+    "name_definition": "card about to expire",
+    "naturalized": "card about to expire",
+    "raw": "card_about_to_expire",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_acceptance",
+    "definition": null,
+    "name_definition": "card acceptance",
+    "naturalized": "card acceptance",
+    "raw": "card_acceptance",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_arrival",
+    "definition": null,
+    "name_definition": "card arrival",
+    "naturalized": "card arrival",
+    "raw": "card_arrival",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_delivery_estimate",
+    "definition": null,
+    "name_definition": "card delivery estimate",
+    "naturalized": "card delivery estimate",
+    "raw": "card_delivery_estimate",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_linking",
+    "definition": null,
+    "name_definition": "card linking",
+    "naturalized": "card linking",
+    "raw": "card_linking",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_not_working",
+    "definition": null,
+    "name_definition": "card not working",
+    "naturalized": "card not working",
+    "raw": "card_not_working",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_payment_fee_charged",
+    "definition": null,
+    "name_definition": "card payment fee charged",
+    "naturalized": "card payment fee charged",
+    "raw": "card_payment_fee_charged",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_payment_not_recognised",
+    "definition": null,
+    "name_definition": "card payment not recognised",
+    "naturalized": "card payment not recognised",
+    "raw": "card_payment_not_recognised",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_payment_wrong_exchange_rate",
+    "definition": null,
+    "name_definition": "card payment wrong exchange rate",
+    "naturalized": "card payment wrong exchange rate",
+    "raw": "card_payment_wrong_exchange_rate",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:card_swallowed",
+    "definition": null,
+    "name_definition": "card swallowed",
+    "naturalized": "card swallowed",
+    "raw": "card_swallowed",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:cash_withdrawal_charge",
+    "definition": null,
+    "name_definition": "cash withdrawal charge",
+    "naturalized": "cash withdrawal charge",
+    "raw": "cash_withdrawal_charge",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:cash_withdrawal_not_recognised",
+    "definition": null,
+    "name_definition": "cash withdrawal not recognised",
+    "naturalized": "cash withdrawal not recognised",
+    "raw": "cash_withdrawal_not_recognised",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:change_pin",
+    "definition": null,
+    "name_definition": "change pin",
+    "naturalized": "change pin",
+    "raw": "change_pin",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:compromised_card",
+    "definition": null,
+    "name_definition": "compromised card",
+    "naturalized": "compromised card",
+    "raw": "compromised_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:contactless_not_working",
+    "definition": null,
+    "name_definition": "contactless not working",
+    "naturalized": "contactless not working",
+    "raw": "contactless_not_working",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:country_support",
+    "definition": null,
+    "name_definition": "country support",
+    "naturalized": "country support",
+    "raw": "country_support",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:declined_card_payment",
+    "definition": null,
+    "name_definition": "declined card payment",
+    "naturalized": "declined card payment",
+    "raw": "declined_card_payment",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:declined_cash_withdrawal",
+    "definition": null,
+    "name_definition": "declined cash withdrawal",
+    "naturalized": "declined cash withdrawal",
+    "raw": "declined_cash_withdrawal",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:declined_transfer",
+    "definition": null,
+    "name_definition": "declined transfer",
+    "naturalized": "declined transfer",
+    "raw": "declined_transfer",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:direct_debit_payment_not_recognised",
+    "definition": null,
+    "name_definition": "direct debit payment not recognised",
+    "naturalized": "direct debit payment not recognised",
+    "raw": "direct_debit_payment_not_recognised",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:disposable_card_limits",
+    "definition": null,
+    "name_definition": "disposable card limits",
+    "naturalized": "disposable card limits",
+    "raw": "disposable_card_limits",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:edit_personal_details",
+    "definition": null,
+    "name_definition": "edit personal details",
+    "naturalized": "edit personal details",
+    "raw": "edit_personal_details",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:exchange_charge",
+    "definition": null,
+    "name_definition": "exchange charge",
+    "naturalized": "exchange charge",
+    "raw": "exchange_charge",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:exchange_rate",
+    "definition": null,
+    "name_definition": "exchange rate",
+    "naturalized": "exchange rate",
+    "raw": "exchange_rate",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:exchange_via_app",
+    "definition": null,
+    "name_definition": "exchange via app",
+    "naturalized": "exchange via app",
+    "raw": "exchange_via_app",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:extra_charge_on_statement",
+    "definition": null,
+    "name_definition": "extra charge on statement",
+    "naturalized": "extra charge on statement",
+    "raw": "extra_charge_on_statement",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:failed_transfer",
+    "definition": null,
+    "name_definition": "failed transfer",
+    "naturalized": "failed transfer",
+    "raw": "failed_transfer",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:fiat_currency_support",
+    "definition": null,
+    "name_definition": "fiat currency support",
+    "naturalized": "fiat currency support",
+    "raw": "fiat_currency_support",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:get_disposable_virtual_card",
+    "definition": null,
+    "name_definition": "get disposable virtual card",
+    "naturalized": "get disposable virtual card",
+    "raw": "get_disposable_virtual_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:get_physical_card",
+    "definition": null,
+    "name_definition": "get physical card",
+    "naturalized": "get physical card",
+    "raw": "get_physical_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:getting_spare_card",
+    "definition": null,
+    "name_definition": "getting spare card",
+    "naturalized": "getting spare card",
+    "raw": "getting_spare_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:getting_virtual_card",
+    "definition": null,
+    "name_definition": "getting virtual card",
+    "naturalized": "getting virtual card",
+    "raw": "getting_virtual_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:lost_or_stolen_card",
+    "definition": null,
+    "name_definition": "lost or stolen card",
+    "naturalized": "lost or stolen card",
+    "raw": "lost_or_stolen_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:lost_or_stolen_phone",
+    "definition": null,
+    "name_definition": "lost or stolen phone",
+    "naturalized": "lost or stolen phone",
+    "raw": "lost_or_stolen_phone",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:order_physical_card",
+    "definition": null,
+    "name_definition": "order physical card",
+    "naturalized": "order physical card",
+    "raw": "order_physical_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:passcode_forgotten",
+    "definition": null,
+    "name_definition": "passcode forgotten",
+    "naturalized": "passcode forgotten",
+    "raw": "passcode_forgotten",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:pending_card_payment",
+    "definition": null,
+    "name_definition": "pending card payment",
+    "naturalized": "pending card payment",
+    "raw": "pending_card_payment",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:pending_cash_withdrawal",
+    "definition": null,
+    "name_definition": "pending cash withdrawal",
+    "naturalized": "pending cash withdrawal",
+    "raw": "pending_cash_withdrawal",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:pending_top_up",
+    "definition": null,
+    "name_definition": "pending top up",
+    "naturalized": "pending top up",
+    "raw": "pending_top_up",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:pending_transfer",
+    "definition": null,
+    "name_definition": "pending transfer",
+    "naturalized": "pending transfer",
+    "raw": "pending_transfer",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:pin_blocked",
+    "definition": null,
+    "name_definition": "pin blocked",
+    "naturalized": "pin blocked",
+    "raw": "pin_blocked",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:receiving_money",
+    "definition": null,
+    "name_definition": "receiving money",
+    "naturalized": "receiving money",
+    "raw": "receiving_money",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:request_refund",
+    "definition": null,
+    "name_definition": "request refund",
+    "naturalized": "request refund",
+    "raw": "request_refund",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:reverted_card_payment?",
+    "definition": null,
+    "name_definition": "reverted card payment?",
+    "naturalized": "reverted card payment?",
+    "raw": "reverted_card_payment?",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:supported_cards_and_currencies",
+    "definition": null,
+    "name_definition": "supported cards and currencies",
+    "naturalized": "supported cards and currencies",
+    "raw": "supported_cards_and_currencies",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:terminate_account",
+    "definition": null,
+    "name_definition": "terminate account",
+    "naturalized": "terminate account",
+    "raw": "terminate_account",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:top_up_by_bank_transfer_charge",
+    "definition": null,
+    "name_definition": "top up by bank transfer charge",
+    "naturalized": "top up by bank transfer charge",
+    "raw": "top_up_by_bank_transfer_charge",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:top_up_by_card_charge",
+    "definition": null,
+    "name_definition": "top up by card charge",
+    "naturalized": "top up by card charge",
+    "raw": "top_up_by_card_charge",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:top_up_by_cash_or_cheque",
+    "definition": null,
+    "name_definition": "top up by cash or cheque",
+    "naturalized": "top up by cash or cheque",
+    "raw": "top_up_by_cash_or_cheque",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:top_up_failed",
+    "definition": null,
+    "name_definition": "top up failed",
+    "naturalized": "top up failed",
+    "raw": "top_up_failed",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:top_up_limits",
+    "definition": null,
+    "name_definition": "top up limits",
+    "naturalized": "top up limits",
+    "raw": "top_up_limits",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:top_up_reverted",
+    "definition": null,
+    "name_definition": "top up reverted",
+    "naturalized": "top up reverted",
+    "raw": "top_up_reverted",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:topping_up_by_card",
+    "definition": null,
+    "name_definition": "topping up by card",
+    "naturalized": "topping up by card",
+    "raw": "topping_up_by_card",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:transaction_charged_twice",
+    "definition": null,
+    "name_definition": "transaction charged twice",
+    "naturalized": "transaction charged twice",
+    "raw": "transaction_charged_twice",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:transfer_fee_charged",
+    "definition": null,
+    "name_definition": "transfer fee charged",
+    "naturalized": "transfer fee charged",
+    "raw": "transfer_fee_charged",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:transfer_into_account",
+    "definition": null,
+    "name_definition": "transfer into account",
+    "naturalized": "transfer into account",
+    "raw": "transfer_into_account",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:transfer_not_received_by_recipient",
+    "definition": null,
+    "name_definition": "transfer not received by recipient",
+    "naturalized": "transfer not received by recipient",
+    "raw": "transfer_not_received_by_recipient",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:transfer_timing",
+    "definition": null,
+    "name_definition": "transfer timing",
+    "naturalized": "transfer timing",
+    "raw": "transfer_timing",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:unable_to_verify_identity",
+    "definition": null,
+    "name_definition": "unable to verify identity",
+    "naturalized": "unable to verify identity",
+    "raw": "unable_to_verify_identity",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:verify_my_identity",
+    "definition": null,
+    "name_definition": "verify my identity",
+    "naturalized": "verify my identity",
+    "raw": "verify_my_identity",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:verify_source_of_funds",
+    "definition": null,
+    "name_definition": "verify source of funds",
+    "naturalized": "verify source of funds",
+    "raw": "verify_source_of_funds",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:verify_top_up",
+    "definition": null,
+    "name_definition": "verify top up",
+    "naturalized": "verify top up",
+    "raw": "verify_top_up",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:virtual_card_not_working",
+    "definition": null,
+    "name_definition": "virtual card not working",
+    "naturalized": "virtual card not working",
+    "raw": "virtual_card_not_working",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:visa_or_mastercard",
+    "definition": null,
+    "name_definition": "visa or mastercard",
+    "naturalized": "visa or mastercard",
+    "raw": "visa_or_mastercard",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:why_verify_identity",
+    "definition": null,
+    "name_definition": "why verify identity",
+    "naturalized": "why verify identity",
+    "raw": "why_verify_identity",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:wrong_amount_of_cash_received",
+    "definition": null,
+    "name_definition": "wrong amount of cash received",
+    "naturalized": "wrong amount of cash received",
+    "raw": "wrong_amount_of_cash_received",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "banking77:wrong_exchange_rate_for_cash_withdrawal",
+    "definition": null,
+    "name_definition": "wrong exchange rate for cash withdrawal",
+    "naturalized": "wrong exchange rate for cash withdrawal",
+    "raw": "wrong_exchange_rate_for_cash_withdrawal",
+    "schema": "banking77"
+  },
+  {
+    "candidate_id": "sgd:Banks_1:CheckBalance",
+    "definition": "Check the amount of money in a user's bank account",
+    "name_definition": "check balance. Check the amount of money in a user's bank account",
+    "naturalized": "check balance",
+    "raw": "CheckBalance",
+    "schema": "sgd:Banks_1"
+  },
+  {
+    "candidate_id": "sgd:Banks_1:TransferMoney",
+    "definition": "Transfer money from one bank account to another user's account",
+    "name_definition": "transfer money. Transfer money from one bank account to another user's account",
+    "naturalized": "transfer money",
+    "raw": "TransferMoney",
+    "schema": "sgd:Banks_1"
+  },
+  {
+    "candidate_id": "sgd:Buses_1:FindBus",
+    "definition": "Find a bus journey for a given pair of cities",
+    "name_definition": "find bus. Find a bus journey for a given pair of cities",
+    "naturalized": "find bus",
+    "raw": "FindBus",
+    "schema": "sgd:Buses_1"
+  },
+  {
+    "candidate_id": "sgd:Buses_1:BuyBusTicket",
+    "definition": "Buy tickets for a bus journey",
+    "name_definition": "buy bus ticket. Buy tickets for a bus journey",
+    "naturalized": "buy bus ticket",
+    "raw": "BuyBusTicket",
+    "schema": "sgd:Buses_1"
+  },
+  {
+    "candidate_id": "sgd:Buses_2:FindBus",
+    "definition": "Find a bus itinerary between cities for a given date",
+    "name_definition": "find bus. Find a bus itinerary between cities for a given date",
+    "naturalized": "find bus",
+    "raw": "FindBus",
+    "schema": "sgd:Buses_2"
+  },
+  {
+    "candidate_id": "sgd:Buses_2:BuyBusTicket",
+    "definition": "Buy tickets for a bus itinerary",
+    "name_definition": "buy bus ticket. Buy tickets for a bus itinerary",
+    "naturalized": "buy bus ticket",
+    "raw": "BuyBusTicket",
+    "schema": "sgd:Buses_2"
+  },
+  {
+    "candidate_id": "sgd:Events_1:FindEvents",
+    "definition": "Find events in a given city",
+    "name_definition": "find events. Find events in a given city",
+    "naturalized": "find events",
+    "raw": "FindEvents",
+    "schema": "sgd:Events_1"
+  },
+  {
+    "candidate_id": "sgd:Events_1:BuyEventTickets",
+    "definition": "Buy tickets for an event",
+    "name_definition": "buy event tickets. Buy tickets for an event",
+    "naturalized": "buy event tickets",
+    "raw": "BuyEventTickets",
+    "schema": "sgd:Events_1"
+  },
+  {
+    "candidate_id": "sgd:Events_2:FindEvents",
+    "definition": "Find concerts and games happening in your area",
+    "name_definition": "find events. Find concerts and games happening in your area",
+    "naturalized": "find events",
+    "raw": "FindEvents",
+    "schema": "sgd:Events_2"
+  },
+  {
+    "candidate_id": "sgd:Events_2:GetEventDates",
+    "definition": "Get dates on which a given event is taking place",
+    "name_definition": "get event dates. Get dates on which a given event is taking place",
+    "naturalized": "get event dates",
+    "raw": "GetEventDates",
+    "schema": "sgd:Events_2"
+  },
+  {
+    "candidate_id": "sgd:Events_2:BuyEventTickets",
+    "definition": "Buy tickets for an event",
+    "name_definition": "buy event tickets. Buy tickets for an event",
+    "naturalized": "buy event tickets",
+    "raw": "BuyEventTickets",
+    "schema": "sgd:Events_2"
+  },
+  {
+    "candidate_id": "sgd:Flights_2:SearchOnewayFlight",
+    "definition": "Search for a one way flight with your set of preferences",
+    "name_definition": "search oneway flight. Search for a one way flight with your set of preferences",
+    "naturalized": "search oneway flight",
+    "raw": "SearchOnewayFlight",
+    "schema": "sgd:Flights_2"
+  },
+  {
+    "candidate_id": "sgd:Flights_2:SearchRoundtripFlights",
+    "definition": "Search for round trip flights with your set of preferences",
+    "name_definition": "search roundtrip flights. Search for round trip flights with your set of preferences",
+    "naturalized": "search roundtrip flights",
+    "raw": "SearchRoundtripFlights",
+    "schema": "sgd:Flights_2"
+  },
+  {
+    "candidate_id": "sgd:Homes_1:FindApartment",
+    "definition": "Find an apartment in a city for a given number of bedrooms",
+    "name_definition": "find apartment. Find an apartment in a city for a given number of bedrooms",
+    "naturalized": "find apartment",
+    "raw": "FindApartment",
+    "schema": "sgd:Homes_1"
+  },
+  {
+    "candidate_id": "sgd:Homes_1:ScheduleVisit",
+    "definition": "Schedule a visit for a given property on a particular date",
+    "name_definition": "schedule visit. Schedule a visit for a given property on a particular date",
+    "naturalized": "schedule visit",
+    "raw": "ScheduleVisit",
+    "schema": "sgd:Homes_1"
+  },
+  {
+    "candidate_id": "sgd:Hotels_1:ReserveHotel",
+    "definition": "Reserve a selected hotel for given dates",
+    "name_definition": "reserve hotel. Reserve a selected hotel for given dates",
+    "naturalized": "reserve hotel",
+    "raw": "ReserveHotel",
+    "schema": "sgd:Hotels_1"
+  },
+  {
+    "candidate_id": "sgd:Hotels_1:SearchHotel",
+    "definition": "Find a hotel at a given location",
+    "name_definition": "search hotel. Find a hotel at a given location",
+    "naturalized": "search hotel",
+    "raw": "SearchHotel",
+    "schema": "sgd:Hotels_1"
+  },
+  {
+    "candidate_id": "sgd:Hotels_2:BookHouse",
+    "definition": "Book the selected house for given dates and number of adults",
+    "name_definition": "book house. Book the selected house for given dates and number of adults",
+    "naturalized": "book house",
+    "raw": "BookHouse",
+    "schema": "sgd:Hotels_2"
+  },
+  {
+    "candidate_id": "sgd:Hotels_2:SearchHouse",
+    "definition": "Find a house at a given location",
+    "name_definition": "search house. Find a house at a given location",
+    "naturalized": "search house",
+    "raw": "SearchHouse",
+    "schema": "sgd:Hotels_2"
+  },
+  {
+    "candidate_id": "sgd:Movies_1:BuyMovieTickets",
+    "definition": "Buy movie tickets for a particular show",
+    "name_definition": "buy movie tickets. Buy movie tickets for a particular show",
+    "naturalized": "buy movie tickets",
+    "raw": "BuyMovieTickets",
+    "schema": "sgd:Movies_1"
+  },
+  {
+    "candidate_id": "sgd:Movies_1:FindMovies",
+    "definition": "Search for movies by location, genre or other attributes",
+    "name_definition": "find movies. Search for movies by location, genre or other attributes",
+    "naturalized": "find movies",
+    "raw": "FindMovies",
+    "schema": "sgd:Movies_1"
+  },
+  {
+    "candidate_id": "sgd:Movies_1:GetTimesForMovie",
+    "definition": "Get show times for a movie at a location on a given date",
+    "name_definition": "get times for movie. Get show times for a movie at a location on a given date",
+    "naturalized": "get times for movie",
+    "raw": "GetTimesForMovie",
+    "schema": "sgd:Movies_1"
+  },
+  {
+    "candidate_id": "sgd:Music_1:LookupSong",
+    "definition": "Search for a song",
+    "name_definition": "lookup song. Search for a song",
+    "naturalized": "lookup song",
+    "raw": "LookupSong",
+    "schema": "sgd:Music_1"
+  },
+  {
+    "candidate_id": "sgd:Music_1:PlaySong",
+    "definition": "Play the selected song on the device",
+    "name_definition": "play song. Play the selected song on the device",
+    "naturalized": "play song",
+    "raw": "PlaySong",
+    "schema": "sgd:Music_1"
+  },
+  {
+    "candidate_id": "sgd:Music_2:LookupMusic",
+    "definition": "Search for a song based on the name and optionally other attributes",
+    "name_definition": "lookup music. Search for a song based on the name and optionally other attributes",
+    "naturalized": "lookup music",
+    "raw": "LookupMusic",
+    "schema": "sgd:Music_2"
+  },
+  {
+    "candidate_id": "sgd:Music_2:PlayMedia",
+    "definition": "Play a song by its name and optionally artist",
+    "name_definition": "play media. Play a song by its name and optionally artist",
+    "naturalized": "play media",
+    "raw": "PlayMedia",
+    "schema": "sgd:Music_2"
+  },
+  {
+    "candidate_id": "sgd:RentalCars_1:GetCarsAvailable",
+    "definition": "Search for available rental cars by city and date",
+    "name_definition": "get cars available. Search for available rental cars by city and date",
+    "naturalized": "get cars available",
+    "raw": "GetCarsAvailable",
+    "schema": "sgd:RentalCars_1"
+  },
+  {
+    "candidate_id": "sgd:RentalCars_1:ReserveCar",
+    "definition": "Reserve car rental for given dates and location",
+    "name_definition": "reserve car. Reserve car rental for given dates and location",
+    "naturalized": "reserve car",
+    "raw": "ReserveCar",
+    "schema": "sgd:RentalCars_1"
+  },
+  {
+    "candidate_id": "sgd:RentalCars_2:GetCarsAvailable",
+    "definition": "See available cars for rental in a particular city and a date",
+    "name_definition": "get cars available. See available cars for rental in a particular city and a date",
+    "naturalized": "get cars available",
+    "raw": "GetCarsAvailable",
+    "schema": "sgd:RentalCars_2"
+  },
+  {
+    "candidate_id": "sgd:RentalCars_2:ReserveCar",
+    "definition": "Reserve a rental car for specified pickup location and dates",
+    "name_definition": "reserve car. Reserve a rental car for specified pickup location and dates",
+    "naturalized": "reserve car",
+    "raw": "ReserveCar",
+    "schema": "sgd:RentalCars_2"
+  },
+  {
+    "candidate_id": "sgd:Restaurants_1:ReserveRestaurant",
+    "definition": "Reserve a table at a restaurant",
+    "name_definition": "reserve restaurant. Reserve a table at a restaurant",
+    "naturalized": "reserve restaurant",
+    "raw": "ReserveRestaurant",
+    "schema": "sgd:Restaurants_1"
+  },
+  {
+    "candidate_id": "sgd:Restaurants_1:FindRestaurants",
+    "definition": "Find a restaurant of a particular cuisine in a city",
+    "name_definition": "find restaurants. Find a restaurant of a particular cuisine in a city",
+    "naturalized": "find restaurants",
+    "raw": "FindRestaurants",
+    "schema": "sgd:Restaurants_1"
+  },
+  {
+    "candidate_id": "sgd:RideSharing_1:GetRide",
+    "definition": "Call a taxi to head to a given destination",
+    "name_definition": "get ride. Call a taxi to head to a given destination",
+    "naturalized": "get ride",
+    "raw": "GetRide",
+    "schema": "sgd:RideSharing_1"
+  },
+  {
+    "candidate_id": "sgd:RideSharing_2:GetRide",
+    "definition": "Book a cab for any destination, number of seats and ride type",
+    "name_definition": "get ride. Book a cab for any destination, number of seats and ride type",
+    "naturalized": "get ride",
+    "raw": "GetRide",
+    "schema": "sgd:RideSharing_2"
+  },
+  {
+    "candidate_id": "sgd:Services_1:BookAppointment",
+    "definition": "Book an appointment at a hair stylist",
+    "name_definition": "book appointment. Book an appointment at a hair stylist",
+    "naturalized": "book appointment",
+    "raw": "BookAppointment",
+    "schema": "sgd:Services_1"
+  },
+  {
+    "candidate_id": "sgd:Services_1:FindProvider",
+    "definition": "Search for a hair stylist by city and optionally other attributes",
+    "name_definition": "find provider. Search for a hair stylist by city and optionally other attributes",
+    "naturalized": "find provider",
+    "raw": "FindProvider",
+    "schema": "sgd:Services_1"
+  },
+  {
+    "candidate_id": "sgd:Services_2:BookAppointment",
+    "definition": "Book an appointment at a dentist for a given time and date",
+    "name_definition": "book appointment. Book an appointment at a dentist for a given time and date",
+    "naturalized": "book appointment",
+    "raw": "BookAppointment",
+    "schema": "sgd:Services_2"
+  },
+  {
+    "candidate_id": "sgd:Services_2:FindProvider",
+    "definition": "Find a dentist by location and optionally by services offered",
+    "name_definition": "find provider. Find a dentist by location and optionally by services offered",
+    "naturalized": "find provider",
+    "raw": "FindProvider",
+    "schema": "sgd:Services_2"
+  },
+  {
+    "candidate_id": "sgd:Travel_1:FindAttractions",
+    "definition": "Browse attractions in a given city",
+    "name_definition": "find attractions. Browse attractions in a given city",
+    "naturalized": "find attractions",
+    "raw": "FindAttractions",
+    "schema": "sgd:Travel_1"
+  },
+  {
+    "candidate_id": "sgd:Weather_1:GetWeather",
+    "definition": "Get the weather of a certain location on a date",
+    "name_definition": "get weather. Get the weather of a certain location on a date",
+    "naturalized": "get weather",
+    "raw": "GetWeather",
+    "schema": "sgd:Weather_1"
+  },
+  {
+    "candidate_id": "sgd:Calendar_1:GetEvents",
+    "definition": "Get list of all calendar events for the user on a given day",
+    "name_definition": "get events. Get list of all calendar events for the user on a given day",
+    "naturalized": "get events",
+    "raw": "GetEvents",
+    "schema": "sgd:Calendar_1"
+  },
+  {
+    "candidate_id": "sgd:Calendar_1:GetAvailableTime",
+    "definition": "Get a list of available times for the user on a given day",
+    "name_definition": "get available time. Get a list of available times for the user on a given day",
+    "naturalized": "get available time",
+    "raw": "GetAvailableTime",
+    "schema": "sgd:Calendar_1"
+  },
+  {
+    "candidate_id": "sgd:Calendar_1:AddEvent",
+    "definition": "Add event to the user's calendar",
+    "name_definition": "add event. Add event to the user's calendar",
+    "naturalized": "add event",
+    "raw": "AddEvent",
+    "schema": "sgd:Calendar_1"
+  },
+  {
+    "candidate_id": "sgd:Flights_1:SearchOnewayFlight",
+    "definition": "Search for one-way flights to a destination",
+    "name_definition": "search oneway flight. Search for one-way flights to a destination",
+    "naturalized": "search oneway flight",
+    "raw": "SearchOnewayFlight",
+    "schema": "sgd:Flights_1"
+  },
+  {
+    "candidate_id": "sgd:Flights_1:SearchRoundtripFlights",
+    "definition": "Search for round-trip flights to a destination",
+    "name_definition": "search roundtrip flights. Search for round-trip flights to a destination",
+    "naturalized": "search roundtrip flights",
+    "raw": "SearchRoundtripFlights",
+    "schema": "sgd:Flights_1"
+  },
+  {
+    "candidate_id": "sgd:Flights_1:ReserveOnewayFlight",
+    "definition": "Reserve a one-way flight",
+    "name_definition": "reserve oneway flight. Reserve a one-way flight",
+    "naturalized": "reserve oneway flight",
+    "raw": "ReserveOnewayFlight",
+    "schema": "sgd:Flights_1"
+  },
+  {
+    "candidate_id": "sgd:Flights_1:ReserveRoundtripFlights",
+    "definition": "Reserve a round-trip flight",
+    "name_definition": "reserve roundtrip flights. Reserve a round-trip flight",
+    "naturalized": "reserve roundtrip flights",
+    "raw": "ReserveRoundtripFlights",
+    "schema": "sgd:Flights_1"
+  },
+  {
+    "candidate_id": "sgd:Hotels_3:ReserveHotel",
+    "definition": "Reserve a selected hotel for given dates",
+    "name_definition": "reserve hotel. Reserve a selected hotel for given dates",
+    "naturalized": "reserve hotel",
+    "raw": "ReserveHotel",
+    "schema": "sgd:Hotels_3"
+  },
+  {
+    "candidate_id": "sgd:Hotels_3:SearchHotel",
+    "definition": "Search for a hotel based on location",
+    "name_definition": "search hotel. Search for a hotel based on location",
+    "naturalized": "search hotel",
+    "raw": "SearchHotel",
+    "schema": "sgd:Hotels_3"
+  },
+  {
+    "candidate_id": "sgd:Media_1:FindMovies",
+    "definition": "Find movies by genre and optionally director",
+    "name_definition": "find movies. Find movies by genre and optionally director",
+    "naturalized": "find movies",
+    "raw": "FindMovies",
+    "schema": "sgd:Media_1"
+  },
+  {
+    "candidate_id": "sgd:Media_1:PlayMovie",
+    "definition": "Play the selected movie",
+    "name_definition": "play movie. Play the selected movie",
+    "naturalized": "play movie",
+    "raw": "PlayMovie",
+    "schema": "sgd:Media_1"
+  },
+  {
+    "candidate_id": "sgd:Services_3:BookAppointment",
+    "definition": "Book an appointment with a specific doctor for the given date and time",
+    "name_definition": "book appointment. Book an appointment with a specific doctor for the given date and time",
+    "naturalized": "book appointment",
+    "raw": "BookAppointment",
+    "schema": "sgd:Services_3"
+  },
+  {
+    "candidate_id": "sgd:Services_3:FindProvider",
+    "definition": "Find a medical service provider based on their location and speciality",
+    "name_definition": "find provider. Find a medical service provider based on their location and speciality",
+    "naturalized": "find provider",
+    "raw": "FindProvider",
+    "schema": "sgd:Services_3"
+  },
+  {
+    "candidate_id": "clinc150:accept_reservations",
+    "definition": null,
+    "name_definition": "accept reservations",
+    "naturalized": "accept reservations",
+    "raw": "accept_reservations",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:account_blocked",
+    "definition": null,
+    "name_definition": "account blocked",
+    "naturalized": "account blocked",
+    "raw": "account_blocked",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:alarm",
+    "definition": null,
+    "name_definition": "alarm",
+    "naturalized": "alarm",
+    "raw": "alarm",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:application_status",
+    "definition": null,
+    "name_definition": "application status",
+    "naturalized": "application status",
+    "raw": "application_status",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:apr",
+    "definition": null,
+    "name_definition": "apr",
+    "naturalized": "apr",
+    "raw": "apr",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:are_you_a_bot",
+    "definition": null,
+    "name_definition": "are you a bot",
+    "naturalized": "are you a bot",
+    "raw": "are_you_a_bot",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:balance",
+    "definition": null,
+    "name_definition": "balance",
+    "naturalized": "balance",
+    "raw": "balance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:bill_balance",
+    "definition": null,
+    "name_definition": "bill balance",
+    "naturalized": "bill balance",
+    "raw": "bill_balance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:bill_due",
+    "definition": null,
+    "name_definition": "bill due",
+    "naturalized": "bill due",
+    "raw": "bill_due",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:book_flight",
+    "definition": null,
+    "name_definition": "book flight",
+    "naturalized": "book flight",
+    "raw": "book_flight",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:book_hotel",
+    "definition": null,
+    "name_definition": "book hotel",
+    "naturalized": "book hotel",
+    "raw": "book_hotel",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:calculator",
+    "definition": null,
+    "name_definition": "calculator",
+    "naturalized": "calculator",
+    "raw": "calculator",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:calendar",
+    "definition": null,
+    "name_definition": "calendar",
+    "naturalized": "calendar",
+    "raw": "calendar",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:calendar_update",
+    "definition": null,
+    "name_definition": "calendar update",
+    "naturalized": "calendar update",
+    "raw": "calendar_update",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:calories",
+    "definition": null,
+    "name_definition": "calories",
+    "naturalized": "calories",
+    "raw": "calories",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:cancel",
+    "definition": null,
+    "name_definition": "cancel",
+    "naturalized": "cancel",
+    "raw": "cancel",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:cancel_reservation",
+    "definition": null,
+    "name_definition": "cancel reservation",
+    "naturalized": "cancel reservation",
+    "raw": "cancel_reservation",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:car_rental",
+    "definition": null,
+    "name_definition": "car rental",
+    "naturalized": "car rental",
+    "raw": "car_rental",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:card_declined",
+    "definition": null,
+    "name_definition": "card declined",
+    "naturalized": "card declined",
+    "raw": "card_declined",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:carry_on",
+    "definition": null,
+    "name_definition": "carry on",
+    "naturalized": "carry on",
+    "raw": "carry_on",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:change_accent",
+    "definition": null,
+    "name_definition": "change accent",
+    "naturalized": "change accent",
+    "raw": "change_accent",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:change_ai_name",
+    "definition": null,
+    "name_definition": "change ai name",
+    "naturalized": "change ai name",
+    "raw": "change_ai_name",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:change_language",
+    "definition": null,
+    "name_definition": "change language",
+    "naturalized": "change language",
+    "raw": "change_language",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:change_speed",
+    "definition": null,
+    "name_definition": "change speed",
+    "naturalized": "change speed",
+    "raw": "change_speed",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:change_user_name",
+    "definition": null,
+    "name_definition": "change user name",
+    "naturalized": "change user name",
+    "raw": "change_user_name",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:change_volume",
+    "definition": null,
+    "name_definition": "change volume",
+    "naturalized": "change volume",
+    "raw": "change_volume",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:confirm_reservation",
+    "definition": null,
+    "name_definition": "confirm reservation",
+    "naturalized": "confirm reservation",
+    "raw": "confirm_reservation",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:cook_time",
+    "definition": null,
+    "name_definition": "cook time",
+    "naturalized": "cook time",
+    "raw": "cook_time",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:credit_limit",
+    "definition": null,
+    "name_definition": "credit limit",
+    "naturalized": "credit limit",
+    "raw": "credit_limit",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:credit_limit_change",
+    "definition": null,
+    "name_definition": "credit limit change",
+    "naturalized": "credit limit change",
+    "raw": "credit_limit_change",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:credit_score",
+    "definition": null,
+    "name_definition": "credit score",
+    "naturalized": "credit score",
+    "raw": "credit_score",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:current_location",
+    "definition": null,
+    "name_definition": "current location",
+    "naturalized": "current location",
+    "raw": "current_location",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:damaged_card",
+    "definition": null,
+    "name_definition": "damaged card",
+    "naturalized": "damaged card",
+    "raw": "damaged_card",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:date",
+    "definition": null,
+    "name_definition": "date",
+    "naturalized": "date",
+    "raw": "date",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:definition",
+    "definition": null,
+    "name_definition": "definition",
+    "naturalized": "definition",
+    "raw": "definition",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:direct_deposit",
+    "definition": null,
+    "name_definition": "direct deposit",
+    "naturalized": "direct deposit",
+    "raw": "direct_deposit",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:directions",
+    "definition": null,
+    "name_definition": "directions",
+    "naturalized": "directions",
+    "raw": "directions",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:distance",
+    "definition": null,
+    "name_definition": "distance",
+    "naturalized": "distance",
+    "raw": "distance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:do_you_have_pets",
+    "definition": null,
+    "name_definition": "do you have pets",
+    "naturalized": "do you have pets",
+    "raw": "do_you_have_pets",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:exchange_rate",
+    "definition": null,
+    "name_definition": "exchange rate",
+    "naturalized": "exchange rate",
+    "raw": "exchange_rate",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:expiration_date",
+    "definition": null,
+    "name_definition": "expiration date",
+    "naturalized": "expiration date",
+    "raw": "expiration_date",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:find_phone",
+    "definition": null,
+    "name_definition": "find phone",
+    "naturalized": "find phone",
+    "raw": "find_phone",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:flight_status",
+    "definition": null,
+    "name_definition": "flight status",
+    "naturalized": "flight status",
+    "raw": "flight_status",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:flip_coin",
+    "definition": null,
+    "name_definition": "flip coin",
+    "naturalized": "flip coin",
+    "raw": "flip_coin",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:food_last",
+    "definition": null,
+    "name_definition": "food last",
+    "naturalized": "food last",
+    "raw": "food_last",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:freeze_account",
+    "definition": null,
+    "name_definition": "freeze account",
+    "naturalized": "freeze account",
+    "raw": "freeze_account",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:fun_fact",
+    "definition": null,
+    "name_definition": "fun fact",
+    "naturalized": "fun fact",
+    "raw": "fun_fact",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:gas",
+    "definition": null,
+    "name_definition": "gas",
+    "naturalized": "gas",
+    "raw": "gas",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:gas_type",
+    "definition": null,
+    "name_definition": "gas type",
+    "naturalized": "gas type",
+    "raw": "gas_type",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:goodbye",
+    "definition": null,
+    "name_definition": "goodbye",
+    "naturalized": "goodbye",
+    "raw": "goodbye",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:greeting",
+    "definition": null,
+    "name_definition": "greeting",
+    "naturalized": "greeting",
+    "raw": "greeting",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:how_busy",
+    "definition": null,
+    "name_definition": "how busy",
+    "naturalized": "how busy",
+    "raw": "how_busy",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:how_old_are_you",
+    "definition": null,
+    "name_definition": "how old are you",
+    "naturalized": "how old are you",
+    "raw": "how_old_are_you",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:improve_credit_score",
+    "definition": null,
+    "name_definition": "improve credit score",
+    "naturalized": "improve credit score",
+    "raw": "improve_credit_score",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:income",
+    "definition": null,
+    "name_definition": "income",
+    "naturalized": "income",
+    "raw": "income",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:ingredient_substitution",
+    "definition": null,
+    "name_definition": "ingredient substitution",
+    "naturalized": "ingredient substitution",
+    "raw": "ingredient_substitution",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:ingredients_list",
+    "definition": null,
+    "name_definition": "ingredients list",
+    "naturalized": "ingredients list",
+    "raw": "ingredients_list",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:insurance",
+    "definition": null,
+    "name_definition": "insurance",
+    "naturalized": "insurance",
+    "raw": "insurance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:insurance_change",
+    "definition": null,
+    "name_definition": "insurance change",
+    "naturalized": "insurance change",
+    "raw": "insurance_change",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:interest_rate",
+    "definition": null,
+    "name_definition": "interest rate",
+    "naturalized": "interest rate",
+    "raw": "interest_rate",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:international_fees",
+    "definition": null,
+    "name_definition": "international fees",
+    "naturalized": "international fees",
+    "raw": "international_fees",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:international_visa",
+    "definition": null,
+    "name_definition": "international visa",
+    "naturalized": "international visa",
+    "raw": "international_visa",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:jump_start",
+    "definition": null,
+    "name_definition": "jump start",
+    "naturalized": "jump start",
+    "raw": "jump_start",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:last_maintenance",
+    "definition": null,
+    "name_definition": "last maintenance",
+    "naturalized": "last maintenance",
+    "raw": "last_maintenance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:lost_luggage",
+    "definition": null,
+    "name_definition": "lost luggage",
+    "naturalized": "lost luggage",
+    "raw": "lost_luggage",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:make_call",
+    "definition": null,
+    "name_definition": "make call",
+    "naturalized": "make call",
+    "raw": "make_call",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:maybe",
+    "definition": null,
+    "name_definition": "maybe",
+    "naturalized": "maybe",
+    "raw": "maybe",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:meal_suggestion",
+    "definition": null,
+    "name_definition": "meal suggestion",
+    "naturalized": "meal suggestion",
+    "raw": "meal_suggestion",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:meaning_of_life",
+    "definition": null,
+    "name_definition": "meaning of life",
+    "naturalized": "meaning of life",
+    "raw": "meaning_of_life",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:measurement_conversion",
+    "definition": null,
+    "name_definition": "measurement conversion",
+    "naturalized": "measurement conversion",
+    "raw": "measurement_conversion",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:meeting_schedule",
+    "definition": null,
+    "name_definition": "meeting schedule",
+    "naturalized": "meeting schedule",
+    "raw": "meeting_schedule",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:min_payment",
+    "definition": null,
+    "name_definition": "min payment",
+    "naturalized": "min payment",
+    "raw": "min_payment",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:mpg",
+    "definition": null,
+    "name_definition": "mpg",
+    "naturalized": "mpg",
+    "raw": "mpg",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:new_card",
+    "definition": null,
+    "name_definition": "new card",
+    "naturalized": "new card",
+    "raw": "new_card",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:next_holiday",
+    "definition": null,
+    "name_definition": "next holiday",
+    "naturalized": "next holiday",
+    "raw": "next_holiday",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:next_song",
+    "definition": null,
+    "name_definition": "next song",
+    "naturalized": "next song",
+    "raw": "next_song",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:no",
+    "definition": null,
+    "name_definition": "no",
+    "naturalized": "no",
+    "raw": "no",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:nutrition_info",
+    "definition": null,
+    "name_definition": "nutrition info",
+    "naturalized": "nutrition info",
+    "raw": "nutrition_info",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:oil_change_how",
+    "definition": null,
+    "name_definition": "oil change how",
+    "naturalized": "oil change how",
+    "raw": "oil_change_how",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:oil_change_when",
+    "definition": null,
+    "name_definition": "oil change when",
+    "naturalized": "oil change when",
+    "raw": "oil_change_when",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:order",
+    "definition": null,
+    "name_definition": "order",
+    "naturalized": "order",
+    "raw": "order",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:order_checks",
+    "definition": null,
+    "name_definition": "order checks",
+    "naturalized": "order checks",
+    "raw": "order_checks",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:order_status",
+    "definition": null,
+    "name_definition": "order status",
+    "naturalized": "order status",
+    "raw": "order_status",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:pay_bill",
+    "definition": null,
+    "name_definition": "pay bill",
+    "naturalized": "pay bill",
+    "raw": "pay_bill",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:payday",
+    "definition": null,
+    "name_definition": "payday",
+    "naturalized": "payday",
+    "raw": "payday",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:pin_change",
+    "definition": null,
+    "name_definition": "pin change",
+    "naturalized": "pin change",
+    "raw": "pin_change",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:play_music",
+    "definition": null,
+    "name_definition": "play music",
+    "naturalized": "play music",
+    "raw": "play_music",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:plug_type",
+    "definition": null,
+    "name_definition": "plug type",
+    "naturalized": "plug type",
+    "raw": "plug_type",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:pto_balance",
+    "definition": null,
+    "name_definition": "pto balance",
+    "naturalized": "pto balance",
+    "raw": "pto_balance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:pto_request",
+    "definition": null,
+    "name_definition": "pto request",
+    "naturalized": "pto request",
+    "raw": "pto_request",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:pto_request_status",
+    "definition": null,
+    "name_definition": "pto request status",
+    "naturalized": "pto request status",
+    "raw": "pto_request_status",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:pto_used",
+    "definition": null,
+    "name_definition": "pto used",
+    "naturalized": "pto used",
+    "raw": "pto_used",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:recipe",
+    "definition": null,
+    "name_definition": "recipe",
+    "naturalized": "recipe",
+    "raw": "recipe",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:redeem_rewards",
+    "definition": null,
+    "name_definition": "redeem rewards",
+    "naturalized": "redeem rewards",
+    "raw": "redeem_rewards",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:reminder",
+    "definition": null,
+    "name_definition": "reminder",
+    "naturalized": "reminder",
+    "raw": "reminder",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:reminder_update",
+    "definition": null,
+    "name_definition": "reminder update",
+    "naturalized": "reminder update",
+    "raw": "reminder_update",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:repeat",
+    "definition": null,
+    "name_definition": "repeat",
+    "naturalized": "repeat",
+    "raw": "repeat",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:replacement_card_duration",
+    "definition": null,
+    "name_definition": "replacement card duration",
+    "naturalized": "replacement card duration",
+    "raw": "replacement_card_duration",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:report_fraud",
+    "definition": null,
+    "name_definition": "report fraud",
+    "naturalized": "report fraud",
+    "raw": "report_fraud",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:report_lost_card",
+    "definition": null,
+    "name_definition": "report lost card",
+    "naturalized": "report lost card",
+    "raw": "report_lost_card",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:reset_settings",
+    "definition": null,
+    "name_definition": "reset settings",
+    "naturalized": "reset settings",
+    "raw": "reset_settings",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:restaurant_reservation",
+    "definition": null,
+    "name_definition": "restaurant reservation",
+    "naturalized": "restaurant reservation",
+    "raw": "restaurant_reservation",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:restaurant_reviews",
+    "definition": null,
+    "name_definition": "restaurant reviews",
+    "naturalized": "restaurant reviews",
+    "raw": "restaurant_reviews",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:restaurant_suggestion",
+    "definition": null,
+    "name_definition": "restaurant suggestion",
+    "naturalized": "restaurant suggestion",
+    "raw": "restaurant_suggestion",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:rewards_balance",
+    "definition": null,
+    "name_definition": "rewards balance",
+    "naturalized": "rewards balance",
+    "raw": "rewards_balance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:roll_dice",
+    "definition": null,
+    "name_definition": "roll dice",
+    "naturalized": "roll dice",
+    "raw": "roll_dice",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:rollover_401k",
+    "definition": null,
+    "name_definition": "rollover 401k",
+    "naturalized": "rollover 401k",
+    "raw": "rollover_401k",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:routing",
+    "definition": null,
+    "name_definition": "routing",
+    "naturalized": "routing",
+    "raw": "routing",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:schedule_maintenance",
+    "definition": null,
+    "name_definition": "schedule maintenance",
+    "naturalized": "schedule maintenance",
+    "raw": "schedule_maintenance",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:schedule_meeting",
+    "definition": null,
+    "name_definition": "schedule meeting",
+    "naturalized": "schedule meeting",
+    "raw": "schedule_meeting",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:share_location",
+    "definition": null,
+    "name_definition": "share location",
+    "naturalized": "share location",
+    "raw": "share_location",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:shopping_list",
+    "definition": null,
+    "name_definition": "shopping list",
+    "naturalized": "shopping list",
+    "raw": "shopping_list",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:shopping_list_update",
+    "definition": null,
+    "name_definition": "shopping list update",
+    "naturalized": "shopping list update",
+    "raw": "shopping_list_update",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:smart_home",
+    "definition": null,
+    "name_definition": "smart home",
+    "naturalized": "smart home",
+    "raw": "smart_home",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:spelling",
+    "definition": null,
+    "name_definition": "spelling",
+    "naturalized": "spelling",
+    "raw": "spelling",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:spending_history",
+    "definition": null,
+    "name_definition": "spending history",
+    "naturalized": "spending history",
+    "raw": "spending_history",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:sync_device",
+    "definition": null,
+    "name_definition": "sync device",
+    "naturalized": "sync device",
+    "raw": "sync_device",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:taxes",
+    "definition": null,
+    "name_definition": "taxes",
+    "naturalized": "taxes",
+    "raw": "taxes",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:tell_joke",
+    "definition": null,
+    "name_definition": "tell joke",
+    "naturalized": "tell joke",
+    "raw": "tell_joke",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:text",
+    "definition": null,
+    "name_definition": "text",
+    "naturalized": "text",
+    "raw": "text",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:thank_you",
+    "definition": null,
+    "name_definition": "thank you",
+    "naturalized": "thank you",
+    "raw": "thank_you",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:time",
+    "definition": null,
+    "name_definition": "time",
+    "naturalized": "time",
+    "raw": "time",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:timer",
+    "definition": null,
+    "name_definition": "timer",
+    "naturalized": "timer",
+    "raw": "timer",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:timezone",
+    "definition": null,
+    "name_definition": "timezone",
+    "naturalized": "timezone",
+    "raw": "timezone",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:tire_change",
+    "definition": null,
+    "name_definition": "tire change",
+    "naturalized": "tire change",
+    "raw": "tire_change",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:tire_pressure",
+    "definition": null,
+    "name_definition": "tire pressure",
+    "naturalized": "tire pressure",
+    "raw": "tire_pressure",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:todo_list",
+    "definition": null,
+    "name_definition": "todo list",
+    "naturalized": "todo list",
+    "raw": "todo_list",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:todo_list_update",
+    "definition": null,
+    "name_definition": "todo list update",
+    "naturalized": "todo list update",
+    "raw": "todo_list_update",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:traffic",
+    "definition": null,
+    "name_definition": "traffic",
+    "naturalized": "traffic",
+    "raw": "traffic",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:transactions",
+    "definition": null,
+    "name_definition": "transactions",
+    "naturalized": "transactions",
+    "raw": "transactions",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:transfer",
+    "definition": null,
+    "name_definition": "transfer",
+    "naturalized": "transfer",
+    "raw": "transfer",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:translate",
+    "definition": null,
+    "name_definition": "translate",
+    "naturalized": "translate",
+    "raw": "translate",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:travel_alert",
+    "definition": null,
+    "name_definition": "travel alert",
+    "naturalized": "travel alert",
+    "raw": "travel_alert",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:travel_notification",
+    "definition": null,
+    "name_definition": "travel notification",
+    "naturalized": "travel notification",
+    "raw": "travel_notification",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:travel_suggestion",
+    "definition": null,
+    "name_definition": "travel suggestion",
+    "naturalized": "travel suggestion",
+    "raw": "travel_suggestion",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:uber",
+    "definition": null,
+    "name_definition": "uber",
+    "naturalized": "uber",
+    "raw": "uber",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:update_playlist",
+    "definition": null,
+    "name_definition": "update playlist",
+    "naturalized": "update playlist",
+    "raw": "update_playlist",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:user_name",
+    "definition": null,
+    "name_definition": "user name",
+    "naturalized": "user name",
+    "raw": "user_name",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:vaccines",
+    "definition": null,
+    "name_definition": "vaccines",
+    "naturalized": "vaccines",
+    "raw": "vaccines",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:w2",
+    "definition": null,
+    "name_definition": "w2",
+    "naturalized": "w2",
+    "raw": "w2",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:weather",
+    "definition": null,
+    "name_definition": "weather",
+    "naturalized": "weather",
+    "raw": "weather",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:what_are_your_hobbies",
+    "definition": null,
+    "name_definition": "what are your hobbies",
+    "naturalized": "what are your hobbies",
+    "raw": "what_are_your_hobbies",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:what_can_i_ask_you",
+    "definition": null,
+    "name_definition": "what can i ask you",
+    "naturalized": "what can i ask you",
+    "raw": "what_can_i_ask_you",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:what_is_your_name",
+    "definition": null,
+    "name_definition": "what is your name",
+    "naturalized": "what is your name",
+    "raw": "what_is_your_name",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:what_song",
+    "definition": null,
+    "name_definition": "what song",
+    "naturalized": "what song",
+    "raw": "what_song",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:where_are_you_from",
+    "definition": null,
+    "name_definition": "where are you from",
+    "naturalized": "where are you from",
+    "raw": "where_are_you_from",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:whisper_mode",
+    "definition": null,
+    "name_definition": "whisper mode",
+    "naturalized": "whisper mode",
+    "raw": "whisper_mode",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:who_do_you_work_for",
+    "definition": null,
+    "name_definition": "who do you work for",
+    "naturalized": "who do you work for",
+    "raw": "who_do_you_work_for",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:who_made_you",
+    "definition": null,
+    "name_definition": "who made you",
+    "naturalized": "who made you",
+    "raw": "who_made_you",
+    "schema": "clinc150"
+  },
+  {
+    "candidate_id": "clinc150:yes",
+    "definition": null,
+    "name_definition": "yes",
+    "naturalized": "yes",
+    "raw": "yes",
+    "schema": "clinc150"
+  }
+]

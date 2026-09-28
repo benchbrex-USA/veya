@@ -1,0 +1,15 @@
+{
+  "experiment_id": "phase3-calibration-shortlist-2026-09-22",
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "working_tree": "phase-2 and phase-3 code uncommitted",
+  "checkpoint_in": "models/production",
+  "architecture": "packed Choice head, frozen encoder, learned 128-d projection for shortlist only",
+  "training_data": "Banking77 train.csv first 600-800 rows after seed 17 shuffle, shortlist projection only",
+  "calibration_data": "AG News public test rows 0:400 seed 17 for choice:3-5; Banking77 public test rows 0:80 for choice:11+ at 20 options",
+  "test_data": "AG News public test rows 400:800; Banking77 public test rows 80:160 for choice:11+; Banking77 rows 400:440 for honest shortlist",
+  "seed": 17,
+  "hardware": "macOS arm64, MPS for the forward passes, CPU for the reloaded check",
+  "hyperparameters": {"shortlist_projection_dim": 128, "epochs": 8, "lr": 0.001, "temperature_grid": 48},
+  "results": "artifacts/experiments/phase3/phase3_results.json and phase3_followup.json",
+  "conclusion": "choice:3-5 and choice:11+ temperatures from the fitter improved held-out NLL and ECE with accuracy unchanged, and are loaded from calibration.json. The learned shortlist raises Banking77 recall far above frozen cosine but top-8 reranking did not beat packed 20-way Choice. The candidate-set and ordinal heads were not trained."
+}

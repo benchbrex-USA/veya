@@ -1,0 +1,199 @@
+{
+  "caveat": "Development-only research candidate; no calibration, deferral policy, robustness, or sealed evaluation.",
+  "dev_services": [
+    "Alarm_1",
+    "Banks_2",
+    "Flights_3",
+    "Hotels_4",
+    "Media_2",
+    "Restaurants_2",
+    "Services_4"
+  ],
+  "development": {
+    "accuracy": 0.9033470884915177,
+    "by_service": {
+      "Alarm_1": {
+        "accuracy": 0.9388646288209607,
+        "n": 229
+      },
+      "Banks_2": {
+        "accuracy": 0.8628133704735376,
+        "n": 1436
+      },
+      "Flights_3": {
+        "accuracy": 0.8660667019587083,
+        "n": 1889
+      },
+      "Hotels_4": {
+        "accuracy": 0.9422680412371134,
+        "n": 1940
+      },
+      "Media_2": {
+        "accuracy": 0.9164208456243854,
+        "n": 1017
+      },
+      "Restaurants_2": {
+        "accuracy": 0.8726489028213166,
+        "n": 2552
+      },
+      "Services_4": {
+        "accuracy": 0.9630836047774158,
+        "n": 1842
+      }
+    },
+    "by_slice": {
+      "initial": {
+        "accuracy": 0.952,
+        "n": 1000
+      },
+      "later": {
+        "accuracy": 0.8984351337708228,
+        "n": 9905
+      },
+      "same_service": {
+        "accuracy": 0.9123963639996004,
+        "n": 10011
+      },
+      "transition": {
+        "accuracy": 0.802013422818792,
+        "n": 894
+      }
+    },
+    "confusion": {
+      "AddAlarm": {
+        "AddAlarm": 135,
+        "GetAlarms": 6,
+        "NONE": 3
+      },
+      "BookAppointment": {
+        "BookAppointment": 935,
+        "FindProvider": 28,
+        "NONE": 8
+      },
+      "CheckBalance": {
+        "CheckBalance": 733,
+        "NONE": 3,
+        "TransferMoney": 17
+      },
+      "FindMovies": {
+        "FindMovies": 462,
+        "RentMovie": 21
+      },
+      "FindProvider": {
+        "BookAppointment": 13,
+        "FindProvider": 775
+      },
+      "FindRestaurants": {
+        "FindRestaurants": 822,
+        "NONE": 33,
+        "ReserveRestaurant": 246
+      },
+      "GetAlarms": {
+        "AddAlarm": 3,
+        "GetAlarms": 61
+      },
+      "NONE": {
+        "AddAlarm": 2,
+        "BookAppointment": 19,
+        "CheckBalance": 5,
+        "FindMovies": 11,
+        "NONE": 636,
+        "RentMovie": 22,
+        "ReserveHotel": 23,
+        "ReserveRestaurant": 16,
+        "SearchHotel": 8,
+        "SearchRoundtripFlights": 2,
+        "TransferMoney": 5
+      },
+      "RentMovie": {
+        "FindMovies": 31,
+        "RentMovie": 417
+      },
+      "ReserveHotel": {
+        "NONE": 7,
+        "ReserveHotel": 643,
+        "SearchHotel": 40
+      },
+      "ReserveRestaurant": {
+        "FindRestaurants": 25,
+        "NONE": 5,
+        "ReserveRestaurant": 1267
+      },
+      "SearchHotel": {
+        "NONE": 7,
+        "ReserveHotel": 27,
+        "SearchHotel": 1024
+      },
+      "SearchOnewayFlight": {
+        "NONE": 5,
+        "SearchOnewayFlight": 1001,
+        "SearchRoundtripFlights": 211
+      },
+      "SearchRoundtripFlights": {
+        "NONE": 11,
+        "SearchOnewayFlight": 24,
+        "SearchRoundtripFlights": 540
+      },
+      "TransferMoney": {
+        "CheckBalance": 149,
+        "NONE": 18,
+        "TransferMoney": 400
+      }
+    },
+    "correct": 9851,
+    "n": 10905,
+    "wilson95": [
+      0.8976583361548054,
+      0.9087517701069281
+    ]
+  },
+  "development_evaluation_seconds": 10.12227695796173,
+  "epochs": 2,
+  "feature_dimension": 524288,
+  "format": "veya-phase12-sparse-scorer-diagnostic-v1",
+  "inventory_sha256": "cd81ea8be4df25e4220ed42fc59c5a303850feaef1957d18715099c2523eb5f8",
+  "lr": 0.2,
+  "mode": "full_context",
+  "n_dev": 10905,
+  "n_train_sampled": 50000,
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false,
+  "train_services": [
+    "Banks_1",
+    "Buses_1",
+    "Buses_2",
+    "Calendar_1",
+    "Events_1",
+    "Events_2",
+    "Flights_1",
+    "Flights_2",
+    "Homes_1",
+    "Hotels_1",
+    "Hotels_2",
+    "Hotels_3",
+    "Media_1",
+    "Movies_1",
+    "Music_1",
+    "Music_2",
+    "RentalCars_1",
+    "RentalCars_2",
+    "Restaurants_1",
+    "Services_1",
+    "Services_2",
+    "Services_3"
+  ],
+  "training_history": [
+    {
+      "epoch": 1,
+      "seconds": 61.27489229198545,
+      "train_online_accuracy": 0.86572,
+      "train_online_nll": 0.4210321295458108
+    },
+    {
+      "epoch": 2,
+      "seconds": 58.93603133398574,
+      "train_online_accuracy": 0.93316,
+      "train_online_nll": 0.24095636036120724
+    }
+  ]
+}

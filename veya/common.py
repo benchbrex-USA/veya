@@ -2,7 +2,7 @@
 import json
 import math
 import os
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, cast
 
 import numpy as np
 import torch
@@ -16,6 +16,15 @@ def serialize_state(state: Union[str, dict, list]) -> str:
     if isinstance(state, str):
         return state
     return json.dumps(state, ensure_ascii=False)
+
+
+def state_has_content(state: Any) -> bool:
+    """Whether ``state`` is a supported, non-empty inference input."""
+    if isinstance(state, str):
+        return bool(state.strip())
+    if isinstance(state, (dict, list)):
+        return bool(state)
+    return False
 
 
 def render_criterion(value) -> str:
@@ -34,10 +43,16 @@ def render_options(q: Dict) -> List[str]:
     """Render option texts in label-index order. Noul is always [false, true]."""
     t, crit = q["t"], q.get("crit")
     if t == "choice":
+        if not isinstance(crit, dict) or not crit:
+            raise ValueError("choice criteria must be a non-empty dict")
         # only None/"" mean "no description"; 0 and False are legitimate criterion values
         return [k if v is None or v == "" else "%s: %s" % (k, render_criterion(v)) for k, v in crit.items()]
     if t == "score":
+        if not isinstance(crit, list) or len(crit) < 2:
+            raise ValueError("score criteria must contain at least two ordered levels")
         return ["level %d: %s" % (i, render_criterion(c)) for i, c in enumerate(crit)]
+    if crit is not None and not isinstance(crit, dict):
+        raise ValueError("noul criteria must be a dict when provided")
     crit = crit or {}
     false_crit, true_crit = crit.get("false"), crit.get("true")
     return [
@@ -54,8 +69,11 @@ def build_sequence(
     head_max_len: int = 192,
     option_order: Optional[List[int]] = None,
     truncate_left: bool = False,
+    option_token_cap: int = 48,
 ):
     """Format: [CLS] <type> instructions [SEP] [MASK] opt0 [MASK] opt1 ... [SEP] state [SEP]."""
+    if isinstance(option_token_cap, bool) or int(option_token_cap) < 1:
+        raise ValueError("option_token_cap must be a positive integer")
     mask_tok = tok.mask_token
     opts = render_options(q)
     order = option_order if option_order is not None else list(range(len(opts)))
@@ -65,7 +83,7 @@ def build_sequence(
     for i in order:
         opt_ids.append(
             [tok.mask_token_id]
-            + tok(" " + opts[i].replace(mask_tok, " "), add_special_tokens=False)["input_ids"][:48]
+            + tok(" " + opts[i].replace(mask_tok, " "), add_special_tokens=False)["input_ids"][: int(option_token_cap)]
         )
     opt_budget = head_max_len - sum(len(o) for o in opt_ids)
     if opt_budget < 16:
@@ -81,7 +99,14 @@ def build_sequence(
     ids.append(tok.sep_token_id)
     room = max(0, max_len - len(ids) - 1)
     st = tok(serialize_state(state).replace(mask_tok, " "), add_special_tokens=False)["input_ids"]
-    st = st[-room:] if truncate_left else st[:room]
+    # `st[-0:]` is the whole list in Python, so a zero token budget must be handled
+    # before the slice. Otherwise truncate_left keeps the state it was asked to drop.
+    if room == 0:
+        st = []
+    elif truncate_left:
+        st = st[-room:]
+    else:
+        st = st[:room]
     ids = ids + st + [tok.sep_token_id]
     return ids[:max_len], [m for m in markers if m < max_len]
 
@@ -92,7 +117,7 @@ class DecisionModel(nn.Module):
     def __init__(self, encoder: nn.Module, head_layers: int = 2, n_act: int = 2, dropout: float = 0.1):
         super().__init__()
         self.encoder = encoder
-        d = encoder.config.hidden_size
+        d = cast(int, cast(Any, encoder).config.hidden_size)
         nhead = max(1, d // 64)
         layer = nn.TransformerEncoderLayer(d, nhead, 4 * d, dropout, batch_first=True, norm_first=True)
         self.head = nn.TransformerEncoder(layer, head_layers, enable_nested_tensor=False) if head_layers > 0 else None
@@ -200,11 +225,37 @@ def ece_score(conf: np.ndarray, correct: np.ndarray, bins: int = 15) -> float:
         return float("nan")
     edges = np.linspace(0, 1, bins + 1)
     e = 0.0
-    for lo, hi in zip(edges[:-1], edges[1:]):
-        sel = (conf > lo) & (conf <= hi)
+    for i, (lo, hi) in enumerate(zip(edges[:-1], edges[1:])):
+        # The first bin includes confidence 0. A strict `>` drops every row that
+        # abstains at the floor and reports ECE 0 when every confidence is 0.
+        sel = (conf >= lo) & (conf <= hi) if i == 0 else (conf > lo) & (conf <= hi)
         if sel.any():
             e += sel.mean() * abs(conf[sel].mean() - correct[sel].mean())
     return float(e)
+
+
+def safe_automation_coverage(correct, confidence, epsilon: float) -> float:
+    """Largest fraction of decisions kept, highest confidence first, with error <= epsilon.
+
+    `correct` is 1 for a right decision and 0 for a wrong one. Coverage is measured
+    against the full set, so refusing the lowest-confidence rows is how coverage shrinks.
+    """
+    correct = np.asarray(correct, dtype=np.float64)
+    confidence = np.asarray(confidence, dtype=np.float64)
+    n = int(correct.shape[0])
+    if n == 0 or confidence.shape[0] != n:
+        return float("nan")
+    order = np.argsort(-confidence, kind="mergesort")
+    correct = correct[order]
+    sorted_confidence = confidence[order]
+    wrong = 0.0
+    best = 0.0
+    for i in range(n):
+        wrong += 1.0 - float(correct[i])
+        is_group_end = i == n - 1 or sorted_confidence[i + 1] < sorted_confidence[i] - 1e-12
+        if is_group_end and wrong / (i + 1) <= float(epsilon) + 1e-12:
+            best = (i + 1) / n
+    return float(best)
 
 
 def confidence_from_probs(p: np.ndarray, k: int) -> float:
@@ -264,6 +315,7 @@ def collate_items(batch, pad_id: int):
         mpos[i, :k] = torch.tensor(it["markers"])
         mmask[i, :k] = True
         if has_target and "target" in it:
+            assert target is not None
             target[i, : len(it["target"])] = torch.tensor(it["target"], dtype=torch.float32)
 
     res = {

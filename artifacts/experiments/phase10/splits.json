@@ -1,0 +1,62 @@
+{
+  "development": {
+    "candidates": 13,
+    "examples": 260,
+    "schemas": [
+      "sgd:Calendar_1",
+      "sgd:Flights_1",
+      "sgd:Hotels_3",
+      "sgd:Media_1",
+      "sgd:Services_3"
+    ],
+    "sha256": "5a825d937655f6dfbd1368a59f8aa56dbd0f82a59a00b181b86d5d60bfd5ba00"
+  },
+  "format": "veya-phase10-split-freeze-v1",
+  "future_blind": "unfrozen and absent until finalist selection",
+  "prohibited": [
+    "research/data/banking77/test.csv",
+    "CLINC150 val partition",
+    "CLINC150 test partition"
+  ],
+  "schema_held_out_validation": {
+    "candidates": 150,
+    "examples": 3000,
+    "matched_end_to_end_subset_examples": 1000,
+    "matched_end_to_end_subset_ids_sha256": "ddc64e706504267d94480d490575437a5ff1128f0dd9429d9c9f1b0c667acf47",
+    "schemas": [
+      "clinc150"
+    ],
+    "sha256": "8d56603620ae95aa7ab5ce312bab6775f22821d830b66dc510bfc4325c9cd996",
+    "source_partition": "CLINC150 train only"
+  },
+  "seed": 20260923,
+  "train": {
+    "candidates": 117,
+    "examples": 4635,
+    "schemas": [
+      "banking77",
+      "sgd:Banks_1",
+      "sgd:Buses_1",
+      "sgd:Buses_2",
+      "sgd:Events_1",
+      "sgd:Events_2",
+      "sgd:Flights_2",
+      "sgd:Homes_1",
+      "sgd:Hotels_1",
+      "sgd:Hotels_2",
+      "sgd:Movies_1",
+      "sgd:Music_1",
+      "sgd:Music_2",
+      "sgd:RentalCars_1",
+      "sgd:RentalCars_2",
+      "sgd:Restaurants_1",
+      "sgd:RideSharing_1",
+      "sgd:RideSharing_2",
+      "sgd:Services_1",
+      "sgd:Services_2",
+      "sgd:Travel_1",
+      "sgd:Weather_1"
+    ],
+    "sha256": "645b968107501011915bc5d97fd55b567c1a3e3650395971921d2ff79a19d2df"
+  }
+}

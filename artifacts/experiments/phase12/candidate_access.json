@@ -1,0 +1,21 @@
+{
+  "candidate_count_distribution_active": {
+    "2": 10156
+  },
+  "format": "veya-phase12-candidate-access-v1",
+  "inventory_sha256": "81a526a57fa2e5b8d941a78c018c33ddc06815fd0b8565c2c2eec6da4f3b4301",
+  "n_active_intent": 10156,
+  "n_all_user_frames": 10905,
+  "n_none": 749,
+  "recall_at_1": null,
+  "recall_at_16": 1.0,
+  "recall_at_1_note": "No retrieval ranker is used; top-1 is the scorer's accuracy, not candidate access.",
+  "recall_at_32": 1.0,
+  "recall_at_4": 1.0,
+  "recall_at_8": 1.0,
+  "recall_at_all": 1.0,
+  "selected_architecture": "score every official intent; model NONE as a separate no-route outcome",
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false,
+  "workflow": "schema_guided_service_intent_routing"
+}

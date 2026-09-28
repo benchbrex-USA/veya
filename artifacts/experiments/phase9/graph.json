@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    {"id": "P9-G0", "status": "done", "evidence": "control.json matches the phase-5 manifest; production checkpoint hash unchanged"},
+    {"id": "P9-G1", "status": "done", "evidence": "premise is state plus question; hypothesis is the second segment"},
+    {"id": "P9-G2", "status": "done", "evidence": "trained template is H0, the label id. H1 was a 150-step screen. H2 was not trained"},
+    {"id": "P9-G3", "status": "done", "evidence": "6605 natural top-8 groups; 1195 forced positives tagged and kept out of the main loss"},
+    {"id": "P9-G4", "status": "done", "evidence": "one mask readout per candidate, pairs batched"},
+    {"id": "P9-G5", "status": "done", "evidence": "frozen encoder conditional accuracy 0.705, interval includes zero"},
+    {"id": "P9-G6", "status": "done", "evidence": "listwise cross-entropy, head learning rate 0.001"},
+    {"id": "P9-G7", "status": "done", "evidence": "top layer 0.754; top two layers 0.772. Encoder learning rate 1e-5"},
+    {"id": "P9-G8", "status": "done", "evidence": "softmax over K compatibility logits"},
+    {"id": "P9-G9", "status": "skipped", "evidence": "listwise loss was sufficient; no auxiliary loss was added"},
+    {"id": "P9-G10", "status": "done", "evidence": "72 permutations, max logit delta 0, flip rate 0"},
+    {"id": "P9-G11", "status": "done", "evidence": "train-side sibling clusters scored on validation hits"},
+    {"id": "P9-G12", "status": "done", "evidence": "same validation shortlist ids as packed K=8; conditional 0.772 versus 0.697"},
+    {"id": "P9-G13", "status": "done", "evidence": "controlled K=2/4/8. K=16 and K=32 were not promoted"},
+    {"id": "P9-G14", "status": "done", "evidence": "hypothesis p50 233 ms versus packed p50 94 ms on 32 requests"},
+    {"id": "P9-G15", "status": "done", "evidence": "top-2 encoder adaptation, H0 template, K=8, frozen shortlist"},
+    {"id": "P9-G16", "status": "done", "evidence": "temperature 1.6203480178935838 fit on 589 calibration hits"},
+    {"id": "P9-G17", "status": "done", "evidence": "thresholds chosen on validation; sealed test reported once"},
+    {"id": "P9-G18", "status": "done", "evidence": "AG News 0.9583 unchanged; 4-way Choice 0.880 unchanged; production probe max abs 0"},
+    {"id": "P9-G19", "status": "done", "evidence": "experimental route only; default reranker_id remains base_decision_head"},
+    {"id": "P9-G20", "status": "superseded", "evidence": "Forensic audit keeps Phase 9 RESEARCH ONLY: development-exposed evidence and unresolved adversarial sensitivity. Default route remains base packed/K8 rerank."}
+  ]
+}

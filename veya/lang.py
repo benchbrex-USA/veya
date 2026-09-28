@@ -202,7 +202,8 @@ def guess_latin_language(text: str) -> Optional[str]:
     Scores function-word hits per language and requires the winner to beat English by a margin,
     so ordinary English is never misrouted. Short inputs usually return None on purpose.
     """
-    return latin_profile(text)["language"]
+    language = latin_profile(text)["language"]
+    return language if isinstance(language, str) else None
 
 
 def analyse(state: Union[str, dict, list, None]) -> Dict[str, object]:
@@ -233,10 +234,32 @@ def analyse(state: Union[str, dict, list, None]) -> Dict[str, object]:
     english = lang == "en" or (undecided and not prof_lat["looks_non_english"])
     return {"script": "latin", "script_profile": prof, "language": lang,
             "is_english": english, "language_undecided": undecided,
-            "diacritic_rate": round(float(prof_lat["diacritic_rate"]), 4),
+            "diacritic_rate": round(float(str(prof_lat["diacritic_rate"])), 4),
             "non_latin_fraction": non_latin}
 
 
 def is_english(state: Union[str, dict, list, None]) -> bool:
     """True when the English checkpoint can be expected to read this state."""
     return bool(analyse(state)["is_english"])
+
+
+def reads_non_latin(cfg: Optional[dict]) -> bool:
+    """True for the multilingual encoder. ModernBERT checkpoints are Latin-only."""
+    encoder = str((cfg or {}).get("encoder", "")).lower()
+    return "mmbert" in encoder
+
+
+def defer_reason(cfg: Optional[dict], state: Union[str, dict, list, None]) -> Optional[str]:
+    """Why this checkpoint must not answer `state`, or None when it may.
+
+    Non-Latin text on a ModernBERT checkpoint is outside the model's tokenizer.
+    Returning a decision there is a confident guess, not a reading of the input.
+    """
+    if reads_non_latin(cfg):
+        return None
+    detected = analyse(state)
+    if detected["script"] not in ("latin", "unknown"):
+        return "unsupported_language"
+    if detected["script"] == "latin" and not detected["is_english"]:
+        return "unsupported_language"
+    return None

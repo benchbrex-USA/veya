@@ -1,0 +1,163 @@
+{
+  "reranker_mistakes": 181,
+  "relations": {
+    "residual": 84,
+    "same_parent": 17,
+    "negation_or_failure_pair": 28,
+    "temporal_or_status": 35,
+    "embedding_near_neighbor": 3,
+    "lexical_overlap": 14
+  },
+  "top_edges": [
+    {
+      "true": "card_payment_wrong_exchange_rate",
+      "predicted": "wrong_exchange_rate_for_cash_withdrawal",
+      "count": 10
+    },
+    {
+      "true": "fiat_currency_support",
+      "predicted": "supported_cards_and_currencies",
+      "count": 7
+    },
+    {
+      "true": "balance_not_updated_after_bank_transfer",
+      "predicted": "balance_not_updated_after_cheque_or_cash_deposit",
+      "count": 5
+    },
+    {
+      "true": "transfer_timing",
+      "predicted": "pending_transfer",
+      "count": 4
+    },
+    {
+      "true": "beneficiary_not_allowed",
+      "predicted": "declined_cash_withdrawal",
+      "count": 3
+    },
+    {
+      "true": "beneficiary_not_allowed",
+      "predicted": "declined_transfer",
+      "count": 3
+    },
+    {
+      "true": "card_payment_not_recognised",
+      "predicted": "reverted_card_payment?",
+      "count": 3
+    },
+    {
+      "true": "failed_transfer",
+      "predicted": "declined_transfer",
+      "count": 3
+    },
+    {
+      "true": "balance_not_updated_after_bank_transfer",
+      "predicted": "Refund_not_showing_up",
+      "count": 2
+    },
+    {
+      "true": "balance_not_updated_after_bank_transfer",
+      "predicted": "declined_transfer",
+      "count": 2
+    },
+    {
+      "true": "balance_not_updated_after_bank_transfer",
+      "predicted": "pending_transfer",
+      "count": 2
+    },
+    {
+      "true": "card_linking",
+      "predicted": "lost_or_stolen_card",
+      "count": 2
+    },
+    {
+      "true": "card_swallowed",
+      "predicted": "declined_cash_withdrawal",
+      "count": 2
+    },
+    {
+      "true": "cash_withdrawal_not_recognised",
+      "predicted": "declined_cash_withdrawal",
+      "count": 2
+    },
+    {
+      "true": "cash_withdrawal_not_recognised",
+      "predicted": "lost_or_stolen_card",
+      "count": 2
+    },
+    {
+      "true": "declined_cash_withdrawal",
+      "predicted": "balance_not_updated_after_cheque_or_cash_deposit",
+      "count": 2
+    },
+    {
+      "true": "exchange_via_app",
+      "predicted": "exchange_rate",
+      "count": 2
+    },
+    {
+      "true": "get_physical_card",
+      "predicted": "change_pin",
+      "count": 2
+    },
+    {
+      "true": "get_physical_card",
+      "predicted": "passcode_forgotten",
+      "count": 2
+    },
+    {
+      "true": "request_refund",
+      "predicted": "reverted_card_payment?",
+      "count": 2
+    },
+    {
+      "true": "top_up_by_bank_transfer_charge",
+      "predicted": "transfer_fee_charged",
+      "count": 2
+    },
+    {
+      "true": "top_up_reverted",
+      "predicted": "top_up_failed",
+      "count": 2
+    },
+    {
+      "true": "topping_up_by_card",
+      "predicted": "top_up_by_card_charge",
+      "count": 2
+    },
+    {
+      "true": "transfer_fee_charged",
+      "predicted": "card_payment_fee_charged",
+      "count": 2
+    },
+    {
+      "true": "transfer_not_received_by_recipient",
+      "predicted": "balance_not_updated_after_cheque_or_cash_deposit",
+      "count": 2
+    },
+    {
+      "true": "transfer_not_received_by_recipient",
+      "predicted": "failed_transfer",
+      "count": 2
+    },
+    {
+      "true": "transfer_not_received_by_recipient",
+      "predicted": "pending_transfer",
+      "count": 2
+    },
+    {
+      "true": "transfer_timing",
+      "predicted": "balance_not_updated_after_cheque_or_cash_deposit",
+      "count": 2
+    },
+    {
+      "true": "wrong_amount_of_cash_received",
+      "predicted": "balance_not_updated_after_cheque_or_cash_deposit",
+      "count": 2
+    },
+    {
+      "true": "wrong_amount_of_cash_received",
+      "predicted": "declined_cash_withdrawal",
+      "count": 2
+    }
+  ]
+}

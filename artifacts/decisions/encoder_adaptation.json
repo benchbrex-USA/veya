@@ -1,0 +1,20 @@
+{
+  "decision": "DO NOT PROMOTE",
+  "status": "RESEARCH",
+  "control": "Historical Phase-6 candidate, base decision head, hierarchical temperature 1.971127355603397",
+  "what_was_trained": "Top encoder layer plus the decision head, one epoch, 6605 hard K=8 rows, encoder lr 1e-6, head lr 5e-6. Short runs also covered the top 2 layers and generic versus mixed candidate sets.",
+  "validation_conditional_accuracy": 0.6968174204355109,
+  "delta_vs_control": 0.0,
+  "bootstrap_ci95": [0.0, 0.0],
+  "n_hits": 597,
+  "reason": "No validation decision changed. A higher learning rate on the 300-step screen changed one decision in the wrong direction.",
+  "evidence": [
+    "artifacts/experiments/phase7/short_runs.json",
+    "artifacts/experiments/phase7/full_run.json",
+    "artifacts/experiments/phase7/layer_probe.json",
+    "artifacts/experiments/phase7/control.json",
+    "artifacts/experiments/phase7/parameter_update_audit.json"
+  ],
+  "parameter_update_audit": "38 of 38 trainable tensors changed in a real-checkpoint isolated one-step diagnostic; max abs delta 5.245208740234375e-06. The negative validation result is not explained by a frozen-parameter bug.",
+  "release_manifest": "unchanged"
+}

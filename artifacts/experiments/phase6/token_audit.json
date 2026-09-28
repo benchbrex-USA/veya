@@ -1,0 +1,11 @@
+{
+  "n": 200,
+  "wider_budget_identical_sequences": 200,
+  "wider_budget_changed_sequences": 0,
+  "mean_sequence_tokens": 150.545,
+  "mean_state_tokens_available": 15.935,
+  "mean_state_tokens_kept_estimate": 15.935,
+  "mean_option_tokens_unbounded": 15.07625,
+  "mean_option_tokens_after_cap": 15.07625,
+  "sequences_whose_options_hit_the_head_budget": 0
+}

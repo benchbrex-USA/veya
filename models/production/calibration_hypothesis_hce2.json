@@ -1,0 +1,21 @@
+{
+  "format": "veya-hypothesis-calibration-v1",
+  "primitive": "choice",
+  "route": "hypothesis_hce2_h0",
+  "k": 8,
+  "method": "temperature_scaling",
+  "temperature": 1.6203480178935838,
+  "sample_count": 589,
+  "fitting_split": "banking77_train_seed17_8600_9300",
+  "fit_split_sha256": "a673102e447c1409904115424fe82a98a2973b7bdce8e897193b1b7af20a8d45",
+  "validation_split": "banking77_train_seed17_9300_10003",
+  "validation_split_sha256": "e26dd91d4e9d1c659a939b7251e44d47db499b1f3b30bd1466ba4d281cf9a479",
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+  "head_sha256": "8ccd560a7464d0dfa35a5382694bbf398d991fa2f2acf869525a2e93a0008d50",
+  "encoder_delta_sha256": "c2c8eec02fa01e118f36a9920b1f023d0785dd35c699a6e240c561054253d517",
+  "template_version": "phase9-h0-v1",
+  "start_layer": 26,
+  "architecture_id": "hypothesis_hce2_h0",
+  "source": "fit_temperature on natural top-8 hits inside the phase-6 calibration slice; architecture was already frozen"
+}

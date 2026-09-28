@@ -1,0 +1,139 @@
+{
+  "by_service": {
+    "Alarm_1": {
+      "accuracy": 0.972972972972973,
+      "confusion": {
+        "GetAlarms -> AddAlarm": 1,
+        "GetAlarms -> GetAlarms": 36
+      },
+      "correct": 36,
+      "n": 37,
+      "wilson95": [
+        0.861759301362695,
+        0.9952130255480596
+      ]
+    },
+    "Banks_2": {
+      "accuracy": 0.9862068965517241,
+      "confusion": {
+        "CheckBalance -> CheckBalance": 143,
+        "CheckBalance -> TransferMoney": 2
+      },
+      "correct": 143,
+      "n": 145,
+      "wilson95": [
+        0.9511074552234658,
+        0.9962092475096044
+      ]
+    },
+    "Flights_3": {
+      "accuracy": 1.0,
+      "confusion": {
+        "SearchOnewayFlight -> SearchOnewayFlight": 192
+      },
+      "correct": 192,
+      "n": 192,
+      "wilson95": [
+        0.980384853933246,
+        1.0000000000000002
+      ]
+    },
+    "Hotels_4": {
+      "accuracy": 0.7226890756302521,
+      "confusion": {
+        "SearchHotel -> ReserveHotel": 33,
+        "SearchHotel -> SearchHotel": 86
+      },
+      "correct": 86,
+      "n": 119,
+      "wilson95": [
+        0.6362542159994129,
+        0.7951962121281266
+      ]
+    },
+    "Media_2": {
+      "accuracy": 0.7430167597765364,
+      "confusion": {
+        "FindMovies -> FindMovies": 133,
+        "FindMovies -> RentMovie": 46
+      },
+      "correct": 133,
+      "n": 179,
+      "wilson95": [
+        0.674367850325328,
+        0.8014542119199625
+      ]
+    },
+    "Restaurants_2": {
+      "accuracy": 0.889763779527559,
+      "confusion": {
+        "FindRestaurants -> FindRestaurants": 86,
+        "FindRestaurants -> ReserveRestaurant": 12,
+        "ReserveRestaurant -> FindRestaurants": 2,
+        "ReserveRestaurant -> ReserveRestaurant": 27
+      },
+      "correct": 113,
+      "n": 127,
+      "wilson95": [
+        0.8234509086033921,
+        0.9331899978211546
+      ]
+    },
+    "Services_4": {
+      "accuracy": 0.5920398009950248,
+      "confusion": {
+        "FindProvider -> BookAppointment": 82,
+        "FindProvider -> FindProvider": 119
+      },
+      "correct": 119,
+      "n": 201,
+      "wilson95": [
+        0.5229903095704524,
+        0.6576371874851488
+      ]
+    }
+  },
+  "candidate_access": {
+    "recall_at_16": 1.0,
+    "recall_at_32": 1.0,
+    "recall_at_4": 1.0,
+    "recall_at_8": 1.0,
+    "recall_at_all": 1.0
+  },
+  "candidate_representation": "official intent descriptions; official service description in instruction",
+  "device": "cpu",
+  "format": "veya-phase12-sgd-dev-baseline-v1",
+  "inventory_sha256": "cd81ea8be4df25e4220ed42fc59c5a303850feaef1957d18715099c2523eb5f8",
+  "limitations": [
+    "No training, calibration, threshold fitting, or sealed test was performed.",
+    "Six of seven validation services have one observed first-turn intent; majority-by-service scores 97.1%. This baseline cannot support a 98% commercial claim.",
+    "Local CPU scoring latency excludes HTTP, concurrency, and cold load.",
+    "Public SGD services are not commercial customers."
+  ],
+  "none_rows": 0,
+  "overall": {
+    "accuracy": 0.822,
+    "brier": 0.24735119322807667,
+    "correct": 822,
+    "high_confidence_errors_at_0_9": 7,
+    "latency_ms": {
+      "p50": 102.56316646700725,
+      "p95": 113.04451879695988,
+      "p99": 124.89893042424228
+    },
+    "mean_confidence": 0.7737812259310303,
+    "n": 1000,
+    "nll": 0.3820656977999947,
+    "throughput_sequential_per_second": 9.922422375988527,
+    "wilson95": [
+      0.7970731778115323,
+      0.8444623897237702
+    ]
+  },
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "population": "initial USER turn; whole dev-only services; >=2 official intents",
+  "release_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false,
+  "verified_release": "0.3.5-audit-baseline.1"
+}

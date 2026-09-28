@@ -1,0 +1,35 @@
+{
+  "phase": 9,
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "manifest_release": "0.3.5-phase5",
+  "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "manifest_checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+  "router_sha256": "375c0ac9d9461c7761fedb79d9b36cad2703be06a2db19492935fce5fd3bd30d",
+  "packed_calibration_sha256": "608e27f5dee4d6e9849fd4ec023c465694c5ff546ec87ad7a4913384da66144d",
+  "hierarchical_calibration_sha256": "12ef36ee3858c41177fd598dc543f832be75b77d32c82b9ac70ab99cb8ae5d92",
+  "hierarchical_temperature": 1.971127355603397,
+  "val_predictions_sha256": "642168e73c2bc694e6dcc9d849d6003315254eb6afc0baee6aa7b7690b1455da",
+  "split_hashes": {
+    "reranker_train": "0edfdf32fde2f1d813690129f213d4d4f959988b8bb86d49678bf64a8500a746",
+    "calibration": "a673102e447c1409904115424fe82a98a2973b7bdce8e897193b1b7af20a8d45",
+    "reranker_val": "e26dd91d4e9d1c659a939b7251e44d47db499b1f3b30bd1466ba4d281cf9a479"
+  },
+  "packed_conditional_control": 0.6968174204355109,
+  "template_version": "phase9-h0-v1",
+  "first_variant": "H0",
+  "objective": "listwise_cross_entropy",
+  "promotion_rule": {
+    "conditional_ci_low_must_exceed": 0,
+    "end_to_end_must_not_fall": true,
+    "t1_high_conf_070_count_must_not_rise": true,
+    "permutation_flip_rate_max": 0,
+    "permutation_logit_delta_max": 0.001,
+    "ag_news_drop_max": 0.02,
+    "latency_p50_multiple_max_for_promotion": 4.0,
+    "if_similar": "keep packed",
+    "calibration_only_after_the_gate": true,
+    "release_test_only_after_calibration": true
+  },
+  "release_test_opened": false
+}

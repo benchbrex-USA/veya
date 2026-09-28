@@ -1,0 +1,20 @@
+{
+  "decision": "KEEP THE PHASE-5 PACKED HEAD",
+  "status": "SERVED IN RESEARCH RELEASE",
+  "rejected": ["larger token budget", "listwise fine-tune of a copied head", "listwise plus pairwise weight 0.2", "top-8 interaction scorer on frozen encoder means"],
+  "rule": "Promote only if the paired bootstrap 95% interval for validation conditional accuracy is entirely above zero and the T=1 high-confidence error rate does not rise.",
+  "validation_shortlist_conditional_accuracy": 0.6968174204355109,
+  "listwise_best_delta": 0.0033500837520938024,
+  "listwise_ci95": [-0.0033500837520938024, 0.010050251256281407],
+  "pairwise_best_delta": 0.005025125628140704,
+  "pairwise_ci95": [0.0, 0.011725293132328308],
+  "interaction_best_conditional_accuracy": 0.22445561139028475,
+  "evidence": [
+    "artifacts/experiments/phase6/constructions.json",
+    "artifacts/experiments/phase6/train_decision.json",
+    "artifacts/experiments/phase6/train_decision_pairwise.json",
+    "artifacts/experiments/phase6/interaction_decision.json",
+    "artifacts/experiments/phase6/final_report.json"
+  ],
+  "revisit": "Only revisit with a distinct cross-domain hypothesis and clean validation data; Phase 7 already tested upper-layer adaptation without a validation gain."
+}

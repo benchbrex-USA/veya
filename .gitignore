@@ -3,6 +3,7 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+.coverage
 env/
 venv/
 .venv/
@@ -34,6 +35,20 @@ session-*.md
 # Checkpoint weights are larger than GitHub's 100MB file limit.
 models/production/**/*.safetensors
 models/production/.cache/
+
+# Retired Phase-6 candidate weights above GitHub's 100MB file limit.
+artifacts/experiments/phase6/candidates/k8_pairwise.pt
+artifacts/experiments/phase6/candidates/k8_listwise.pt
+
+# Reproducible Phase-10 working caches/raw downloads. Curated split files,
+# registries, licenses, schemas, and final artifacts remain versionable.
+artifacts/experiments/phase10/frozen_embeddings.npz
+artifacts/experiments/phase11/augmented_embeddings.npz
+artifacts/experiments/phase11/validation_embeddings.npz
+research/data/sgd/train/dialogues_*.json
+research/data/sgd/dev/dialogues_*.json
+research/data/hwu64/NLU-Data-Home-Domain-Annotated-All.csv
+data/external/sgd/
 
 # credentials - never commit
 .env

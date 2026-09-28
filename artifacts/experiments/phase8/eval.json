@@ -1,0 +1,579 @@
+{
+  "levels": {
+    "D0": {
+      "n": 703,
+      "retrieval_recall_at_8": 0.8492176386913229,
+      "conditional_accuracy": 0.6968174204355109,
+      "end_to_end_accuracy": 0.5917496443812233,
+      "nll_on_hits": 0.9388716524901974,
+      "brier_on_hits": 0.42324315151335895,
+      "ece_honest": 0.11086721040688968,
+      "wrong_070": 84,
+      "wrong_080": 49,
+      "wrong_090": 26,
+      "mean_input_tokens": 148.25462304409672,
+      "bootstrap_vs_saved_d0": {
+        "delta": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 597
+      }
+    },
+    "D0_wide": {
+      "n": 703,
+      "retrieval_recall_at_8": 0.8492176386913229,
+      "conditional_accuracy": 0.6968174204355109,
+      "end_to_end_accuracy": 0.5917496443812233,
+      "nll_on_hits": 0.9388716524901974,
+      "brier_on_hits": 0.42324315151335895,
+      "ece_honest": 0.11086721040688968,
+      "wrong_070": 84,
+      "wrong_080": 49,
+      "wrong_090": 26,
+      "mean_input_tokens": 148.25462304409672,
+      "bootstrap_vs_saved_d0": {
+        "delta": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "n": 597
+      }
+    },
+    "D1": {
+      "n": 703,
+      "retrieval_recall_at_8": 0.8492176386913229,
+      "conditional_accuracy": 0.3249581239530988,
+      "end_to_end_accuracy": 0.2759601706970128,
+      "nll_on_hits": 1.8543565035113958,
+      "brier_on_hits": 0.8209789317963827,
+      "ece_honest": 0.13514607539852327,
+      "wrong_070": 27,
+      "wrong_080": 7,
+      "wrong_090": 1,
+      "mean_input_tokens": 273.16073968705547,
+      "bootstrap_vs_saved_d0": {
+        "delta": -0.37185929648241206,
+        "ci95_low": -0.41708542713567837,
+        "ci95_high": -0.3316582914572864,
+        "n": 597
+      }
+    },
+    "D2": {
+      "n": 703,
+      "retrieval_recall_at_8": 0.8492176386913229,
+      "conditional_accuracy": 0.3316582914572864,
+      "end_to_end_accuracy": 0.28165007112375534,
+      "nll_on_hits": 1.8547310237242125,
+      "brier_on_hits": 0.8086038655085668,
+      "ece_honest": 0.09765522829990474,
+      "wrong_070": 12,
+      "wrong_080": 3,
+      "wrong_090": 0,
+      "mean_input_tokens": 299.6941678520626,
+      "bootstrap_vs_saved_d0": {
+        "delta": -0.36515912897822445,
+        "ci95_low": -0.40871021775544386,
+        "ci95_high": -0.3249581239530988,
+        "n": 597
+      }
+    }
+  },
+  "transitions": {
+    "D0": {
+      "wrong_to_correct": 0,
+      "correct_to_wrong": 0,
+      "wrong_to_other_wrong": 0,
+      "unchanged": 703
+    },
+    "D0_wide": {
+      "wrong_to_correct": 0,
+      "correct_to_wrong": 0,
+      "wrong_to_other_wrong": 0,
+      "unchanged": 703
+    },
+    "D1": {
+      "wrong_to_correct": 13,
+      "correct_to_wrong": 235,
+      "wrong_to_other_wrong": 163,
+      "unchanged": 292
+    },
+    "D2": {
+      "wrong_to_correct": 10,
+      "correct_to_wrong": 228,
+      "wrong_to_other_wrong": 165,
+      "unchanged": 300
+    }
+  },
+  "clusters": {
+    "D0": [
+      {
+        "true": "card_payment_wrong_exchange_rate",
+        "baseline_prediction": "wrong_exchange_rate_for_cash_withdrawal",
+        "n": 10,
+        "accuracy": 0.0
+      },
+      {
+        "true": "fiat_currency_support",
+        "baseline_prediction": "supported_cards_and_currencies",
+        "n": 7,
+        "accuracy": 0.0
+      },
+      {
+        "true": "failed_transfer",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_payment_not_recognised",
+        "baseline_prediction": "reverted_card_payment?",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "beneficiary_not_allowed",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "top_up_reverted",
+        "baseline_prediction": "top_up_failed",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "pending_transfer",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "exchange_via_app",
+        "baseline_prediction": "exchange_rate",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "declined_cash_withdrawal",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_delivery_estimate",
+        "baseline_prediction": "card_arrival",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "unable_to_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "why_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "pending_cash_withdrawal",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "transfer_not_received_by_recipient",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "getting_spare_card",
+        "baseline_prediction": "order_physical_card",
+        "n": 1,
+        "accuracy": 0.0
+      }
+    ],
+    "D0_wide": [
+      {
+        "true": "card_payment_wrong_exchange_rate",
+        "baseline_prediction": "wrong_exchange_rate_for_cash_withdrawal",
+        "n": 10,
+        "accuracy": 0.0
+      },
+      {
+        "true": "fiat_currency_support",
+        "baseline_prediction": "supported_cards_and_currencies",
+        "n": 7,
+        "accuracy": 0.0
+      },
+      {
+        "true": "failed_transfer",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_payment_not_recognised",
+        "baseline_prediction": "reverted_card_payment?",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "beneficiary_not_allowed",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "top_up_reverted",
+        "baseline_prediction": "top_up_failed",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "pending_transfer",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "exchange_via_app",
+        "baseline_prediction": "exchange_rate",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "declined_cash_withdrawal",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_delivery_estimate",
+        "baseline_prediction": "card_arrival",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "unable_to_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "why_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "pending_cash_withdrawal",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "transfer_not_received_by_recipient",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "getting_spare_card",
+        "baseline_prediction": "order_physical_card",
+        "n": 1,
+        "accuracy": 0.0
+      }
+    ],
+    "D1": [
+      {
+        "true": "card_payment_wrong_exchange_rate",
+        "baseline_prediction": "wrong_exchange_rate_for_cash_withdrawal",
+        "n": 10,
+        "accuracy": 0.0
+      },
+      {
+        "true": "fiat_currency_support",
+        "baseline_prediction": "supported_cards_and_currencies",
+        "n": 7,
+        "accuracy": 0.0
+      },
+      {
+        "true": "failed_transfer",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_payment_not_recognised",
+        "baseline_prediction": "reverted_card_payment?",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "beneficiary_not_allowed",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "top_up_reverted",
+        "baseline_prediction": "top_up_failed",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "pending_transfer",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 2,
+        "accuracy": 0.5
+      },
+      {
+        "true": "exchange_via_app",
+        "baseline_prediction": "exchange_rate",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "declined_cash_withdrawal",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_delivery_estimate",
+        "baseline_prediction": "card_arrival",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "unable_to_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "why_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "pending_cash_withdrawal",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "transfer_not_received_by_recipient",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "getting_spare_card",
+        "baseline_prediction": "order_physical_card",
+        "n": 1,
+        "accuracy": 0.0
+      }
+    ],
+    "D2": [
+      {
+        "true": "card_payment_wrong_exchange_rate",
+        "baseline_prediction": "wrong_exchange_rate_for_cash_withdrawal",
+        "n": 10,
+        "accuracy": 0.0
+      },
+      {
+        "true": "fiat_currency_support",
+        "baseline_prediction": "supported_cards_and_currencies",
+        "n": 7,
+        "accuracy": 0.14285714285714285
+      },
+      {
+        "true": "failed_transfer",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_payment_not_recognised",
+        "baseline_prediction": "reverted_card_payment?",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "beneficiary_not_allowed",
+        "baseline_prediction": "declined_transfer",
+        "n": 3,
+        "accuracy": 0.0
+      },
+      {
+        "true": "top_up_reverted",
+        "baseline_prediction": "top_up_failed",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "pending_transfer",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "exchange_via_app",
+        "baseline_prediction": "exchange_rate",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "wrong_amount_of_cash_received",
+        "baseline_prediction": "declined_cash_withdrawal",
+        "n": 2,
+        "accuracy": 0.0
+      },
+      {
+        "true": "card_delivery_estimate",
+        "baseline_prediction": "card_arrival",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "unable_to_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "why_verify_identity",
+        "baseline_prediction": "verify_my_identity",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "pending_cash_withdrawal",
+        "baseline_prediction": "balance_not_updated_after_cheque_or_cash_deposit",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "balance_not_updated_after_bank_transfer",
+        "baseline_prediction": "transfer_not_received_by_recipient",
+        "n": 1,
+        "accuracy": 0.0
+      },
+      {
+        "true": "getting_spare_card",
+        "baseline_prediction": "order_physical_card",
+        "n": 1,
+        "accuracy": 0.0
+      }
+    ]
+  },
+  "truncation": {
+    "D0": {
+      "n": 80,
+      "mean_sequence_tokens": 149.525,
+      "max_sequence_tokens": 206,
+      "rows_missing_a_marker": 0
+    },
+    "D0_wide": {
+      "n": 80,
+      "mean_sequence_tokens": 149.525,
+      "max_sequence_tokens": 206,
+      "rows_missing_a_marker": 0
+    },
+    "D1": {
+      "n": 80,
+      "mean_sequence_tokens": 274.2625,
+      "max_sequence_tokens": 325,
+      "rows_missing_a_marker": 0
+    },
+    "D2": {
+      "n": 80,
+      "mean_sequence_tokens": 302.425,
+      "max_sequence_tokens": 367,
+      "rows_missing_a_marker": 0
+    }
+  },
+  "d0_prediction_agreement_with_phase6": 1.0,
+  "small4": {
+    "D0": 0.845,
+    "D2": 0.62
+  },
+  "injection": {
+    "prediction": "billing",
+    "selected_injected_option": false
+  },
+  "paraphrase_D2": {
+    "n": 28,
+    "agreement": 0.8928571428571429
+  },
+  "permutation_D0": {
+    "trials": 32,
+    "top1_flip_rate": 0.1875
+  },
+  "permutation_D2": {
+    "trials": 32,
+    "top1_flip_rate": 0.75
+  },
+  "latency_ms": {
+    "D0": {
+      "n": 20,
+      "p50": 92.53768701455556,
+      "p95": 101.69823988544522,
+      "mean": 91.81386670243228
+    },
+    "D2": {
+      "n": 20,
+      "p50": 171.29349998140242,
+      "p95": 194.53825866512489,
+      "mean": 173.16026249609422
+    }
+  },
+  "ag_news_label_only": {
+    "n": 120,
+    "temperature": 1.2076712505429734,
+    "accuracy": 0.9583333333333334,
+    "nll": 0.12989458888749109,
+    "brier": 0.06201988213965061,
+    "ece": 0.031088909948051545
+  },
+  "ag_news_note": "The AG News card names four classes and does not define them. No richer official text was invented.",
+  "decision": {
+    "best_level": "D2",
+    "promoted": false,
+    "reasons": [
+      "conditional-accuracy interval does not lie above zero",
+      "4-way Choice dropped by more than 0.03"
+    ],
+    "release_test_scored": false
+  }
+}

@@ -2,7 +2,7 @@
 import json
 import os
 import warnings
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, cast
 
 import numpy as np
 import torch
@@ -18,8 +18,10 @@ from .common import (
     collate_items,
     confidence_from_probs,
     render_options,
+    state_has_content,
     temp_bucket,
 )
+from .lang import defer_reason
 
 
 def _fix_tokenizer_config(path: str):
@@ -71,7 +73,6 @@ def _verify_compatibility(model: torch.nn.Module, cfg: Dict, weights: Dict[str, 
             )
 
     # 3. Check for parameter shape mismatches
-    model_sd = model.state_dict()
     shape_mismatches = []
     missing_keys = []
 
@@ -128,13 +129,14 @@ class Agent:
             # Restrict root checkpoints too: the default repo also contains sibling
             # checkpoints, which an unfiltered snapshot would unnecessarily download.
             prefix = f"{subfolder}/" if subfolder else ""
-            kw = {
-                "token": token or os.environ.get("HF_TOKEN"),
-                "allow_patterns": [prefix + name for name in (
-                    "rl_agent_config.json", "model.safetensors", "tokenizer/*", "encoder/*",
-                )],
-            }
-            model_dir = snapshot_download(model_id_or_path, **kw)
+            allow_patterns = [prefix + name for name in (
+                "rl_agent_config.json", "model.safetensors", "tokenizer/*", "encoder/*",
+            )]
+            model_dir = snapshot_download(
+                model_id_or_path,
+                token=token or os.environ.get("HF_TOKEN"),
+                allow_patterns=allow_patterns,
+            )
 
         if subfolder:
             model_dir = os.path.join(model_dir, subfolder)
@@ -197,7 +199,7 @@ class Agent:
         # That is a loss for the batch sizes Veya runs (a handful of questions per call) and can
         # hang on some platforms, so keep the eager path.
         try:
-            self.model.encoder.config.reference_compile = False
+            cast(Any, self.model.encoder).config.reference_compile = False
         except Exception:
             pass
 
@@ -208,14 +210,22 @@ class Agent:
         self.temperature = [clamp_temperature(t) for t in self.temperature_raw]
         self.temperature_by_options = {k: clamp_temperature(v)
                                        for k, v in self.temperature_by_options_raw.items()}
-        rejected = ["%s=%.4g" % (k, float(v)) for k, v in self.temperature_by_options_raw.items()
-                    if clamp_temperature(v) != float(v)]
-        rejected += ["temperature[%d]=%.4g" % (i, float(t)) for i, t in enumerate(self.temperature_raw)
-                     if clamp_temperature(t) != float(t)]
+        self.calibration = None
+        self.calibration_version = "checkpoint"
+        calibration_path = os.path.join(model_dir, "calibration.json")
+        if os.path.exists(calibration_path):
+            from .calibration import apply_calibration, load_calibration
+            apply_calibration(self, load_calibration(calibration_path))
+        rejected = []
+        for key, raw in self.temperature_by_options_raw.items():
+            applied = self.temperature_by_options.get(key)
+            if applied is None or abs(float(applied) - clamp_temperature(raw)) > 1e-5:
+                continue
+            if clamp_temperature(raw) != float(raw):
+                rejected.append("%s=%.4g" % (key, float(raw)))
         if rejected:
             warnings.warn(
-                "veya: this checkpoint ships temperatures outside [%g, %g] which would distort "
-                "confidence; clamping %s. Treat confidence from the affected buckets as uncalibrated."
+                "veya: temperatures outside [%g, %g] are clamped: %s."
                 % (TEMP_MIN, TEMP_MAX, ", ".join(rejected)),
                 RuntimeWarning, stacklevel=2)
         self.dtype = amp_dtype(self.cfg.get("amp_dtype", "fp16"))
@@ -253,10 +263,26 @@ class Agent:
 
     @staticmethod
     def _to_internal(qdef: Dict) -> Dict:
+        if not isinstance(qdef, dict):
+            raise ValueError("question definition must be an object")
+        if "type" not in qdef or "instructions" not in qdef:
+            raise ValueError("question requires type and instructions")
         t = qdef["type"]
+        if t not in QTYPES:
+            raise ValueError("unsupported question type %r" % (t,))
         crit = qdef.get("criteria")
         if t == "choice" and isinstance(crit, list):
-            crit = {c: None for c in crit}
+            from .shortlist import _criteria_items
+            items = _criteria_items(crit)
+            crit = {key: value for key, value in items}
+        elif t == "choice":
+            from .shortlist import _criteria_items
+            items = _criteria_items(crit)
+            crit = {key: value for key, value in items}
+        elif t == "score" and (not isinstance(crit, list) or len(crit) < 2):
+            raise ValueError("score criteria must contain at least two ordered levels")
+        elif t == "noul" and crit is not None and not isinstance(crit, dict):
+            raise ValueError("noul criteria must be an object when provided")
         ins = qdef["instructions"]
         if not isinstance(ins, str):
             ins = json.dumps(ins)
@@ -276,6 +302,24 @@ class Agent:
         Returns:
             Dictionary with answers, probabilities, calibrated confidence, and token usage.
         """
+        if not isinstance(questions, dict) or not questions or not state_has_content(state):
+            return {
+                "model": "veya-rl-agent",
+                "decision": "defer",
+                "reason": "invalid_schema",
+                "answers": {},
+                "usage": {"input_tokens": 0, "output_tokens": 0},
+            }
+        blocked = defer_reason(self.cfg, state)
+        if blocked:
+            return {
+                "model": "veya-rl-agent",
+                "decision": "defer",
+                "reason": blocked,
+                "answers": {},
+                "usage": {"input_tokens": 0, "output_tokens": 0},
+            }
+
         ids = list(questions.keys())
         items = []
         max_len = self.cfg.get("max_len", 512)
@@ -363,6 +407,8 @@ class Agent:
 
         return {
             "model": "veya-rl-agent",
+            "decision": "answer",
+            "reason": None,
             "answers": answers,
             "usage": {"input_tokens": n_tokens, "output_tokens": 0},
         }

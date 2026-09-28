@@ -1,0 +1,21 @@
+{
+  "P8-G0": "done: release manifest untouched; D0 reproduced Phase-6 validation exactly",
+  "P8-G1": "done: PolyAI categories.json is a name list; local files have text and category only",
+  "P8-G2": "done: candidate_semantics.json",
+  "P8-G3": "done: each description cites a train: index in 800:8600",
+  "P8-G4": "done: D1 is one training utterance; D2 adds one contrast utterance when the train confusion graph has a partner",
+  "P8-G5": "done: no test ids; two exemplar-overlap pairs flagged",
+  "P8-G6": "done: D0 conditional 0.697",
+  "P8-G7": "done: D1 conditional 0.325",
+  "P8-G8": "done: D2 conditional 0.332",
+  "P8-G9": "same as D1/D2; there is no official definition to separate from the training quote",
+  "P8-G10": "done: sibling clusters stay wrong",
+  "P8-G11": "label-only remains the best",
+  "P8-G12": "AG News has no definition field; label-only control remains 0.958",
+  "P8-G13": "done: D2 top-1 flip rate 0.75 versus 0.19 for D0",
+  "P8-G14": "not run: reranker-only text already failed, so retrieval was not retrained",
+  "P8-G15": "not run: no promotion",
+  "P8-G16": "not run: served probabilities unchanged",
+  "P8-G17": "injection case did not select the hostile option; small-N D2 fell from 0.845 to 0.620",
+  "P8-G18": "REJECT SEMANTIC ENRICHMENT"
+}

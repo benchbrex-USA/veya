@@ -1,0 +1,341 @@
+{
+  "caveat": "Exact-input collision ceiling is an in-sample feasibility bound, not a model score or human agreement estimate.",
+  "development": {
+    "by_service": {
+      "Alarm_1": {
+        "labels": {
+          "AddAlarm": 144,
+          "GetAlarms": 64,
+          "NONE": 21
+        },
+        "rows": 229
+      },
+      "Banks_2": {
+        "labels": {
+          "CheckBalance": 753,
+          "NONE": 116,
+          "TransferMoney": 567
+        },
+        "rows": 1436
+      },
+      "Flights_3": {
+        "labels": {
+          "NONE": 97,
+          "SearchOnewayFlight": 1217,
+          "SearchRoundtripFlights": 575
+        },
+        "rows": 1889
+      },
+      "Hotels_4": {
+        "labels": {
+          "NONE": 192,
+          "ReserveHotel": 690,
+          "SearchHotel": 1058
+        },
+        "rows": 1940
+      },
+      "Media_2": {
+        "labels": {
+          "FindMovies": 483,
+          "NONE": 86,
+          "RentMovie": 448
+        },
+        "rows": 1017
+      },
+      "Restaurants_2": {
+        "labels": {
+          "FindRestaurants": 1101,
+          "NONE": 154,
+          "ReserveRestaurant": 1297
+        },
+        "rows": 2552
+      },
+      "Services_4": {
+        "labels": {
+          "BookAppointment": 971,
+          "FindProvider": 788,
+          "NONE": 83
+        },
+        "rows": 1842
+      }
+    },
+    "exact_input_ceiling": {
+      "full_context": {
+        "conflicting_input_groups": 0,
+        "in_sample_deterministic_ceiling": 1.0,
+        "minimum_exact_input_conflict_errors": 0,
+        "n": 10905,
+        "repeated_same_label_input_rows": 107
+      },
+      "previous_turn": {
+        "conflicting_input_groups": 0,
+        "in_sample_deterministic_ceiling": 1.0,
+        "minimum_exact_input_conflict_errors": 0,
+        "n": 10905,
+        "repeated_same_label_input_rows": 143
+      },
+      "utterance_only": {
+        "conflicting_input_groups": 93,
+        "in_sample_deterministic_ceiling": 0.990371,
+        "minimum_exact_input_conflict_errors": 105,
+        "n": 10905,
+        "repeated_same_label_input_rows": 1015
+      }
+    },
+    "initial_rows": 1000,
+    "n": 10905,
+    "none_rows": 749,
+    "service_transitions": 894
+  },
+  "format": "veya-phase12-context-audit-v1",
+  "inventory_sha256": "81a526a57fa2e5b8d941a78c018c33ddc06815fd0b8565c2c2eec6da4f3b4301",
+  "regression_pair_count": 32,
+  "schema_quality": {
+    "caveat": "Lexical similarity flags pairs for review; it does not measure expert label ambiguity.",
+    "changed_shared_definitions_train_dev": [],
+    "lexically_similar_intent_pairs_jaccard_ge_0_5": {
+      "dev": [
+        {
+          "left": "SearchOnewayFlight",
+          "right": "SearchRoundtripFlights",
+          "service": "Flights_3",
+          "token_jaccard": 0.667
+        }
+      ],
+      "train": [
+        {
+          "left": "GetEvents",
+          "right": "GetAvailableTime",
+          "service": "Calendar_1",
+          "token_jaccard": 0.667
+        },
+        {
+          "left": "SearchOnewayFlight",
+          "right": "SearchRoundtripFlights",
+          "service": "Flights_1",
+          "token_jaccard": 0.6
+        },
+        {
+          "left": "SearchOnewayFlight",
+          "right": "SearchRoundtripFlights",
+          "service": "Flights_2",
+          "token_jaccard": 0.5
+        }
+      ]
+    },
+    "shared_service_definitions_train_dev": 9
+  },
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false,
+  "train": {
+    "by_service": {
+      "Banks_1": {
+        "labels": {
+          "CheckBalance": 2013,
+          "NONE": 371,
+          "TransferMoney": 1177
+        },
+        "rows": 3561
+      },
+      "Buses_1": {
+        "labels": {
+          "BuyBusTicket": 2089,
+          "FindBus": 3827,
+          "NONE": 395
+        },
+        "rows": 6311
+      },
+      "Buses_2": {
+        "labels": {
+          "BuyBusTicket": 3008,
+          "FindBus": 4148,
+          "NONE": 442
+        },
+        "rows": 7598
+      },
+      "Calendar_1": {
+        "labels": {
+          "AddEvent": 2408,
+          "GetAvailableTime": 2278,
+          "GetEvents": 700,
+          "NONE": 684
+        },
+        "rows": 6070
+      },
+      "Events_1": {
+        "labels": {
+          "BuyEventTickets": 3232,
+          "FindEvents": 3220,
+          "NONE": 551
+        },
+        "rows": 7003
+      },
+      "Events_2": {
+        "labels": {
+          "BuyEventTickets": 6755,
+          "FindEvents": 5084,
+          "GetEventDates": 3406,
+          "NONE": 1356
+        },
+        "rows": 16601
+      },
+      "Flights_1": {
+        "labels": {
+          "NONE": 862,
+          "ReserveOnewayFlight": 2446,
+          "ReserveRoundtripFlights": 3079,
+          "SearchOnewayFlight": 4482,
+          "SearchRoundtripFlights": 4996
+        },
+        "rows": 15865
+      },
+      "Flights_2": {
+        "labels": {
+          "NONE": 271,
+          "SearchOnewayFlight": 1209,
+          "SearchRoundtripFlights": 1894
+        },
+        "rows": 3374
+      },
+      "Homes_1": {
+        "labels": {
+          "FindApartment": 3470,
+          "NONE": 436,
+          "ScheduleVisit": 2003
+        },
+        "rows": 5909
+      },
+      "Hotels_1": {
+        "labels": {
+          "NONE": 626,
+          "ReserveHotel": 3671,
+          "SearchHotel": 3240
+        },
+        "rows": 7537
+      },
+      "Hotels_2": {
+        "labels": {
+          "BookHouse": 1681,
+          "NONE": 437,
+          "SearchHouse": 2027
+        },
+        "rows": 4145
+      },
+      "Hotels_3": {
+        "labels": {
+          "NONE": 701,
+          "ReserveHotel": 3906,
+          "SearchHotel": 3408
+        },
+        "rows": 8015
+      },
+      "Media_1": {
+        "labels": {
+          "FindMovies": 2690,
+          "NONE": 563,
+          "PlayMovie": 2579
+        },
+        "rows": 5832
+      },
+      "Movies_1": {
+        "labels": {
+          "FindMovies": 3690,
+          "GetTimesForMovie": 3761,
+          "NONE": 1005
+        },
+        "rows": 8456
+      },
+      "Music_1": {
+        "labels": {
+          "LookupSong": 1068,
+          "NONE": 269,
+          "PlaySong": 2447
+        },
+        "rows": 3784
+      },
+      "Music_2": {
+        "labels": {
+          "LookupMusic": 1290,
+          "NONE": 239,
+          "PlayMedia": 2185
+        },
+        "rows": 3714
+      },
+      "RentalCars_1": {
+        "labels": {
+          "GetCarsAvailable": 3432,
+          "NONE": 254,
+          "ReserveCar": 2494
+        },
+        "rows": 6180
+      },
+      "RentalCars_2": {
+        "labels": {
+          "GetCarsAvailable": 2608,
+          "NONE": 179,
+          "ReserveCar": 2253
+        },
+        "rows": 5040
+      },
+      "Restaurants_1": {
+        "labels": {
+          "FindRestaurants": 7406,
+          "NONE": 1158,
+          "ReserveRestaurant": 9006
+        },
+        "rows": 17570
+      },
+      "Services_1": {
+        "labels": {
+          "BookAppointment": 3493,
+          "FindProvider": 2470,
+          "NONE": 206
+        },
+        "rows": 6169
+      },
+      "Services_2": {
+        "labels": {
+          "BookAppointment": 2281,
+          "FindProvider": 1668,
+          "NONE": 281
+        },
+        "rows": 4230
+      },
+      "Services_3": {
+        "labels": {
+          "BookAppointment": 2326,
+          "FindProvider": 2464,
+          "NONE": 288
+        },
+        "rows": 5078
+      }
+    },
+    "exact_input_ceiling": {
+      "full_context": {
+        "conflicting_input_groups": 38,
+        "in_sample_deterministic_ceiling": 0.99969,
+        "minimum_exact_input_conflict_errors": 49,
+        "n": 158042,
+        "repeated_same_label_input_rows": 1903
+      },
+      "previous_turn": {
+        "conflicting_input_groups": 65,
+        "in_sample_deterministic_ceiling": 0.999519,
+        "minimum_exact_input_conflict_errors": 76,
+        "n": 158042,
+        "repeated_same_label_input_rows": 3177
+      },
+      "utterance_only": {
+        "conflicting_input_groups": 2162,
+        "in_sample_deterministic_ceiling": 0.975861,
+        "minimum_exact_input_conflict_errors": 3815,
+        "n": 158042,
+        "repeated_same_label_input_rows": 25807
+      }
+    },
+    "initial_rows": 14337,
+    "n": 158042,
+    "none_rows": 11574,
+    "service_transitions": 12609
+  }
+}

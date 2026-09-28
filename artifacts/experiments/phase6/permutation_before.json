@@ -1,0 +1,8 @@
+{
+  "examples": 24,
+  "shuffles_per_example": 6,
+  "trials": 144,
+  "top1_flip_rate": 0.20833333333333334,
+  "mean_abs_probability_delta": 0.03975389176888103,
+  "mean_max_probability_delta": 0.14081363899746968
+}

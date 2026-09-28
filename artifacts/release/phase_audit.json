@@ -1,0 +1,16 @@
+{
+  "audit": "phases-1-9-corrective",
+  "release_manifest": "artifacts/release/manifest.json",
+  "release": "0.3.5-phase9-rc",
+  "archived_phase5_manifest": "artifacts/release/manifest-phase5.json",
+  "high_n": "hypothesis_hce2_h0",
+  "hypothesis_template": "phase9-h0-v1",
+  "temperature": 1.6203480178935838,
+  "temperature_refit_rows": 589,
+  "temperature_fit_split": "banking77_train_seed17_8600_9300",
+  "test_rows_1300_3080": "DEVELOPMENT-EXPOSED",
+  "fresh_blind_partition": null,
+  "packed_cutoff": 20,
+  "encoder_isolation": "phase9 delta is a private copy of layers 26-27 and final_norm",
+  "integrate_report": "artifacts/experiments/phase9/integrate_report.json"
+}

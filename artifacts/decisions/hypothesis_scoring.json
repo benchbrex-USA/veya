@@ -1,0 +1,23 @@
+{
+  "decision": "KEEP AS RESEARCH; DO NOT SERVE",
+  "status": "RESEARCH ONLY",
+  "reasons": [
+    "The reported release test is DEVELOPMENT-EXPOSED and cannot certify promotion.",
+    "The Phase-9 scorer was not selected or calibrated under the fresh CLINC150 blind protocol.",
+    "The saved adversarial report shows candidate-injection selection and state-injection flips that need a new security hypothesis before promotion."
+  ],
+  "conditional_accuracy": 0.7721943048576214,
+  "packed_conditional_accuracy": 0.6968174204355109,
+  "bootstrap": {
+    "delta": 0.07537688442211055,
+    "ci95_low": 0.03685092127303183,
+    "ci95_high": 0.11055276381909548,
+    "n": 597
+  },
+  "bottleneck": "retrieval misses on the frozen shortlist",
+  "release_test_scored": true,
+  "release_test_status": "DEVELOPMENT-EXPOSED",
+  "clean_load_max_abs_logit_delta": 0.0000972747802734375,
+  "manifest_updated": false,
+  "served": false
+}

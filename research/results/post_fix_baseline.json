@@ -1,0 +1,83 @@
+{
+  "commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "working_tree": "phase-2 changes are uncommitted on top of that commit",
+  "checkpoint": "/Volumes/Parth Patel/Veya/models/production",
+  "hardware": "macOS-27.0-arm64-arm-64bit",
+  "torch": "2.14.0",
+  "results": {
+    "cardinality": [
+      {
+        "options": 2,
+        "sequence_tokens": 271,
+        "markers_kept": 2,
+        "dropped": 0
+      },
+      {
+        "options": 10,
+        "sequence_tokens": 319,
+        "markers_kept": 10,
+        "dropped": 0
+      },
+      {
+        "options": 20,
+        "sequence_tokens": 379,
+        "markers_kept": 20,
+        "dropped": 0
+      },
+      {
+        "options": 50,
+        "sequence_tokens": 458,
+        "markers_kept": 50,
+        "dropped": 0
+      },
+      {
+        "options": 100,
+        "sequence_tokens": 512,
+        "markers_kept": 100,
+        "dropped": 0
+      },
+      {
+        "options": 150,
+        "sequence_tokens": 512,
+        "markers_kept": 126,
+        "dropped": 24
+      },
+      {
+        "options": 255,
+        "sequence_tokens": 512,
+        "markers_kept": 126,
+        "dropped": 129
+      }
+    ],
+    "language": {},
+    "choice": {},
+    "calibration": {
+      "runtime": "checkpoint",
+      "note": "no held-out calibration.json fitted"
+    },
+    "load_seconds": 47.53,
+    "device": "cpu",
+    "calibration_version": "checkpoint",
+    "english_choice": "billing",
+    "english_probabilities": {
+      "billing": 0.9871,
+      "technical": 0.0042,
+      "sales": 0.0046,
+      "hr": 0.0041
+    },
+    "hindi": {
+      "decision": "defer",
+      "reason": "unsupported_language"
+    },
+    "empty_questions": {
+      "decision": "defer",
+      "reason": "invalid_schema"
+    },
+    "permutation": {
+      "mean_abs_delta": 0.0023218749999999954,
+      "max_abs_delta": 0.011299999999999977,
+      "top1_flip_rate": 0.0,
+      "n_permutations": 8
+    }
+  }
+}

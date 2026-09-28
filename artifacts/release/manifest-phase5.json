@@ -1,0 +1,99 @@
+{
+  "format": "veya-release-manifest-v2",
+  "model": "veya",
+  "release": "0.3.5-audit-research-release",
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "working_tree": "dirty",
+  "architecture_version": "veya-shortlist-v1",
+  "base_checkpoint": "models/production",
+  "base_checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "tokenizer": "models/production/tokenizer",
+  "tokenizer_files": {
+    "models/production/tokenizer/tokenizer.json": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30",
+    "models/production/tokenizer/tokenizer_config.json": "50044de60daaa73df97d262e15a40d4faf0160e7d742df64b377877a1320dd12"
+  },
+  "model_config": "models/production/rl_agent_config.json",
+  "model_config_hash": "ae287b56bbcf5f8c4f4541ae9dfd00c914c4c48b940b8398c3058af37ba92bbd",
+  "choice": {
+    "packed_max_candidates": 20,
+    "hierarchical_enabled": true,
+    "shortlist_k": 8,
+    "shortlist_artifact": "models/production/shortlist_k8.pt",
+    "shortlist_hash": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "embed_max_length": 96,
+    "training_rows": "banking77_train_seed17_0_800"
+  },
+  "score": {
+    "architecture": "categorical",
+    "ordinal": "research_only_unvalidated"
+  },
+  "noul": {
+    "architecture": "base_decision_head",
+    "calibration": "checkpoint_only"
+  },
+  "calibration": {
+    "packed_choice": "models/production/calibration.json",
+    "packed_choice_hash": "1d1c5834b362e86f60abac9d608a4a9506ba4fe5100c352538900a4958b5ad9b",
+    "hierarchical_choice": "models/production/calibration_shortlist_k8.json",
+    "hierarchical_choice_hash": "b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50",
+    "hierarchical_route": "shortlist_k8_packed_rerank",
+    "hierarchical_temperature": 1.971127355603397,
+    "score": "checkpoint_unvalidated",
+    "noul": "checkpoint_unvalidated"
+  },
+  "routing": {
+    "language_router": "unsupported_language_defers_on_modernbert",
+    "choice_router": "models/production/choice_router.json",
+    "choice_router_hash": "375c0ac9d9461c7761fedb79d9b36cad2703be06a2db19492935fce5fd3bd30d"
+  },
+  "selective_policy": "artifacts/release/selective_policy.json",
+  "selective_policy_hash": "075f7f7e61dcc07995dd1f8655e21e17fb0b1e48431531fdead0a266ad232ffd",
+  "automation_policy": "disabled_pending_a_statistically_supported_threshold",
+  "supported_languages": ["en"],
+  "supported_primitives": ["choice", "score", "noul"],
+  "release_status": {
+    "english_choice": "RESEARCH RELEASE",
+    "english_noul": "RESEARCH RELEASE",
+    "english_score": "RESEARCH ONLY",
+    "multilingual_choice": "RESEARCH ONLY",
+    "multilingual_noul": "RESEARCH ONLY",
+    "multilingual_score": "RESEARCH ONLY"
+  },
+  "evaluation_output": "artifacts/release/blind_clinc150_metrics.json",
+  "prior_evaluation": {
+    "path": "artifacts/experiments/phase5/clean_load_eval.json",
+    "status": "DEVELOPMENT-EXPOSED"
+  },
+  "data_lineage": {
+    "path": "docs/audit/data_lineage.json",
+    "sha256": "6949c909cd4510139b1568dca21d359fbcd89c01c98db833707f5ed9dbc7e97e"
+  },
+  "blind_evaluation": {
+    "freeze_manifest": "docs/audit/blind_clinc150_freeze.json",
+    "freeze_manifest_sha256": "0eccf7bf4fe66c86fe5d8f7cc95bbe7a08da5d4b60c61c67b0aa4ed1fdf36702",
+    "status_at_release_freeze": "FROZEN_UNOPENED"
+  },
+  "phase9": {
+    "status": "RESEARCH ONLY",
+    "served": false,
+    "scorer_id": "hypothesis_hce2_h0",
+    "template_version": "phase9-h0-v1",
+    "head_artifact": "artifacts/experiments/phase9/finalist_head.pt",
+    "head_sha256": "8ccd560a7464d0dfa35a5382694bbf398d991fa2f2acf869525a2e93a0008d50",
+    "encoder_delta_artifact": "artifacts/experiments/phase9/encoder_delta.pt",
+    "encoder_delta_sha256": "c2c8eec02fa01e118f36a9920b1f023d0785dd35c699a6e240c561054253d517",
+    "temperature": 1.6203480178935838,
+    "reason": "Validation improvement is real, but Banking77 reporting data is development-exposed and the candidate is not part of the verified production startup path."
+  },
+  "known_limitations": [
+    "The K=8 projection was trained on Banking77 train rows 0:800 and has not been proven to be a general retriever.",
+    "Banking77 public-test rows 0:3080 are DEVELOPMENT-EXPOSED and cannot certify this release.",
+    "Automatic execution is disabled. The old 5% validation threshold observed about 7% risk on development-exposed reporting data.",
+    "Hierarchical temperature is not applied to packed Choice.",
+    "Candidate counts 21 through 31 were not measured on an untainted validation grid.",
+    "Ordinal Score is not trained or validated; served Score remains categorical.",
+    "Multilingual calibration is unvalidated for release use.",
+    "K=16, K=32, the candidate-set head, semantic enrichment, and Phase 9 are not production routes.",
+    "Each question re-encodes its state. No state cache is shipped."
+  ]
+}

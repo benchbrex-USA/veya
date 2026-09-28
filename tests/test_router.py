@@ -271,16 +271,21 @@ def _load_stub(rr, name):
 
 
 rr = stubbed_router(1)
-rr.load("english"); rr.load("multilingual")
+rr.load("english")
+rr.load("multilingual")
 check("lru/cap 1 keeps newest", rr.loaded, ["multilingual"])
 check("lru/cap 1 agents match order", sorted(rr._agents), ["multilingual"])
 
 rr = stubbed_router(2)
-rr.load("english"); rr.load("multilingual"); rr.load("typed-decisions")
+rr.load("english")
+rr.load("multilingual")
+rr.load("typed-decisions")
 check("lru/cap 2 evicts oldest", rr.loaded, ["multilingual", "typed-decisions"])
 
 rr = stubbed_router(2)
-rr.load("english"); rr.load("multilingual"); rr.load("english")   # touch english
+rr.load("english")
+rr.load("multilingual")
+rr.load("english")  # touch english
 rr.load("typed-decisions")
 check("lru/touch protects", sorted(rr.loaded), ["english", "typed-decisions"])
 
@@ -432,4 +437,11 @@ for f in FAIL:
     print("  FAIL", f)
 if not FAIL:
     print("all routing tests passed")
-sys.exit(1 if FAIL else 0)
+
+
+def test_recorded_checks_pass():
+    assert not FAIL, "\n".join(FAIL)
+
+
+if __name__ == "__main__":
+    sys.exit(1 if FAIL else 0)

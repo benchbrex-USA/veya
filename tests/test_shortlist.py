@@ -485,4 +485,11 @@ check("pipe/answer choice is inside the shortlist", piped["answers"]["intent"]["
 print("\n%d passed, %d failed" % (len(PASS), len(FAIL)))
 for f in FAIL:
     print("  FAIL " + f)
-sys.exit(1 if FAIL else 0)
+
+
+def test_recorded_checks_pass():
+    assert not FAIL, "\n".join(FAIL)
+
+
+if __name__ == "__main__":
+    sys.exit(1 if FAIL else 0)

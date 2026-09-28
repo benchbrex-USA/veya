@@ -1,0 +1,14 @@
+{
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "count": 11669,
+  "file_sha256": "5cac98925c2cb51cc65b3061a92d588454f643e94bb84a0a71efbf083cff0a62",
+  "format": "veya-phase11-augmented-embedding-cache-v1",
+  "max_length": 96,
+  "noise_version": "phase11-generic-noise-v1",
+  "seconds": 706.0285147080431,
+  "shape": [
+    11669,
+    1024
+  ],
+  "texts_sha256": "515311af2d31b527cc0ddb33979aa3ef19c7a130d2077602def14af8afe0d495"
+}

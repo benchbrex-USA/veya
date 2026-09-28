@@ -1,0 +1,18 @@
+{
+  "P6-G0": "done: Phase-5 artifacts frozen; val and release-test predictions saved",
+  "P6-G1": "done: failure taxonomy on train rows 800:2400 and val rows 9300:10003",
+  "P6-G2": "done: 6605 target-present K=8 rows from train 800:8600; 1195 target-absent rows excluded from the loss",
+  "P6-G3": "done: random 8-way 0.831, shortlist 0.697, nearest 0.679, confusion-augmented 0.657, oracle-forced 0.680 on val",
+  "P6-G4": "done: 200/200 K=8 sequences unchanged at a larger token budget",
+  "P6-G5": "done: listwise head fine-tune, not promoted",
+  "P6-G6": "done: listwise plus pairwise weight 0.2, not promoted",
+  "P6-G7": "done: base-head top-1 flip rate 0.208 on 144 val shuffles",
+  "P6-G8": "done: top-8 interaction scorer, conditional accuracy 0.224, not promoted",
+  "P6-G9": "done: base head kept",
+  "P6-G10": "skipped: no new reranker, so the Phase-5 route temperature stays",
+  "P6-G11": "unchanged: Phase-5 risk-coverage still describes the served model",
+  "P6-G12": "superseded by route_cutoff_audit.json: matched validation at 20/21/24/28/31/32 supports shortlist at 20+, so packed max is 19",
+  "P6-G13": "not implemented: state tokens still repeat per question; a cache would change attention",
+  "P6-G14": "done: AG News 0.955, HTTP suite passed, phase-6 and release-bundle tests passed",
+  "P6-G15": "historical release candidate unchanged; forensic audit now scopes the served path as a research release"
+}

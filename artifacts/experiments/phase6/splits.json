@@ -1,0 +1,32 @@
+{
+  "shortlist_train": [
+    0,
+    800
+  ],
+  "reranker_train": [
+    800,
+    8600
+  ],
+  "calibration": [
+    8600,
+    9300
+  ],
+  "reranker_val": [
+    9300,
+    10003
+  ],
+  "locked_test_do_not_train": [
+    1300,
+    1500
+  ],
+  "release_test_do_not_train": [
+    1300,
+    3080
+  ],
+  "hashes": {
+    "reranker_train": "0edfdf32fde2f1d813690129f213d4d4f959988b8bb86d49678bf64a8500a746",
+    "calibration": "a673102e447c1409904115424fe82a98a2973b7bdce8e897193b1b7af20a8d45",
+    "reranker_val": "e26dd91d4e9d1c659a939b7251e44d47db499b1f3b30bd1466ba4d281cf9a479"
+  },
+  "contamination_note": "The decision to study the reranker used the Phase-5 test error counts. Pair-level negatives in this phase come from train rows 800:2400 only."
+}

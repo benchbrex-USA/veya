@@ -1,0 +1,286 @@
+{
+  "artifact": {
+    "architecture": "frozen_shared_backbone_biencoder",
+    "backbone": "models/production frozen ModernBERT-large encoder",
+    "candidate_representation": "naturalized_label",
+    "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "created_at": "2026-09-23T03:28:16Z",
+    "dataset_registry_sha256": "b4aad1a23be66f831b5eb1e4d90bf6af3f633a363c064da26445313c28e84dda",
+    "episode_cardinalities": [
+      8,
+      16,
+      32,
+      50,
+      77,
+      100
+    ],
+    "file_sha256": "a82e369346d9ee3bbd9bc0df09bbebebea5c92c1a42b6c667b08675e918d713f",
+    "format": "veya-domain-retriever-v1",
+    "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+    "held_out_schemas": [
+      "clinc150"
+    ],
+    "input_dim": 1024,
+    "k": 8,
+    "learning_rate": 0.001,
+    "objective": "episodic InfoNCE cross-entropy with one hard-negative refresh",
+    "output_dim": 128,
+    "projection": "shared",
+    "query_representation": "state_only",
+    "retriever_id": "phase10-domain-general-k8-v1",
+    "selected_variant": "B3_hard_negatives",
+    "selection_metrics": {
+      "candidate_count": 150,
+      "mean_rank": 28.476,
+      "median_rank": 13.0,
+      "mrr": 0.2706653356052531,
+      "n": 3000,
+      "projection_and_exact_rank_ms_per_query": 0.0004362640029285103,
+      "recall_at_1": 0.17166666666666666,
+      "recall_at_16": 0.5403333333333333,
+      "recall_at_32": 0.6883333333333334,
+      "recall_at_4": 0.3323333333333333,
+      "recall_at_8": 0.431
+    },
+    "similarity": "cosine",
+    "split_freeze_sha256": "4ad513379f8962177c42e9e3cb572c5cb8a08c12b8f8d715f3902e742ee990a2",
+    "training_datasets": [
+      "banking77:train",
+      "schema_guided_dialogue:train"
+    ],
+    "training_steps": 900
+  },
+  "current_retriever": {
+    "architecture": "shared bias-free 1024-to-128 projection",
+    "cache": "process-local by exact text",
+    "candidate_encoding": "frozen encoder, mean pool, max length 96",
+    "candidate_representation": "criterion value or label",
+    "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "k": 8,
+    "normalization": "none",
+    "projection": "models/production/shortlist_k8.pt",
+    "projection_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "query_representation": "serialized state",
+    "similarity": "unnormalized dot product",
+    "training_dataset": "Banking77 train seed17 rows 0:800"
+  },
+  "development_candidate_representation": {
+    "current_name_definition": {
+      "candidate_count": 13,
+      "mean_rank": 5.446153846153846,
+      "median_rank": 5.0,
+      "mrr": 0.31504776206699286,
+      "n": 260,
+      "recall_at_1": 0.12307692307692308,
+      "recall_at_16": 1.0,
+      "recall_at_32": 1.0,
+      "recall_at_4": 0.43846153846153846,
+      "recall_at_8": 0.7807692307692308
+    },
+    "current_naturalized": {
+      "candidate_count": 13,
+      "mean_rank": 6.276923076923077,
+      "median_rank": 6.0,
+      "mrr": 0.2896572231187616,
+      "n": 260,
+      "recall_at_1": 0.11153846153846154,
+      "recall_at_16": 1.0,
+      "recall_at_32": 1.0,
+      "recall_at_4": 0.4076923076923077,
+      "recall_at_8": 0.6846153846153846
+    },
+    "current_raw": {
+      "candidate_count": 13,
+      "mean_rank": 6.269230769230769,
+      "median_rank": 6.0,
+      "mrr": 0.2825047708701555,
+      "n": 260,
+      "recall_at_1": 0.1,
+      "recall_at_16": 1.0,
+      "recall_at_32": 1.0,
+      "recall_at_4": 0.4115384615384615,
+      "recall_at_8": 0.6846153846153846
+    }
+  },
+  "development_projection_choice": {
+    "metrics": {
+      "dual": {
+        "candidate_count": 13,
+        "mean_rank": 4.857692307692307,
+        "median_rank": 4.0,
+        "mrr": 0.4021383851191544,
+        "n": 260,
+        "recall_at_1": 0.2,
+        "recall_at_16": 1.0,
+        "recall_at_32": 1.0,
+        "recall_at_4": 0.573076923076923,
+        "recall_at_8": 0.8038461538461539
+      },
+      "shared": {
+        "candidate_count": 13,
+        "mean_rank": 4.726923076923077,
+        "median_rank": 4.0,
+        "mrr": 0.43921213401982634,
+        "n": 260,
+        "recall_at_1": 0.2653846153846154,
+        "recall_at_16": 1.0,
+        "recall_at_32": 1.0,
+        "recall_at_4": 0.573076923076923,
+        "recall_at_8": 0.8076923076923077
+      }
+    },
+    "selected": "shared"
+  },
+  "format": "veya-phase10-retriever-comparison-v1",
+  "future_blind": "not downloaded or inspected",
+  "hard_negative_result": {
+    "B2_recall_at_8": 0.36733333333333335,
+    "B3_recall_at_8": 0.431,
+    "delta": 0.06366666666666665
+  },
+  "release": "0.3.5-audit-baseline.1",
+  "release_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "schema_held_out_validation": {
+    "candidates": 150,
+    "comparison": {
+      "B0_current_naturalized": {
+        "candidate_count": 150,
+        "mean_rank": 33.17933333333333,
+        "median_rank": 19.0,
+        "mrr": 0.18632891969430304,
+        "n": 3000,
+        "projection_and_exact_rank_ms_per_query": 0.00033940266196926433,
+        "recall_at_1": 0.091,
+        "recall_at_16": 0.47433333333333333,
+        "recall_at_32": 0.6306666666666667,
+        "recall_at_4": 0.23666666666666666,
+        "recall_at_8": 0.3486666666666667
+      },
+      "B0_current_production_prefixed": {
+        "candidate_count": 150,
+        "mean_rank": 31.422333333333334,
+        "median_rank": 19.0,
+        "mrr": 0.21701445958903856,
+        "n": 3000,
+        "projection_and_exact_rank_ms_per_query": 0.0002897776624498268,
+        "recall_at_1": 0.127,
+        "recall_at_16": 0.4693333333333333,
+        "recall_at_32": 0.6433333333333333,
+        "recall_at_4": 0.26266666666666666,
+        "recall_at_8": 0.35533333333333333
+      },
+      "B0_current_raw": {
+        "candidate_count": 150,
+        "mean_rank": 37.36633333333333,
+        "median_rank": 23.0,
+        "mrr": 0.1679055926011715,
+        "n": 3000,
+        "projection_and_exact_rank_ms_per_query": 0.0006469303334597498,
+        "recall_at_1": 0.07833333333333334,
+        "recall_at_16": 0.424,
+        "recall_at_32": 0.5813333333333334,
+        "recall_at_4": 0.21166666666666667,
+        "recall_at_8": 0.313
+      },
+      "B2_multi_schema": {
+        "candidate_count": 150,
+        "mean_rank": 31.397333333333332,
+        "median_rank": 18.0,
+        "mrr": 0.223810323981552,
+        "n": 3000,
+        "projection_and_exact_rank_ms_per_query": 0.00040438900274845463,
+        "recall_at_1": 0.13433333333333333,
+        "recall_at_16": 0.482,
+        "recall_at_32": 0.6443333333333333,
+        "recall_at_4": 0.2653333333333333,
+        "recall_at_8": 0.36733333333333335
+      },
+      "B3_hard_negatives": {
+        "candidate_count": 150,
+        "mean_rank": 28.476,
+        "median_rank": 13.0,
+        "mrr": 0.2706653356052531,
+        "n": 3000,
+        "projection_and_exact_rank_ms_per_query": 0.0004362640029285103,
+        "recall_at_1": 0.17166666666666666,
+        "recall_at_16": 0.5403333333333333,
+        "recall_at_32": 0.6883333333333334,
+        "recall_at_4": 0.3323333333333333,
+        "recall_at_8": 0.431
+      },
+      "B4_definitions": {
+        "candidate_count": 150,
+        "mean_rank": 28.870666666666665,
+        "median_rank": 13.0,
+        "mrr": 0.28161758931096836,
+        "n": 3000,
+        "projection_and_exact_rank_ms_per_query": 0.0003584863346380492,
+        "recall_at_1": 0.18866666666666668,
+        "recall_at_16": 0.5476666666666666,
+        "recall_at_32": 0.6893333333333334,
+        "recall_at_4": 0.33366666666666667,
+        "recall_at_8": 0.42633333333333334
+      }
+    },
+    "dataset": "CLINC150 train partition only",
+    "examples": 3000,
+    "recall_at_8_delta_bootstrap": {
+      "B2_multi_schema": {
+        "ci95": [
+          -0.008666666666666666,
+          0.033666666666666664
+        ],
+        "delta": 0.012,
+        "draws": 2000
+      },
+      "B3_hard_negatives": {
+        "ci95": [
+          0.056325,
+          0.09600833333333329
+        ],
+        "delta": 0.07566666666666666,
+        "draws": 2000
+      },
+      "B4_definitions": {
+        "ci95": [
+          0.051666666666666666,
+          0.09134166666666663
+        ],
+        "delta": 0.071,
+        "draws": 2000
+      }
+    },
+    "schema": "clinc150"
+  },
+  "split_freeze_sha256": "4ad513379f8962177c42e9e3cb572c5cb8a08c12b8f8d715f3902e742ee990a2",
+  "status": "FINALIST_FROZEN_BLIND_NOT_OPENED",
+  "training": {
+    "B3_loss": [
+      3.2788050174713135,
+      1.687907099723816
+    ],
+    "B4_hard_loss": [
+      2.9682822227478027,
+      1.299564003944397
+    ],
+    "B4_loss": [
+      2.482147455215454,
+      0.8817862272262573
+    ],
+    "dual_loss": [
+      2.482147455215454,
+      1.5550259351730347
+    ],
+    "hard_steps": 300,
+    "selected_B2_loss": [
+      2.482147455215454,
+      1.3683143854141235
+    ],
+    "shared_loss": [
+      2.482147455215454,
+      1.3683143854141235
+    ],
+    "steps": 600
+  },
+  "winner": "B3_hard_negatives"
+}

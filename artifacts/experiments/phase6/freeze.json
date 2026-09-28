@@ -1,0 +1,10 @@
+{
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "working_tree_lines": 32,
+  "manifest_release": "0.3.5-phase5",
+  "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+  "route_temperature": 1.971127355603397,
+  "choice_router_hash": "375c0ac9d9461c7761fedb79d9b36cad2703be06a2db19492935fce5fd3bd30d",
+  "device": "mps"
+}

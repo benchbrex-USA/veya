@@ -1,0 +1,652 @@
+{
+  "candidate_or_label_used_by_noise_generator": false,
+  "format": "veya-phase11-augmentation-audit-v1",
+  "label_preserved": true,
+  "noise_version": "phase11-generic-noise-v1",
+  "partition": "TRAIN only",
+  "records_sha256": "ed1a2845c23c41ddeba885bed8840fda17aeeb3805fdc5faac592c927a4c9360",
+  "rows": 4635,
+  "sample": [
+    {
+      "augmented_chars": 32,
+      "candidate_id": "banking77:country_support",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:10002",
+      "source_chars": 32,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 106,
+      "candidate_id": "banking77:country_support",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:10002",
+      "source_chars": 32,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4753,
+      "candidate_id": "banking77:country_support",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:10002",
+      "source_chars": 32,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 36,
+      "candidate_id": "banking77:fiat_currency_support",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1003",
+      "source_chars": 36,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 110,
+      "candidate_id": "banking77:fiat_currency_support",
+      "condition": "short_prefix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1003",
+      "source_chars": 36,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4757,
+      "candidate_id": "banking77:fiat_currency_support",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1003",
+      "source_chars": 36,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 58,
+      "candidate_id": "banking77:fiat_currency_support",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1005",
+      "source_chars": 58,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 132,
+      "candidate_id": "banking77:fiat_currency_support",
+      "condition": "short_prefix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1005",
+      "source_chars": 58,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4779,
+      "candidate_id": "banking77:fiat_currency_support",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1005",
+      "source_chars": 58,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 29,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1007",
+      "source_chars": 29,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 103,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1007",
+      "source_chars": 29,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1950,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1007",
+      "source_chars": 29,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 44,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1008",
+      "source_chars": 44,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 119,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "boilerplate_wrapper",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1008",
+      "source_chars": 44,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1965,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1008",
+      "source_chars": 44,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 43,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1009",
+      "source_chars": 43,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 117,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_prefix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1009",
+      "source_chars": 43,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4764,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1009",
+      "source_chars": 43,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 43,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1016",
+      "source_chars": 43,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 117,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1016",
+      "source_chars": 43,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1964,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1016",
+      "source_chars": 43,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 26,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1020",
+      "source_chars": 26,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 100,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_prefix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1020",
+      "source_chars": 26,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4747,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1020",
+      "source_chars": 26,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 27,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1022",
+      "source_chars": 27,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 129,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "middle_insertion",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1022",
+      "source_chars": 27,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1948,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1022",
+      "source_chars": 27,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 87,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1024",
+      "source_chars": 87,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 189,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "middle_insertion",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1024",
+      "source_chars": 87,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 2008,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1024",
+      "source_chars": 87,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 28,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1027",
+      "source_chars": 28,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 102,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1027",
+      "source_chars": 28,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4749,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1027",
+      "source_chars": 28,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 44,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1028",
+      "source_chars": 44,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 118,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1028",
+      "source_chars": 44,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1965,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1028",
+      "source_chars": 44,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 40,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1030",
+      "source_chars": 40,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 114,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1030",
+      "source_chars": 40,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4761,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1030",
+      "source_chars": 40,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 33,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1037",
+      "source_chars": 33,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 108,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "boilerplate_wrapper",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1037",
+      "source_chars": 33,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1954,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1037",
+      "source_chars": 33,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 41,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1049",
+      "source_chars": 41,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 116,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "boilerplate_wrapper",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1049",
+      "source_chars": 41,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1962,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1049",
+      "source_chars": 41,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 56,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1051",
+      "source_chars": 56,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 130,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1051",
+      "source_chars": 56,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4777,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1051",
+      "source_chars": 56,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 69,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1052",
+      "source_chars": 69,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 143,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_prefix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1052",
+      "source_chars": 69,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1990,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1052",
+      "source_chars": 69,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 48,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1058",
+      "source_chars": 48,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 150,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "middle_insertion",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1058",
+      "source_chars": 48,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 1969,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "repeated_low_information",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1058",
+      "source_chars": 48,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 46,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1065",
+      "source_chars": 46,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 148,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "middle_insertion",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1065",
+      "source_chars": 46,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4767,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1065",
+      "source_chars": 46,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 39,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1068",
+      "source_chars": 39,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 113,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1068",
+      "source_chars": 39,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4760,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1068",
+      "source_chars": 39,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 25,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1071",
+      "source_chars": 25,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 99,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "short_prefix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1071",
+      "source_chars": 25,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 4746,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "long_suffix",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1071",
+      "source_chars": 25,
+      "source_occurrences": 1
+    },
+    {
+      "augmented_chars": 24,
+      "candidate_id": "banking77:card_delivery_estimate",
+      "condition": "clean",
+      "label_preserved": true,
+      "noise_version": "phase11-generic-noise-v1",
+      "row_id": "banking77:train:1073",
+      "source_chars": 24,
+      "source_occurrences": 1
+    }
+  ],
+  "variants": 13905
+}

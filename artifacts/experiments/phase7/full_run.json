@@ -1,0 +1,63 @@
+{
+  "n_layers": 1,
+  "mix": "hard",
+  "encoder_lr": 1e-06,
+  "head_lr": 5e-06,
+  "train": {
+    "start_layer": 27,
+    "steps": 3302,
+    "loss_first20": 1.6954359379131347,
+    "loss_last20": 1.5490393760846928,
+    "loss_dropped": 0.0863474452527162,
+    "max_loss": 8.702125549316406,
+    "mean_grad_norm": 10.723106537325645,
+    "trainable": 38506497
+  },
+  "conditional": 0.6968174204355109,
+  "bootstrap": {
+    "delta": 0.0,
+    "ci95_low": 0.0,
+    "ci95_high": 0.0,
+    "n": 597
+  },
+  "high_conf_rate_T1": 0.22759601706970128,
+  "baseline_high_conf_rate_T1": 0.24893314366998578,
+  "ag_news": {
+    "n": 120,
+    "temperature": 1.2076712505429734,
+    "accuracy": 0.9583333333333334,
+    "nll": 0.12839914701339028,
+    "brier": 0.06045823888837675,
+    "ece": 0.04288161172635116
+  },
+  "baseline_ag_news": {
+    "n": 120,
+    "temperature": 1.2076712505429734,
+    "accuracy": 0.9583333333333334,
+    "nll": 0.12989458888749109,
+    "brier": 0.06201988213965061,
+    "ece": 0.031088909948051545
+  },
+  "small4": 0.88,
+  "baseline_small4": 0.88,
+  "anchors": {
+    "noul": 0.8539,
+    "score": 0.9556,
+    "choice": "billing",
+    "choice_confidence": 0.8909
+  },
+  "baseline_anchors": {
+    "noul": 0.8488,
+    "score": 0.956,
+    "choice": "billing",
+    "choice_confidence": 0.9083
+  },
+  "paraphrase": {
+    "n": 28,
+    "agreement": 0.8928571428571429
+  },
+  "promoted": false,
+  "reasons": [
+    "conditional interval includes zero"
+  ]
+}

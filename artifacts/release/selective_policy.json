@@ -1,0 +1,22 @@
+{
+  "format": "veya-selective-policy-v1",
+  "route": "shortlist_k8_packed_rerank",
+  "scorer_id": "base_decision_head",
+  "score": "max_probability",
+  "operating_epsilon": "disabled",
+  "thresholds": {
+    "disabled": null,
+    "0.02": 0.9796500892257723,
+    "0.05": 0.9541679372957224,
+    "0.10": 0.896261827143334
+  },
+  "validation_split": "banking77_test_880_1100",
+  "validation_hash": "0bc7c16b40ef60f9cc29a7ffd41302984d2e97bca89f67c62bcffd3591156ef3",
+  "test_split": "banking77_test_1300_end",
+  "test_hash": "32393a1a7de5865dc4470b10bb340cf5dcdacb958f8d092a8891468919ff8fd5",
+  "test_status": "DEVELOPMENT-EXPOSED",
+  "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "chosen_on": "validation",
+  "runtime_policy": "report a prediction but defer automation; the validation-selected 5% threshold observed 6.99% risk on development-exposed reporting data"
+}

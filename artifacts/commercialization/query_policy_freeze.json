@@ -1,0 +1,16 @@
+{
+  "artifact_sha256": "a82e369346d9ee3bbd9bc0df09bbebebea5c92c1a42b6c667b08675e918d713f",
+  "blind_status": "UNOPENED",
+  "development_report_sha256": "2f31c917f874589ef44db797c1ac132238e30816bc52e886900c2137c1a125c1",
+  "format": "veya-query-policy-freeze-v1",
+  "policy": {
+    "k": 8,
+    "query_fusion": "max",
+    "query_max_views": 4,
+    "query_view_max_chars": 4096,
+    "retriever": "phase10_domain_general_multiview"
+  },
+  "production_default_changed": false,
+  "sample_ids_sha256": "1b7595dc8d828e0b39a43f3d47760858fc6a4bf8325e8b20be7aa486091c8ac4",
+  "status": "FROZEN_FOR_NEW_BLIND_NOT_PRODUCTION"
+}

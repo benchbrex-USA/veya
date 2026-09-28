@@ -1,0 +1,55 @@
+{
+  "promoted": false,
+  "reason": "conditional-accuracy interval includes zero; keep the base head",
+  "best": {
+    "accuracy": 0.22445561139028475,
+    "epoch": 1,
+    "bootstrap": {
+      "delta": -0.4723618090452261,
+      "ci95_low": -0.5209380234505863,
+      "ci95_high": -0.423785594639866,
+      "n": 597
+    },
+    "high_conf_rate": 0.0
+  },
+  "baseline_high_conf_rate": 0.24893314366998578,
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": 2.0459047630789198,
+      "conditional_accuracy": 0.21440536013400335,
+      "bootstrap": {
+        "delta": -0.4824120603015075,
+        "ci95_low": -0.5326633165829145,
+        "ci95_high": -0.4355108877721943,
+        "n": 597
+      },
+      "high_conf_rate": 0.0
+    },
+    {
+      "epoch": 1,
+      "train_loss": 2.003326724692819,
+      "conditional_accuracy": 0.22445561139028475,
+      "bootstrap": {
+        "delta": -0.4723618090452261,
+        "ci95_low": -0.5209380234505863,
+        "ci95_high": -0.423785594639866,
+        "n": 597
+      },
+      "high_conf_rate": 0.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.0021373586378237,
+      "conditional_accuracy": 0.20435510887772193,
+      "bootstrap": {
+        "delta": -0.49246231155778897,
+        "ci95_low": -0.5393634840871022,
+        "ci95_high": -0.4455611390284757,
+        "n": 597
+      },
+      "high_conf_rate": 0.0
+    }
+  ],
+  "artifact": "artifacts/experiments/phase6/candidates/top8_interaction.pt"
+}

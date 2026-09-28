@@ -37,7 +37,7 @@ def _strip_disclaimer(paragraph: str) -> str:
 def clean_email_body(body: str, max_chars: int = 3000) -> str:
     """Remove quoted email history, signatures and disclaimers to keep input focused."""
     text = (body or "").replace("\r\n", "\n").replace("\r", "\n").replace("\\n", "\n")
-    lines = []
+    lines: list[str] = []
     for line in text.split("\n"):
         if any(p.match(line) for p in _QUOTE_HEADERS) and lines:
             break

@@ -1,0 +1,38 @@
+[
+  {
+    "steps": 3302,
+    "first20": 0.8758157256059349,
+    "last20": 0.4120082423847634,
+    "mean_loss": 0.8565911954832279,
+    "max_loss": 7.832864284515381,
+    "mean_head_grad": 2.700926743823067,
+    "mean_encoder_grad": 4.938681234517651,
+    "max_encoder_grad": 29.772323055025005,
+    "lr_head": 0.001,
+    "lr_encoder": 1e-05,
+    "start_layer": 27,
+    "variant": "H0",
+    "batch_groups": 2,
+    "aborted": false,
+    "conditional_accuracy": 0.7537688442211056,
+    "n_layers": 1
+  },
+  {
+    "steps": 3302,
+    "first20": 1.1163728071376682,
+    "last20": 1.1563820104925526,
+    "mean_loss": 0.870250236161825,
+    "max_loss": 9.521931648254395,
+    "mean_head_grad": 2.7055966105931066,
+    "mean_encoder_grad": 6.664288538284467,
+    "max_encoder_grad": 56.90175545972904,
+    "lr_head": 0.001,
+    "lr_encoder": 1e-05,
+    "start_layer": 26,
+    "variant": "H0",
+    "batch_groups": 2,
+    "aborted": false,
+    "conditional_accuracy": 0.7721943048576214,
+    "n_layers": 2
+  }
+]

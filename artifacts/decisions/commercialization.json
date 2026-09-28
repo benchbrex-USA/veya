@@ -1,0 +1,58 @@
+{
+  "format": "veya-commercialization-decision-v1",
+  "as_of": "2026-09-23",
+  "commercial_verdict": "RESEARCH",
+  "model_route_decision": "KEEP_AS_RESEARCH",
+  "query_policy_decision": "FREEZE_MAX_VIEW_FOR_RESEARCH_ONLY",
+  "production_promotion": false,
+  "production_manifest_changed": false,
+  "production_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "evidence": {
+    "development": {
+      "clean_recall_at_8": 0.4266666666666667,
+      "phase10_short_suffix_recall_at_8": 0.14,
+      "max_view_short_suffix_recall_at_8": 0.4066666666666667,
+      "phase10_long_suffix_recall_at_8": 0.05333333333333334,
+      "max_view_long_suffix_recall_at_8": 0.41333333333333333,
+      "max_view_prefix_recall_at_8": 0.41333333333333333
+    },
+    "hwu64_one_shot": {
+      "n": 3000,
+      "candidates": 60,
+      "current_clean_recall_at_8": 0.273,
+      "phase10_clean_recall_at_8": 0.3406666666666667,
+      "phase10_vs_current_delta": 0.06766666666666667,
+      "phase10_vs_current_ci95": [0.048, 0.088],
+      "phase10_suffix_recall_at_8": 0.14233333333333334,
+      "max_view_suffix_recall_at_8": 0.2783333333333333,
+      "phase10_prefix_recall_at_8": 0.18666666666666668,
+      "max_view_prefix_recall_at_8": 0.2976666666666667,
+      "current_clean_end_to_end_accuracy": 0.228,
+      "phase10_clean_end_to_end_accuracy": 0.272,
+      "max_view_suffix_end_to_end_accuracy": 0.156,
+      "max_view_prefix_end_to_end_accuracy": 0.212
+    }
+  },
+  "blockers": [
+    "absolute clean blind Recall@8 remains approximately 34%",
+    "noise robustness improves materially but noisy blind Recall@8 remains below 30%",
+    "clean blind conditional scorer accuracy is 76.84% on the harder shortlist",
+    "calibration and selective-risk policy are not validated for this route",
+    "four exact text overlaps prevent calling HWU64 contamination-free",
+    "base-checkpoint HWU64 pretraining exposure cannot be excluded",
+    "SGD-trained artifact licensing compatibility remains unresolved",
+    "no customer workload, cost, SLO, security-tenancy, billing, or pilot evidence exists"
+  ],
+  "biggest_remaining_bottleneck": "absolute unseen-schema retrieval quality",
+  "next_graph": {
+    "objective": "raise clean and noisy unseen-schema Recall@8 without changing the frozen scorer",
+    "sequence": [
+      "train deterministic query-noise augmentation on TRAIN data only",
+      "run a second hard-negative refresh with false-negative audit",
+      "re-evaluate richer authoritative candidate semantics where licensed",
+      "declare dense retrieval plateau if gains are not material",
+      "then compare one bounded late-interaction reranker over top 32/64",
+      "freeze on schema-held-out development before identifying another blind source"
+    ]
+  }
+}

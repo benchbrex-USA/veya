@@ -1,0 +1,99 @@
+{
+  "model": "veya",
+  "release": "0.3.5-phase9-rc",
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "working_tree": "dirty",
+  "architecture_version": "veya-hypothesis-hce2-v1",
+  "base_checkpoint": "models/production",
+  "base_checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "tokenizer": "models/production/tokenizer",
+  "model_config": "models/production/rl_agent_config.json",
+  "model_config_hash": "ae287b56bbcf5f8c4f4541ae9dfd00c914c4c48b940b8398c3058af37ba92bbd",
+  "choice": {
+    "packed_max_candidates": 20,
+    "hierarchical_enabled": true,
+    "shortlist_k": 8,
+    "shortlist_artifact": "models/production/shortlist_k8.pt",
+    "shortlist_hash": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "embed_max_length": 96,
+    "training_rows": "banking77_train_seed17_0_800",
+    "high_n": {
+      "architecture": "hypothesis_hce2_h0",
+      "shortlist_k": 8,
+      "shortlist_artifact": "models/production/shortlist_k8.pt",
+      "shortlist_hash": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+      "scorer_head": "artifacts/experiments/phase9/finalist_head.pt",
+      "scorer_head_hash": "8ccd560a7464d0dfa35a5382694bbf398d991fa2f2acf869525a2e93a0008d50",
+      "encoder_delta": "artifacts/experiments/phase9/encoder_delta.pt",
+      "encoder_delta_hash": "c2c8eec02fa01e118f36a9920b1f023d0785dd35c699a6e240c561054253d517",
+      "encoder_adaptation_id": "modernbert-layers-26-27+final_norm",
+      "hypothesis_template": "phase9-h0-v1",
+      "calibration": "models/production/calibration_hypothesis_hce2.json",
+      "calibration_hash": "80e35211cf5a649c196d6935777dcb2c78934aa0e87d06ed637b05436e36983e",
+      "training_split_sha256": "0edfdf32fde2f1d813690129f213d4d4f959988b8bb86d49678bf64a8500a746",
+      "validation_split_sha256": "e26dd91d4e9d1c659a939b7251e44d47db499b1f3b30bd1466ba4d281cf9a479",
+      "candidate_threshold": 20
+    },
+    "small_n": {
+      "architecture": "packed",
+      "max_candidates": 20,
+      "calibration": "models/production/calibration.json"
+    }
+  },
+  "score": {
+    "architecture": "categorical",
+    "ordinal": "RESEARCH ONLY"
+  },
+  "noul": {
+    "architecture": "production_head",
+    "encoder": "base_checkpoint_without_phase9_delta"
+  },
+  "calibration": {
+    "packed_choice": "models/production/calibration.json",
+    "packed_choice_hash": "1d1c5834b362e86f60abac9d608a4a9506ba4fe5100c352538900a4958b5ad9b",
+    "hierarchical_choice": "models/production/calibration_shortlist_k8.json",
+    "hierarchical_choice_hash": "b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50",
+    "hierarchical_route": "shortlist_k8_packed_rerank",
+    "hierarchical_temperature": 1.971127355603397,
+    "score": "checkpoint",
+    "noul": "checkpoint",
+    "hypothesis_choice": "models/production/calibration_hypothesis_hce2.json",
+    "hypothesis_choice_hash": "80e35211cf5a649c196d6935777dcb2c78934aa0e87d06ed637b05436e36983e",
+    "hypothesis_temperature": 1.6203480178935838,
+    "hypothesis_route": "hypothesis_hce2_h0"
+  },
+  "routing": {
+    "language_router": "non_latin_defers_on_modernbert",
+    "choice_router": "models/production/choice_router.json",
+    "choice_router_hash": "375c0ac9d9461c7761fedb79d9b36cad2703be06a2db19492935fce5fd3bd30d"
+  },
+  "selective_policy": "artifacts/release/selective_policy.json",
+  "selective_policy_hash": "6218b3e66c83b966876976b885490265bc47422b642f84083b5a23d8ef3e5ecc",
+  "supported_languages": [
+    "en"
+  ],
+  "supported_primitives": [
+    "choice",
+    "score",
+    "noul"
+  ],
+  "evaluation_output": "artifacts/experiments/phase9/integrate_report.json",
+  "prior_evaluation": "artifacts/experiments/phase9/report.json",
+  "known_limitations": [
+    "English only. Non-Latin text on this checkpoint defers as unsupported_language.",
+    "High-N Choice uses the frozen Banking77 K=8 shortlist, then hypothesis_hce2_h0. The shortlist was trained on train rows 0:800.",
+    "Small-N Choice, Noul, and Score use the base encoder. The Phase-9 delta is a private copy of layers 26-27.",
+    "The packed ceiling stays at 20 candidates. The 20-candidate gap did not justify moving it.",
+    "Ordinal Score is RESEARCH ONLY.",
+    "Banking77 test rows 1300:3080 are DEVELOPMENT-EXPOSED. Final independent release evaluation is pending.",
+    "Safe automation at 1% is not supported.",
+    "K=16 and K=32 are not routes.",
+    "Each hypothesis pair re-encodes the state. No state cache is shipped.",
+    "The phase-5 selective thresholds belong to the packed reranker and are not applied to hypothesis probabilities."
+  ],
+  "test_integrity": {
+    "banking77_test_1300_3080": "DEVELOPMENT-EXPOSED",
+    "reason": "Phase 5 published aggregates on these rows, Phase 6 stored pair-level predictions, and the reranker program used those error counts. Phase 9 scored the same rows once. They are not a pristine blind release test.",
+    "fresh_blind_partition": null
+  }
+}

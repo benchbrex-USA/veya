@@ -1,0 +1,31 @@
+{
+  "decision": "For 20 or more candidates, retrieve with the learned K=8 shortlist and rerank with packed Choice. At 19 or fewer, keep packed Choice.",
+  "status": "SERVED IN RESEARCH RELEASE",
+  "alternatives_rejected": ["packed 77-way as the only path", "shortlist K=16", "shortlist K=32", "candidate-set head", "frozen cosine shortlist"],
+  "evidence": [
+    "artifacts/experiments/phase4/banking77_routes.json",
+    "artifacts/experiments/phase5/clean_load_eval.json"
+  ],
+  "k_selection_n96_rows_200_296": {
+    "packed_77": 0.4479,
+    "shortlist_8": 0.6875,
+    "shortlist_16": 0.6563,
+    "shortlist_32": 0.4688,
+    "candidate_set_embeddings": 0.5313
+  },
+  "clean_load_locked_n200_rows_1300_1500": {
+    "packed_77_accuracy": 0.405,
+    "k8_end_to_end_accuracy": 0.68,
+    "k8_recall": 0.895,
+    "k8_rerank_accuracy_given_hit": 0.7597765363128491
+  },
+  "crossover_n104_rows_296_400": {
+    "rule": "Move the packed ceiling only when hierarchical accuracy leads by at least 0.05 and every larger grid point does too. The ceiling is the grid point below that run.",
+    "packed_max_candidates": 20,
+    "status": "SUPERSEDED by the train-validation routing audit"
+  },
+  "routing_audit": "artifacts/release/route_cutoff_audit.json",
+  "routing_audit_result": "On Banking77 train rows 9300:9600, hierarchical routing led packed scoring by at least 0.05 at 20, 21, 24, 28, 31, and 32 candidates. Route to shortlist at 20+.",
+  "known_downside": "The projection is trained on Banking77 train rows 0:800. Retrieval recall on the development-exposed combined test is 0.854, so 259 of 1780 errors never reach the reranker.",
+  "revisit": "Revisit the cutoff if a fresh non-banking high-cardinality set shows the Banking77 projection hurting end-to-end accuracy."
+}

@@ -1,0 +1,7 @@
+{
+  "name": "ordinal-score-micro",
+  "status": "IMPLEMENTED_NOT_RESEARCH_VALIDATED",
+  "note": "veya/experimental/ordinal.py implements cumulative thresholds. veya/experimental/ordinal_data.py refuses a missing CSV. research/veyabench/run_ordinal_eval.py exits 2 until VEYA_ORDINAL_CSV points at a real table. No ordinal dataset is in research/data. Production Score remains the categorical softmax.",
+  "compare_against": "categorical softmax in DecisionModel.scorer",
+  "metrics": ["accuracy", "mae", "nll", "ece"]
+}

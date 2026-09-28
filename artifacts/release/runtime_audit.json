@@ -1,0 +1,109 @@
+{
+  "format": "veya-runtime-audit-v1",
+  "release": "0.3.5-audit-baseline.1",
+  "manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "environment": {
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.11.0",
+    "device": "cpu"
+  },
+  "cold_start": {
+    "module_enter_to_loaded_s": 33.849,
+    "manifest_load_s": 33.849,
+    "stages_s": {
+      "checkpoint_hash_s": 10.887,
+      "checkpoint_load_s": 22.751,
+      "shortlist_load_s": 0.098,
+      "route_calibration_load_s": 0.012
+    },
+    "rss_mb_after_benchmark": 2030.5
+  },
+  "latency": {
+    "small_packed_choice": {
+      "n": 20,
+      "p50_ms": 105.25454199523665,
+      "p90_ms": 106.38761729933321,
+      "p95_ms": 108.6329544428736,
+      "p99_ms": 109.73742369562387,
+      "mean_ms": 105.44239380105864,
+      "throughput_per_second": 9.483851456243778
+    },
+    "high_n_choice_77": {
+      "n": 20,
+      "p50_ms": 163.39977100142278,
+      "p90_ms": 164.88029969332274,
+      "p95_ms": 165.1583166909404,
+      "p99_ms": 166.08843052992597,
+      "mean_ms": 163.452706298267,
+      "throughput_per_second": 6.117977625743371
+    },
+    "noul": {
+      "n": 20,
+      "p50_ms": 76.01224997779354,
+      "p90_ms": 99.45081628975458,
+      "p95_ms": 105.83598066732525,
+      "p99_ms": 156.82536331965812,
+      "mean_ms": 85.63332710036775,
+      "throughput_per_second": 11.677696451382017
+    },
+    "score_categorical": {
+      "n": 20,
+      "p50_ms": 76.31535451218951,
+      "p90_ms": 80.11060061689932,
+      "p95_ms": 83.11641042091651,
+      "p99_ms": 89.74604846531291,
+      "mean_ms": 77.60833115316927,
+      "throughput_per_second": 12.885214578656266
+    },
+    "systemone_three_questions": {
+      "n": 20,
+      "p50_ms": 214.78562500851694,
+      "p90_ms": 231.76565439498518,
+      "p95_ms": 237.37253267900093,
+      "p99_ms": 293.6827065341639,
+      "mean_ms": 221.00500209635356,
+      "throughput_per_second": 4.524784464217786
+    }
+  },
+  "multi_question_redundancy": {
+    "one_question_input_tokens": 43,
+    "three_question_input_tokens": 172,
+    "ratio": 4.0,
+    "request_scoped_state_cache": false,
+    "reason": "State representations are question-conditioned; reuse would change attention semantics."
+  },
+  "http_status": {
+    "health": 200,
+    "version": 200,
+    "choice_small": 200,
+    "choice_high_n": 200,
+    "noul": 200,
+    "score": 200,
+    "systemone": 200,
+    "unsupported_choice": 200,
+    "unsupported_noul": 200,
+    "unsupported_score": 200,
+    "unsupported_systemone": 200
+  },
+  "http_routes": {
+    "choice_small": "packed",
+    "choice_high_n": "shortlist_k8_packed_rerank"
+  },
+  "unsupported_language_reasons": {
+    "unsupported_choice": "unsupported_language",
+    "unsupported_noul": "unsupported_language",
+    "unsupported_score": "unsupported_language",
+    "unsupported_systemone": "unsupported_language"
+  },
+  "version_matches_manifest": {
+    "release": true,
+    "manifest_sha256": true,
+    "checkpoint_sha256": true,
+    "shortlist_sha256": true,
+    "router_version": true,
+    "scorer_id": true,
+    "policy_sha256": true
+  },
+  "all_version_fields_match": true
+}

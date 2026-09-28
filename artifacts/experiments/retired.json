@@ -1,0 +1,12 @@
+{
+  "do_not_revive_without_a_new_hypothesis": [
+    {"id": "k16_k32_production_rerank", "phase": 5, "reason": "Raising K made the packed reranker worse end to end."},
+    {"id": "frozen_cosine_retrieval", "phase": 4, "reason": "The learned projection replaced cosine retrieval on the production shortlist."},
+    {"id": "candidate_set_scorer", "phase": 4, "reason": "Not promoted. The artifact refuses production=true."},
+    {"id": "head_only_listwise_reranker", "phase": 6, "reason": "Validation conditional interval included zero."},
+    {"id": "pairwise_head_addon", "phase": 6, "reason": "The confidence interval touched zero."},
+    {"id": "mean_pooled_top8_scorer", "phase": 6, "reason": "Conditional accuracy fell to 0.224."},
+    {"id": "phase7_top_layer_on_short_labels", "phase": 7, "reason": "A full epoch changed 0 of 597 validation decisions."},
+    {"id": "packed_semantic_enrichment", "phase": 8, "reason": "Training-utterance text inside the packed span cut conditional accuracy from 0.697 to about 0.33."}
+  ]
+}

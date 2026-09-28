@@ -1,0 +1,14 @@
+{
+  "checkpoint": "models/production",
+  "calibration_artifact": null,
+  "reason": "No held-out calibration file has been fit. The checkpoint temperatures remain the runtime temperatures, with choice:11+ clamped to 0.5.",
+  "evaluation_report": "research/results/post_fix_baseline.json",
+  "api": "veya/server.py",
+  "known_limitations": [
+    "Packed choice drops options after about 126 markers in a 512-token window.",
+    "Score is categorical, not ordinal, in production.",
+    "Noul and its negation are not tied by a loss.",
+    "Multilingual temperatures are still 1.0.",
+    "CandidateSetHead and OrdinalHead are experimental and untrained."
+  ]
+}

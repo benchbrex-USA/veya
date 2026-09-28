@@ -1,0 +1,12 @@
+{
+  "format": "veya-choice-router-v1",
+  "version": 1,
+  "packed_max_candidates": 19,
+  "hierarchical_k": 8,
+  "hierarchical_route": "shortlist_k8_packed_rerank",
+  "embed_max_length": 96,
+  "query": "serialized_state",
+  "candidate_text": "criterion_value_or_label",
+  "retired_from_production": ["k16", "k32", "cosine_shortlist", "candidate_set"],
+  "evidence": "artifacts/release/route_cutoff_audit.json"
+}

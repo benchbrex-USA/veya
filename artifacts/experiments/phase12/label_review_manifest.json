@@ -1,0 +1,15 @@
+{
+  "blind_controls_per_service": 5,
+  "blind_file_sha256": "27bed2a5bf97f54cdce9178f8a78e03fcc00084d9c1bb365f9c09aaa40ec53c2",
+  "format": "veya-phase12-blind-label-review-v1",
+  "high_confidence_errors_per_service": 8,
+  "instructions": "Give annotators only the blind file. Obtain two independent intent/none/ambiguous judgments with evidence from the displayed dialogue; adjudicate disagreements before opening the key. The service is given, not inferred.",
+  "inventory_sha256": "81a526a57fa2e5b8d941a78c018c33ddc06815fd0b8565c2c2eec6da4f3b4301",
+  "key_file_sha256": "61219e28e18153badb5ce215f982df72264a99ad84d22925bfbbc0e3c27f7e87",
+  "n": 147,
+  "per_service": 21,
+  "sampled_errors_per_service": 8,
+  "scorer_details_sha256": "414be32d9a75e4fbbff1c4ce69b7250a3e0b59f252b2baa4d862ab1277e7618d",
+  "source_commit": "e852981ae34990f4358979625854259302feaa78",
+  "test_dialogues_opened": false
+}

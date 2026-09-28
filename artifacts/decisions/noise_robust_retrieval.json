@@ -1,0 +1,46 @@
+{
+  "format": "veya-phase11-decision-v1",
+  "decision": "KEEP AS RESEARCH",
+  "dense_plateau_verdict": "DENSE STILL IMPROVING",
+  "late_interaction_executed": false,
+  "late_interaction_gate": "not permitted because RB2 and generic structured-field extraction materially improved held-out robustness",
+  "development_selected_retriever": "RB1_noise",
+  "artifact": "artifacts/experiments/phase11/phase11_noise_robust_k8.pt",
+  "artifact_sha256": "197b896558e1d53a931b6d62f913c79c17795efff2f164313cc9c95ac8d21d4f",
+  "served": false,
+  "production_manifest_changed": false,
+  "production_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "evidence": {
+    "phase10_clean_recall_at_8": 0.431,
+    "rb1_clean_recall_at_8": 0.398,
+    "rb2_clean_recall_at_8": 0.42733333333333334,
+    "phase10_robust_mean_recall_at_8": 0.1335,
+    "rb1_robust_mean_recall_at_8": 0.111,
+    "rb2_robust_mean_recall_at_8": 0.184,
+    "rb2_robust_delta_vs_phase10": 0.0505,
+    "rb2_robust_delta_ci95": [0.0315, 0.07],
+    "structured_json_delta": 0.275,
+    "structured_json_delta_ci95": [0.205, 0.345],
+    "phase10_matched_end_to_end_accuracy": 0.435,
+    "rb1_matched_end_to_end_accuracy": 0.365,
+    "rb2_matched_end_to_end_accuracy": 0.445
+  },
+  "promotion_blockers": [
+    "The development-selected RB1 regressed full clean schema-held-out Recall@8 by 3.3 points with CI entirely below zero.",
+    "RB1 robust mean Recall@8 regressed by 2.25 points and matched end-to-end accuracy regressed by 7 points.",
+    "Generic multi-view policies did not improve aggregate robustness and increased measured p50 latency from 194.6 ms to 438.8 ms for adaptive views.",
+    "The promising RB2 and structured-field results are post-selection evidence and require a newly frozen confirmation split.",
+    "Absolute noisy Recall@8 remains commercially weak.",
+    "No new pristine external blind evidence was opened, and the repository-wide regression gate is blocked by an unrelated concurrent Phase-12 syntax error."
+  ],
+  "unchanged": [
+    "K=8",
+    "base decision head",
+    "calibration",
+    "router cutoff",
+    "automation policy (disabled)",
+    "production serving architecture",
+    "artifacts/release/manifest.json"
+  ],
+  "next_bottleneck": "representation/backbone capacity"
+}

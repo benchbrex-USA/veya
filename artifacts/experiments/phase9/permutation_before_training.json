@@ -1,0 +1,9 @@
+{
+  "examples": 12,
+  "trials": 72,
+  "repeat_max_logit_delta": 0.0,
+  "max_logit_delta": 0.0,
+  "max_probability_delta": 0.0,
+  "top1_flips_when_margin_above_0.05": 0,
+  "flip_rate": 0.0
+}

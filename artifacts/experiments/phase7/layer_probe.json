@@ -1,0 +1,15 @@
+{
+  "n": 161,
+  "layer_6": {
+    "held_out_probe_accuracy": 0.5151515007019043
+  },
+  "layer_13": {
+    "held_out_probe_accuracy": 0.6060606241226196
+  },
+  "layer_20": {
+    "held_out_probe_accuracy": 0.6969696879386902
+  },
+  "layer_27": {
+    "held_out_probe_accuracy": 0.6060606241226196
+  }
+}

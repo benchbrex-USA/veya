@@ -21,14 +21,23 @@ os.environ.setdefault("USE_TF", "0")
 os.environ.setdefault("USE_TORCH", "1")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+if __name__ != "__main__":
+    import pytest
+    pytest.skip("real-checkpoint integration; run python3 tests/test_local_e2e.py models/production", allow_module_level=True)
+
 import veya  # noqa: E402
 from veya.router import Router  # noqa: E402
 
 ROOT = os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else "~/veya_models")
 DEVICE = os.environ.get("VEYA_DEVICE", "cpu")
-LOCAL = {"english": os.path.join(ROOT, "veya"),
-         "multilingual": os.path.join(ROOT, "veya-multilingual"),
-         "typed-decisions": os.path.join(ROOT, "veya-typed-decisions")}
+if os.path.isfile(os.path.join(ROOT, "model.safetensors")):
+    LOCAL = {"english": ROOT,
+             "multilingual": os.path.join(ROOT, "multilingual"),
+             "typed-decisions": os.path.join(ROOT, "typed-decisions")}
+else:
+    LOCAL = {"english": os.path.join(ROOT, "veya"),
+             "multilingual": os.path.join(ROOT, "veya-multilingual"),
+             "typed-decisions": os.path.join(ROOT, "veya-typed-decisions")}
 
 PASS, FAIL, NOTES = [], [], []
 
@@ -98,17 +107,19 @@ ok("multilingual billing intent >= 6/8", correct >= 6, "got %d/8" % correct)
 
 # ---------------------------------------------------------------- 3. English checkpoint contrast
 head("3. English checkpoint on the same non-English inputs (why routing matters)")
-ml_only = {l: t for l, t in BILLING if l in ("hindi", "japanese", "chinese", "russian")}
+ml_only = {language: text for language, text in BILLING if language in ("hindi", "japanese", "chinese", "russian")}
 del ml
 en = veya.load(LOCAL["english"], device=DEVICE)
-en_correct = 0
+deferred = 0
 for label, text in ml_only.items():
-    a = en.predict({"message": text}, QD)["answers"]
-    hit = a["dept"]["choice"] == "billing"
-    en_correct += hit
-    print("   %-9s dept=%-10s p=%.2f  %s" % (label, a["dept"]["choice"],
-          max(a["dept"]["probabilities"].values()), "OK" if hit else "<-- miss"), flush=True)
-NOTES.append("English checkpoint on 4 non-English billing cases: %d/4 correct" % en_correct)
+    out = en.predict({"message": text}, QD)
+    hit = out.get("reason") == "unsupported_language" and not out["answers"]
+    deferred += hit
+    print("   %-9s decision=%s reason=%s  %s" % (
+        label, out.get("decision"), out.get("reason"), "OK" if hit else "<-- answered"), flush=True)
+ok("english checkpoint defers on non-Latin input", deferred == len(ml_only),
+   "deferred %d/%d" % (deferred, len(ml_only)))
+NOTES.append("English checkpoint deferred on %d/%d non-Latin billing cases" % (deferred, len(ml_only)))
 
 # ---------------------------------------------------------------- 4. English applications
 head("4. Application presets on the English checkpoint")

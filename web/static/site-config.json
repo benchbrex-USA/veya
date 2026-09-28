@@ -1,0 +1,22 @@
+{
+  "siteName": "Veya",
+  "primaryNavigation": ["/principles", "/benchmarks", "/developers", "/getting-started"],
+  "footerNavigation": ["/experience", "/architecture", "/benchmarks", "/developers", "/limitations", "/model-status"],
+  "pages": [
+    {"href":"/","title":"Veya — Structured decisions","description":"Veya turns state and typed questions into inspectable probabilities, answers, or deferrals.","section":"Overview","order":0,"kind":"home","navLabel":"Overview"},
+    {"href":"/getting-started","title":"Getting started — Veya","description":"Make your first Veya Choice request and inspect the structured result.","section":"Start","order":1,"kind":"docs","navLabel":"Getting started","topLabel":"Docs"},
+    {"href":"/experience","title":"Try Veya — Live model","description":"Run Choice, Noul, Score, and SystemOne against the audited Veya research checkpoint.","section":"Start","order":2,"kind":"playground","navLabel":"Try Veya"},
+    {"href":"/concepts/choice","title":"Choice — Veya concepts","description":"Choose among named candidates and inspect the candidate distribution.","section":"Core concepts","order":3,"kind":"docs","navLabel":"Choice"},
+    {"href":"/concepts/noul","title":"Noul — Veya concepts","description":"Evaluate a proposition as a probability with explicit deferral.","section":"Core concepts","order":4,"kind":"docs","navLabel":"Noul"},
+    {"href":"/concepts/score","title":"Score — Veya concepts","description":"Understand the current categorical Score result and its limits.","section":"Core concepts","order":5,"kind":"docs","navLabel":"Score"},
+    {"href":"/concepts/systemone","title":"SystemOne — Veya concepts","description":"Run several typed questions over one shared state with stable question IDs.","section":"Core concepts","order":6,"kind":"docs","navLabel":"SystemOne"},
+    {"href":"/architecture","title":"Architecture — Veya","description":"Trace Veya requests through validation, routing, scoring, calibration, and deferral.","section":"System","order":7,"kind":"docs","navLabel":"Architecture"},
+    {"href":"/architecture/high-cardinality-choice","title":"High-cardinality Choice — Veya","description":"Understand the served learned top-eight shortlist path for large Choice sets.","section":"System","order":8,"kind":"docs","navLabel":"High-N Choice"},
+    {"href":"/benchmarks","title":"Benchmarks — Veya","description":"Inspect sealed aggregate CLINC150 validation results and benchmark methodology.","section":"Evidence","order":9,"kind":"docs","navLabel":"Benchmarks"},
+    {"href":"/limitations","title":"Limitations — Veya","description":"Read the audited limits of Veya's current research release.","section":"Evidence","order":10,"kind":"docs","navLabel":"Limitations"},
+    {"href":"/model-status","title":"Model status — Veya","description":"See current primitive and language support from the audited model release.","section":"Evidence","order":11,"kind":"docs","navLabel":"Model status"},
+    {"href":"/developers","title":"Developers — Veya","description":"Use the validated same-origin Veya gateway with copyable requests.","section":"Developers","order":12,"kind":"docs","navLabel":"Developer guide"},
+    {"href":"/developers/api","title":"API reference — Veya","description":"Read Veya gateway request limits, response fields, errors, and version metadata.","section":"Developers","order":13,"kind":"docs","navLabel":"API reference"},
+    {"href":"/principles","title":"Principles — Veya","description":"The principles behind Veya's structured decisions and visible uncertainty.","section":"Overview","order":14,"kind":"docs","navLabel":"Principles","topLabel":"Research"}
+  ]
+}

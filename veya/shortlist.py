@@ -9,19 +9,59 @@ caller-supplied ``embed_fn``, keeps the top ``k``, and runs a single ``predict``
 they are given. This module does not change ``DecisionModel.forward`` and does not add a
 second decision-model pass.
 
-The coarse-to-fine pattern is the one the README recommends and the one reported in
-https://github.com/benchbrex-USA/veya/issues/102. Ranking here is cosine similarity on
-whatever vectors ``embed_fn`` returns. Issue #102's BANKING77 figures belong to that
-report; this module does not measure them.
+``shortlist_choice`` ranks by cosine similarity. That cosine path is a benchmark
+helper. The production high-cardinality route is the saved K=8 projection loaded
+by ``veya.release_bundle``, which scores a dot product in the learned 128-d space.
+Frozen cosine retrieval is not the production ranker.
 """
 import json
+import unicodedata
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
 import numpy as np
 
-from .common import render_options, serialize_state
+from .common import render_criterion, render_options, serialize_state
 
 DEFAULT_SHORTLIST_K = 20
+MAX_CHOICE_CANDIDATES = 1024
+MAX_CANDIDATE_LABEL_CHARS = 512
+MAX_CANDIDATE_VALUE_CHARS = 4096
+# Packed choice keeps a marker per option inside max_len. Measured on the English
+# tokenizer at max_len 512: 100 options already fill the window, and 150 drops markers.
+# The shortlist path is selected only once the packed sequence cannot keep every option.
+PACKED_MARKER_CEILING = 100
+# Banking77 identical-set result, n=96, seed 17, rows 200:296:
+# packed 77-way accuracy 0.448; shortlist K=8 then rerank 0.688;
+# K=16 0.656; K=32 0.469 because the reranker, not retrieval, collapsed.
+# The later train-validation audit measured 20, 21, 24, 28, 31, and 32
+# candidates. Hierarchical K=8 led packed scoring by >= 0.05 at every point.
+# Route 20+ to the shortlist; keep the packed ceiling at 19.
+PRODUCTION_SHORTLIST_ABOVE = 19
+PRODUCTION_SHORTLIST_K = 8
+
+
+def production_choice_plan(n_options: int) -> dict:
+    """Packed Choice while the list is small. Learned shortlist K=8 once it is large.
+
+    K=8 is the Banking77 winner in artifacts/experiments/phase4/banking77_routes.json.
+    The cutoff is backed by artifacts/release/route_cutoff_audit.json. This
+    function does not load the projection. ``ReleaseBundle`` does, and it
+    refuses a router file whose cutoff or K disagrees with these constants.
+    """
+    if isinstance(n_options, bool) or not isinstance(n_options, int) or n_options < 1:
+        raise ValueError("n_options must be a positive integer")
+    if n_options <= PRODUCTION_SHORTLIST_ABOVE:
+        return {"path": "packed", "k": None}
+    return {"path": "shortlist", "k": PRODUCTION_SHORTLIST_K}
+
+
+def choose_choice_path(n_options: int, packed_marker_ceiling: int = PACKED_MARKER_CEILING) -> str:
+    """``packed`` while every option still fits. ``shortlist`` once markers would be dropped."""
+    if isinstance(n_options, bool) or not isinstance(n_options, int) or n_options < 1:
+        raise ValueError("n_options must be a positive integer")
+    if n_options <= packed_marker_ceiling:
+        return "packed"
+    return "shortlist"
 
 
 def shortlist_choice(
@@ -196,11 +236,20 @@ def _criteria_items(criteria):
         )
     if not items:
         raise ValueError("choice criteria must contain at least one option")
-    seen = set()
-    for key, _value in items:
-        if key in seen:
-            raise ValueError("choice criteria label %r is duplicated" % (key,))
-        seen.add(key)
+    if len(items) > MAX_CHOICE_CANDIDATES:
+        raise ValueError("choice criteria exceed the %d-candidate limit" % MAX_CHOICE_CANDIDATES)
+    seen = {}
+    for key, value in items:
+        if not isinstance(key, str) or not key.strip():
+            raise ValueError("choice criteria labels must be non-empty strings")
+        if len(key) > MAX_CANDIDATE_LABEL_CHARS:
+            raise ValueError("choice criteria label exceeds %d characters" % MAX_CANDIDATE_LABEL_CHARS)
+        normalized = " ".join(unicodedata.normalize("NFKC", key).casefold().split())
+        if normalized in seen:
+            raise ValueError("choice criteria labels %r and %r are duplicates after normalization" % (seen[normalized], key))
+        seen[normalized] = key
+        if len(render_criterion(value)) > MAX_CANDIDATE_VALUE_CHARS:
+            raise ValueError("choice criterion %r exceeds %d characters" % (key, MAX_CANDIDATE_VALUE_CHARS))
     return items
 
 

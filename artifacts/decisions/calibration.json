@@ -1,0 +1,31 @@
+{
+  "decision": "Keep packed choice:3-5 and choice:11+ temperatures. Apply a separate temperature only on the shortlist K=8 route. Do not write that temperature into choice:6-10.",
+  "status": "SERVED IN RESEARCH RELEASE",
+  "method": "scalar temperature, NLL grid",
+  "packed": {
+    "choice:3-5": 1.2076712505429734,
+    "choice:11+": 1.8768868409628021,
+    "choice:6-10": 1.0000158548355103
+  },
+  "hierarchical_k8": {
+    "route": "shortlist_k8_packed_rerank",
+    "temperature": 1.971127355603397,
+    "fit_rows": "banking77 test 1100:1300",
+    "fit_hits": 180,
+    "artifact": "models/production/calibration_shortlist_k8.json"
+  },
+  "locked_test_n200_rows_1300_1500": {
+    "accuracy_before": 0.68,
+    "accuracy_after": 0.68,
+    "nll_on_hits_before": 1.1086024237173646,
+    "nll_on_hits_after": 0.8285726472868604,
+    "brier_on_hits_before": 0.38213304759523614,
+    "brier_on_hits_after": 0.36415039999258914,
+    "ece_zeroed_before": 0.13571491016611037,
+    "ece_zeroed_after": 0.08058820773727987,
+    "ece_honest_before": 0.193687272763941,
+    "ece_honest_after": 0.08801733927572629
+  },
+  "known_downside": "The served confidence of a retrieval miss is the reranker's max probability, not zero. The historical locked-200 ECE is DEVELOPMENT-EXPOSED and cannot certify release calibration.",
+  "revisit": "Add another calibrator only if a later held-out set shows this scalar temperature raising honest ECE or changing top-1."
+}

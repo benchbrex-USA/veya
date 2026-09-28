@@ -1,0 +1,10 @@
+{
+  "k": 8,
+  "phase10_artifact_sha256": "a82e369346d9ee3bbd9bc0df09bbebebea5c92c1a42b6c667b08675e918d713f",
+  "production_projection_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+  "release": "0.3.5-audit-baseline.1",
+  "release_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "route_temperature": 1.971127355603397,
+  "scorer": "base_decision_head",
+  "serving_default_changed": false
+}

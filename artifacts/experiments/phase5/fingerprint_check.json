@@ -1,0 +1,24 @@
+{
+  "mismatched_rows": 0,
+  "rows": 32,
+  "probe_score_max_abs": 0.0,
+  "pass": true,
+  "cold_load": {
+    "process_enter_minus_shell_s": 0.313,
+    "import_to_ready_s": 34.837,
+    "ready_wall_s": 35.15,
+    "first_inference_s": 0.176,
+    "stages_s": {
+      "checkpoint_hash_s": 10.473,
+      "checkpoint_load_s": 23.629,
+      "shortlist_load_s": 0.029,
+      "route_calibration_load_s": 0.0
+    },
+    "device": "mps",
+    "hardware": "macOS-27.0-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.11.0",
+    "torch": "2.14.0",
+    "rss_mb_after_load": 515.6
+  }
+}

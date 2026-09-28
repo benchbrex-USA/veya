@@ -1,0 +1,15 @@
+{
+  "release_manifest": "artifacts/release/manifest.json",
+  "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+  "route_temperature": 1.971127355603397,
+  "reranker_id": "base_decision_head",
+  "choice_router_hash": "375c0ac9d9461c7761fedb79d9b36cad2703be06a2db19492935fce5fd3bd30d",
+  "packed_calibration_hash": "608e27f5dee4d6e9849fd4ec023c465694c5ff546ec87ad7a4913384da66144d",
+  "hierarchical_calibration_hash": "12ef36ee3858c41177fd598dc543f832be75b77d32c82b9ac70ab99cb8ae5d92",
+  "release_test": [
+    1300,
+    3080
+  ],
+  "note": "Release-test predictions stay in artifacts/experiments/phase6/frozen_test. This run does not read them."
+}

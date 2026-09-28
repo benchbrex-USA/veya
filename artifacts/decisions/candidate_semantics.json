@@ -1,0 +1,17 @@
+{
+  "decision": "REJECT SEMANTIC ENRICHMENT",
+  "status": "RETIRED",
+  "control": "Phase-6 label-only text, frozen weights, frozen K=8 shortlist",
+  "validation_n": 703,
+  "D0_conditional_accuracy": 0.6968174204355109,
+  "D1_conditional_accuracy": 0.3249581239530988,
+  "D2_conditional_accuracy": 0.3316582914572864,
+  "D0_wide_matches_D0": true,
+  "markers_dropped": 0,
+  "release_test_scored": false,
+  "reason": "Quoting a training utterance, with or without a sibling contrast, cuts conditional accuracy by about 0.37. The wider token budget alone changes nothing.",
+  "evidence": [
+    "artifacts/experiments/phase8/candidate_semantics.json",
+    "artifacts/experiments/phase8/eval.json"
+  ]
+}

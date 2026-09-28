@@ -1,0 +1,51 @@
+{
+  "architecture": "frozen_shared_backbone_biencoder",
+  "backbone": "models/production frozen ModernBERT-large encoder",
+  "candidate_representation": "naturalized_label",
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "created_at": "2026-09-23T03:28:16Z",
+  "dataset_registry_sha256": "b4aad1a23be66f831b5eb1e4d90bf6af3f633a363c064da26445313c28e84dda",
+  "episode_cardinalities": [
+    8,
+    16,
+    32,
+    50,
+    77,
+    100
+  ],
+  "file_sha256": "a82e369346d9ee3bbd9bc0df09bbebebea5c92c1a42b6c667b08675e918d713f",
+  "format": "veya-domain-retriever-v1",
+  "git_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+  "held_out_schemas": [
+    "clinc150"
+  ],
+  "input_dim": 1024,
+  "k": 8,
+  "learning_rate": 0.001,
+  "objective": "episodic InfoNCE cross-entropy with one hard-negative refresh",
+  "output_dim": 128,
+  "projection": "shared",
+  "query_representation": "state_only",
+  "retriever_id": "phase10-domain-general-k8-v1",
+  "selected_variant": "B3_hard_negatives",
+  "selection_metrics": {
+    "candidate_count": 150,
+    "mean_rank": 28.476,
+    "median_rank": 13.0,
+    "mrr": 0.2706653356052531,
+    "n": 3000,
+    "projection_and_exact_rank_ms_per_query": 0.0004362640029285103,
+    "recall_at_1": 0.17166666666666666,
+    "recall_at_16": 0.5403333333333333,
+    "recall_at_32": 0.6883333333333334,
+    "recall_at_4": 0.3323333333333333,
+    "recall_at_8": 0.431
+  },
+  "similarity": "cosine",
+  "split_freeze_sha256": "4ad513379f8962177c42e9e3cb572c5cb8a08c12b8f8d715f3902e742ee990a2",
+  "training_datasets": [
+    "banking77:train",
+    "schema_guided_dialogue:train"
+  ],
+  "training_steps": 900
+}

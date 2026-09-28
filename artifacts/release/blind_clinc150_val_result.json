@@ -1,0 +1,143 @@
+{
+  "format": "veya-blind-evaluation-v1",
+  "status": "SEALED_AGGREGATES_ONLY",
+  "release": "0.3.5-audit-baseline.1",
+  "release_manifest_sha256": "8f8d5e2a11a54e5cd995333b83d038018eaed74c7bc745fc0d529f43ebe6f308",
+  "harness_sha256": "6a0261c675ed7921e0fb8bb4fa60b6f5de6d4d4cf93fa83d9ab051fe0010ede4",
+  "dataset": "CLINC150 val (in-scope)",
+  "dataset_sha256": "36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0",
+  "example_ids_sha256": "4c1f6a7b2cd8905c1220c837be7cdb20f81d7a93c528228dea467a4fe86865ec",
+  "candidate_universe_sha256": "e74b0036e0f576434d3fc10360d9d2aeb3cefc22594515a93ba2da34d346e028",
+  "n": 3000,
+  "candidate_count": 150,
+  "architecture": "veya-shortlist-k8-packed-rerank-v1",
+  "scorer_id": "base_decision_head",
+  "choice": {
+    "retrieval_recall_at_8": {
+      "count": 1068,
+      "n": 3000,
+      "rate": 0.356,
+      "wilson95": [
+        0.3390599485570316,
+        0.373308373394432
+      ]
+    },
+    "conditional_accuracy_given_hit": {
+      "count": 1047,
+      "n": 1068,
+      "rate": 0.9803370786516854,
+      "wilson95": [
+        0.9701271388319651,
+        0.9871038550014521
+      ]
+    },
+    "end_to_end_accuracy": {
+      "count": 1047,
+      "n": 3000,
+      "rate": 0.349,
+      "wilson95": [
+        0.3321460868515095,
+        0.3662401396392615
+      ]
+    },
+    "conditional_nll_on_hits": 0.10927771037624204,
+    "conditional_brier_on_hits": 0.04185039567241202,
+    "honest_end_to_end_nll_with_miss_floor_1e-12": 17.83328046355193,
+    "honest_end_to_end_brier_over_150_classes": 0.8600285693115806,
+    "ece_end_to_end": 0.26731340633441336,
+    "mean_max_probability": 0.6163134063344133,
+    "mean_input_tokens": 101.53933333333333,
+    "retrieval_misses": 1932,
+    "reranker_misses_with_target_present": 21
+  },
+  "selective_policy": {
+    "runtime_status": "DISABLED",
+    "frozen_validation_thresholds_applied_descriptively": {
+      "disabled": {
+        "n": 3000,
+        "threshold": null,
+        "accepted": 0,
+        "deferred": 3000,
+        "incorrect": 0,
+        "coverage": 0.0,
+        "observed_risk": null,
+        "wilson95": null,
+        "supports_1pct_claim": false
+      },
+      "0.02": {
+        "n": 3000,
+        "threshold": 0.9796500892257723,
+        "accepted": 593,
+        "deferred": 2407,
+        "incorrect": 31,
+        "coverage": 0.19766666666666666,
+        "observed_risk": 0.05227655986509275,
+        "wilson95": [
+          0.03706981281059697,
+          0.07324689433582178
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.05": {
+        "n": 3000,
+        "threshold": 0.9541679372957224,
+        "accepted": 886,
+        "deferred": 2114,
+        "incorrect": 84,
+        "coverage": 0.29533333333333334,
+        "observed_risk": 0.09480812641083522,
+        "wilson95": [
+          0.07722976622884135,
+          0.11588505330757952
+        ],
+        "supports_1pct_claim": false
+      },
+      "0.10": {
+        "n": 3000,
+        "threshold": 0.896261827143334,
+        "accepted": 1095,
+        "deferred": 1905,
+        "incorrect": 156,
+        "coverage": 0.365,
+        "observed_risk": 0.14246575342465753,
+        "wilson95": [
+          0.1230113217740689,
+          0.1644200969126645
+        ],
+        "supports_1pct_claim": false
+      }
+    },
+    "note": "No threshold was fit or selected on the blind labels."
+  },
+  "permutation": {
+    "examples": 64,
+    "permutations_per_example": 4,
+    "trials": 256,
+    "shortlist_set_changes": 0,
+    "top1_flips": 0,
+    "max_remapped_logit_delta": 0.0
+  },
+  "runtime": {
+    "device": "cpu",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "python": "3.11.0",
+    "cold_load_s": 38.823,
+    "evaluation_s": 636.884,
+    "throughput_examples_per_second": 4.710431501418334,
+    "latency": {
+      "n": 3000,
+      "p50_ms": 214.90722949965857,
+      "p90_ms": 238.29781250969972,
+      "p95_ms": 242.93989998404865,
+      "p99_ms": 261.9857695055541,
+      "mean_ms": 212.2782536345379
+    },
+    "rss_mb_at_end": null
+  },
+  "integrity": {
+    "per_example_outputs_written": false,
+    "class_level_outputs_written": false,
+    "model_selection_after_unblind_permitted": false,
+    "evaluation_runs": 1
+  }
+}

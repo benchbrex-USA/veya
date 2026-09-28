@@ -1,0 +1,695 @@
+{
+  "commit": "e852981ae34990f4358979625854259302feaa78",
+  "format": "veya-phase12-sgd-inventory-v1",
+  "label_audit": {
+    "dev": {
+      "all_active_turns": {
+        "conflicting_text_rows": 705,
+        "in_sample_deterministic_ceiling": 0.991118,
+        "minimum_errors_from_exact_text_conflicts": 216,
+        "normalized_duplicate_rows": 2365,
+        "rows": 24320
+      },
+      "dialogues": 2482,
+      "initial": {
+        "conflicting_text_rows": 4,
+        "in_sample_deterministic_ceiling": 0.999597,
+        "minimum_errors_from_exact_text_conflicts": 1,
+        "normalized_duplicate_rows": 205,
+        "rows": 2482
+      },
+      "initial_by_service": {
+        "Alarm_1": {
+          "labels": {
+            "GetAlarms": 37
+          },
+          "rows": 37
+        },
+        "Banks_2": {
+          "labels": {
+            "CheckBalance": 145
+          },
+          "rows": 145
+        },
+        "Buses_1": {
+          "labels": {
+            "BuyBusTicket": 86,
+            "FindBus": 95
+          },
+          "rows": 181
+        },
+        "Events_1": {
+          "labels": {
+            "BuyEventTickets": 99,
+            "FindEvents": 267
+          },
+          "rows": 366
+        },
+        "Flights_3": {
+          "labels": {
+            "SearchOnewayFlight": 192
+          },
+          "rows": 192
+        },
+        "Homes_1": {
+          "labels": {
+            "FindApartment": 135
+          },
+          "rows": 135
+        },
+        "Hotels_1": {
+          "labels": {
+            "SearchHotel": 78
+          },
+          "rows": 78
+        },
+        "Hotels_4": {
+          "labels": {
+            "SearchHotel": 119
+          },
+          "rows": 119
+        },
+        "Media_2": {
+          "labels": {
+            "FindMovies": 179
+          },
+          "rows": 179
+        },
+        "Movies_2": {
+          "labels": {
+            "FindMovies": 141
+          },
+          "rows": 141
+        },
+        "Music_1": {
+          "labels": {
+            "LookupSong": 35
+          },
+          "rows": 35
+        },
+        "RentalCars_1": {
+          "labels": {
+            "GetCarsAvailable": 187
+          },
+          "rows": 187
+        },
+        "Restaurants_2": {
+          "labels": {
+            "FindRestaurants": 98,
+            "ReserveRestaurant": 29
+          },
+          "rows": 127
+        },
+        "RideSharing_1": {
+          "labels": {
+            "GetRide": 64
+          },
+          "rows": 64
+        },
+        "Services_4": {
+          "labels": {
+            "FindProvider": 201
+          },
+          "rows": 201
+        },
+        "Travel_1": {
+          "labels": {
+            "FindAttractions": 139
+          },
+          "rows": 139
+        },
+        "Weather_1": {
+          "labels": {
+            "GetWeather": 156
+          },
+          "rows": 156
+        }
+      },
+      "initial_multi_frame_dialogues": 0,
+      "initial_none_rows": 0,
+      "missing_utterance_or_label": 0,
+      "unknown_intent": 0
+    },
+    "train": {
+      "all_active_turns": {
+        "conflicting_text_rows": 11311,
+        "in_sample_deterministic_ceiling": 0.977248,
+        "minimum_errors_from_exact_text_conflicts": 3713,
+        "normalized_duplicate_rows": 24912,
+        "rows": 163196
+      },
+      "dialogues": 16142,
+      "initial": {
+        "conflicting_text_rows": 200,
+        "in_sample_deterministic_ceiling": 0.996964,
+        "minimum_errors_from_exact_text_conflicts": 49,
+        "normalized_duplicate_rows": 2070,
+        "rows": 16142
+      },
+      "initial_by_service": {
+        "Banks_1": {
+          "labels": {
+            "CheckBalance": 161,
+            "TransferMoney": 104
+          },
+          "rows": 265
+        },
+        "Buses_1": {
+          "labels": {
+            "BuyBusTicket": 78,
+            "FindBus": 540
+          },
+          "rows": 618
+        },
+        "Buses_2": {
+          "labels": {
+            "BuyBusTicket": 157,
+            "FindBus": 416
+          },
+          "rows": 573
+        },
+        "Calendar_1": {
+          "labels": {
+            "GetAvailableTime": 126,
+            "GetEvents": 255
+          },
+          "rows": 381
+        },
+        "Events_1": {
+          "labels": {
+            "BuyEventTickets": 375,
+            "FindEvents": 597
+          },
+          "rows": 972
+        },
+        "Events_2": {
+          "labels": {
+            "BuyEventTickets": 368,
+            "FindEvents": 783,
+            "GetEventDates": 675
+          },
+          "rows": 1826
+        },
+        "Flights_1": {
+          "labels": {
+            "ReserveOnewayFlight": 75,
+            "ReserveRoundtripFlights": 93,
+            "SearchOnewayFlight": 772,
+            "SearchRoundtripFlights": 839
+          },
+          "rows": 1779
+        },
+        "Flights_2": {
+          "labels": {
+            "SearchOnewayFlight": 178,
+            "SearchRoundtripFlights": 86
+          },
+          "rows": 264
+        },
+        "Homes_1": {
+          "labels": {
+            "FindApartment": 669
+          },
+          "rows": 669
+        },
+        "Hotels_1": {
+          "labels": {
+            "ReserveHotel": 125,
+            "SearchHotel": 192
+          },
+          "rows": 317
+        },
+        "Hotels_2": {
+          "labels": {
+            "BookHouse": 100,
+            "SearchHouse": 113
+          },
+          "rows": 213
+        },
+        "Hotels_3": {
+          "labels": {
+            "ReserveHotel": 134,
+            "SearchHotel": 157
+          },
+          "rows": 291
+        },
+        "Media_1": {
+          "labels": {
+            "FindMovies": 420,
+            "PlayMovie": 63
+          },
+          "rows": 483
+        },
+        "Movies_1": {
+          "labels": {
+            "FindMovies": 847,
+            "GetTimesForMovie": 168
+          },
+          "rows": 1015
+        },
+        "Music_1": {
+          "labels": {
+            "LookupSong": 97,
+            "PlaySong": 100
+          },
+          "rows": 197
+        },
+        "Music_2": {
+          "labels": {
+            "LookupMusic": 369,
+            "PlayMedia": 95
+          },
+          "rows": 464
+        },
+        "RentalCars_1": {
+          "labels": {
+            "GetCarsAvailable": 431,
+            "ReserveCar": 83
+          },
+          "rows": 514
+        },
+        "RentalCars_2": {
+          "labels": {
+            "GetCarsAvailable": 489,
+            "ReserveCar": 76
+          },
+          "rows": 565
+        },
+        "Restaurants_1": {
+          "labels": {
+            "FindRestaurants": 951,
+            "ReserveRestaurant": 230
+          },
+          "rows": 1181
+        },
+        "RideSharing_1": {
+          "labels": {
+            "GetRide": 138
+          },
+          "rows": 138
+        },
+        "RideSharing_2": {
+          "labels": {
+            "GetRide": 135
+          },
+          "rows": 135
+        },
+        "Services_1": {
+          "labels": {
+            "BookAppointment": 48,
+            "FindProvider": 623
+          },
+          "rows": 671
+        },
+        "Services_2": {
+          "labels": {
+            "BookAppointment": 50,
+            "FindProvider": 345
+          },
+          "rows": 395
+        },
+        "Services_3": {
+          "labels": {
+            "BookAppointment": 52,
+            "FindProvider": 632
+          },
+          "rows": 684
+        },
+        "Travel_1": {
+          "labels": {
+            "FindAttractions": 940
+          },
+          "rows": 940
+        },
+        "Weather_1": {
+          "labels": {
+            "GetWeather": 592
+          },
+          "rows": 592
+        }
+      },
+      "initial_multi_frame_dialogues": 0,
+      "initial_none_rows": 0,
+      "missing_utterance_or_label": 0,
+      "unknown_intent": 0
+    }
+  },
+  "license": "CC-BY-SA-4.0",
+  "phase10_exposure": {
+    "base_checkpoint_pretraining_exposure": "unknown",
+    "development_services": [
+      "Calendar_1",
+      "Flights_1",
+      "Hotels_3",
+      "Media_1",
+      "Services_3"
+    ],
+    "trained_services": [
+      "Banks_1",
+      "Buses_1",
+      "Buses_2",
+      "Events_1",
+      "Events_2",
+      "Flights_2",
+      "Homes_1",
+      "Hotels_1",
+      "Hotels_2",
+      "Movies_1",
+      "Music_1",
+      "Music_2",
+      "RentalCars_1",
+      "RentalCars_2",
+      "Restaurants_1",
+      "RideSharing_1",
+      "RideSharing_2",
+      "Services_1",
+      "Services_2",
+      "Travel_1",
+      "Weather_1"
+    ]
+  },
+  "phase12_split": {
+    "excluded_one_intent_services": [
+      "Messaging_1",
+      "Movies_2",
+      "Movies_3",
+      "RideSharing_1",
+      "RideSharing_2",
+      "Travel_1",
+      "Weather_1"
+    ],
+    "sealed_test": [
+      "Buses_3",
+      "Events_3",
+      "Flights_4",
+      "Homes_2",
+      "Media_3",
+      "Music_3",
+      "Payment_1",
+      "RentalCars_3",
+      "Trains_1"
+    ],
+    "selection_rule": "every USER frame for a known service with at least two official intents; entire dialogue remains causally available through that turn",
+    "split_unit": "whole service_name; service_name is a schema ID, not a customer ID",
+    "test_dialogues_parsed": false,
+    "train": [
+      "Banks_1",
+      "Buses_1",
+      "Buses_2",
+      "Calendar_1",
+      "Events_1",
+      "Events_2",
+      "Flights_1",
+      "Flights_2",
+      "Homes_1",
+      "Hotels_1",
+      "Hotels_2",
+      "Hotels_3",
+      "Media_1",
+      "Movies_1",
+      "Music_1",
+      "Music_2",
+      "RentalCars_1",
+      "RentalCars_2",
+      "Restaurants_1",
+      "Services_1",
+      "Services_2",
+      "Services_3"
+    ],
+    "validation": [
+      "Alarm_1",
+      "Banks_2",
+      "Flights_3",
+      "Hotels_4",
+      "Media_2",
+      "Restaurants_2",
+      "Services_4"
+    ]
+  },
+  "schema_intent_count": {
+    "dev": {
+      "Alarm_1": 2,
+      "Banks_2": 2,
+      "Buses_1": 2,
+      "Events_1": 2,
+      "Flights_3": 2,
+      "Homes_1": 2,
+      "Hotels_1": 2,
+      "Hotels_4": 2,
+      "Media_2": 2,
+      "Movies_2": 1,
+      "Music_1": 2,
+      "RentalCars_1": 2,
+      "Restaurants_2": 2,
+      "RideSharing_1": 1,
+      "Services_4": 2,
+      "Travel_1": 1,
+      "Weather_1": 1
+    },
+    "test": {
+      "Alarm_1": 2,
+      "Buses_3": 2,
+      "Events_3": 2,
+      "Flights_4": 2,
+      "Homes_2": 2,
+      "Hotels_2": 2,
+      "Hotels_4": 2,
+      "Media_3": 2,
+      "Messaging_1": 1,
+      "Movies_1": 3,
+      "Movies_3": 1,
+      "Music_3": 2,
+      "Payment_1": 2,
+      "RentalCars_3": 2,
+      "Restaurants_2": 2,
+      "RideSharing_2": 1,
+      "Services_1": 2,
+      "Services_4": 2,
+      "Trains_1": 2,
+      "Travel_1": 1,
+      "Weather_1": 1
+    },
+    "train": {
+      "Banks_1": 2,
+      "Buses_1": 2,
+      "Buses_2": 2,
+      "Calendar_1": 3,
+      "Events_1": 2,
+      "Events_2": 3,
+      "Flights_1": 4,
+      "Flights_2": 2,
+      "Homes_1": 2,
+      "Hotels_1": 2,
+      "Hotels_2": 2,
+      "Hotels_3": 2,
+      "Media_1": 2,
+      "Movies_1": 3,
+      "Music_1": 2,
+      "Music_2": 2,
+      "RentalCars_1": 2,
+      "RentalCars_2": 2,
+      "Restaurants_1": 2,
+      "RideSharing_1": 1,
+      "RideSharing_2": 1,
+      "Services_1": 2,
+      "Services_2": 2,
+      "Services_3": 2,
+      "Travel_1": 1,
+      "Weather_1": 1
+    }
+  },
+  "source": "https://github.com/google-research-datasets/dstc8-schema-guided-dialogue",
+  "source_files_sha256": {
+    "LICENSE.txt": "71a43a169b52bb1b39510b65ec5b43b4bbb59196d449a835fe58b50af6a72742",
+    "dev/dialogues_001.json": "fe3a8ed9e160c15e20e7cfd16d03734b4473df0d3864f2ad687ea9eeee5eea52",
+    "dev/dialogues_002.json": "fcbc8ba411ed8b3e0b06dff31819dc366f6bc6d228e021053920365e11004b03",
+    "dev/dialogues_003.json": "5915cea36b77de920fbd66569333db2395626ec465ba23e2f0caa77fba2e5dae",
+    "dev/dialogues_004.json": "d379a5149a86304a22162531e122ff9a7b8e9e46178789a5170e0a7091dd2bbf",
+    "dev/dialogues_005.json": "107d8bc1ce21b06453f33cc8dfc19172e0956646b47d9c1db7bdcd978a323d73",
+    "dev/dialogues_006.json": "20140828f25496461003140b67a5987d954109d9e14e12e472ed565ed2843bc3",
+    "dev/dialogues_007.json": "d9af6ffcb69257ab3ce10e4637fc4d45d268094e55693b170a9b5b9d914dc611",
+    "dev/dialogues_008.json": "986264c54cfabb8c70ace72e209ff0cd000523daecde226b19b3dbd6f44ea09b",
+    "dev/dialogues_009.json": "92479f0285dcb5db0d50f51b27a86aa0368a62214c575ad5cdd74299372fa71f",
+    "dev/dialogues_010.json": "76d9ff1656e8cad2287cd5cd44bb8e18df0bd8cc7d3340543e1980b61241d3f8",
+    "dev/dialogues_011.json": "7f034dd1bc18e75fc21077dd6270f8e1f51d97fad80b4e6069dbbe28c3ebdd41",
+    "dev/dialogues_012.json": "9228d58681e3b98db2e7c6a9bef86994718455e3a7d4c7584b6ac53bc35969d3",
+    "dev/dialogues_013.json": "a62cf6bddd52beae0980ecdedf312373976425a9302fb0da79af1270b28b16e1",
+    "dev/dialogues_014.json": "aca7316a63a215bcdeb95189c2e3259f50cd29da9a77deaa264b92ba737b8e95",
+    "dev/dialogues_015.json": "8d8d7b25c21e4a24ed5b3adf0310a66124496f6d3d9a962ca2e77a29eac0f51a",
+    "dev/dialogues_016.json": "36ed533dd0e0b8f178a0aa9ea70a12d7fa3ab042ec4959061aa70b391b92785c",
+    "dev/dialogues_017.json": "50da6ef54acf2cdf630ec99f75fa7fca33bc41683c10d2a4540b4c94a081c11a",
+    "dev/dialogues_018.json": "debc2d37540a4cebb1ff0e1a0b14eb55accd55071c21dbb2c2624bf978d82d3a",
+    "dev/dialogues_019.json": "2e3934d15b5e0b8d47b0018845fb6fb6b1f5d8f480e1788ea67d934aaa2179eb",
+    "dev/dialogues_020.json": "7e022ed5e4c972d607e71e46baeb0b79f57967d5e6de4a4fb28a99a1ed30d9c3",
+    "dev/schema.json": "8fee8b1211500a4a1fb071765150e3267d20148bcad72a22c04bb1fdcd649366",
+    "test/dialogues_001.json": "1fa13b0fe607100bc66ed15e0490df9c52a2cec087ca9733e0f506755eef0ada",
+    "test/dialogues_002.json": "b3b2a2596fad9146e96e4e1aa288f975332e2c7a3153bb2379d75e8d71c35a20",
+    "test/dialogues_003.json": "b595a04f7848aed76d11e82250089023e42a6e5ce047c78b8ddd0f4856dcbecb",
+    "test/dialogues_004.json": "5468f85dd867c7cc825aa6918980dd3142c95c926d685a56803b91cd2d3eb379",
+    "test/dialogues_005.json": "9f344d5660b5d8bf6935f72cf4dc11149caaf9febf688fd748eacbe262c67c2b",
+    "test/dialogues_006.json": "249d591df0c32b5518560c37a02cdc09b147ea4f95d1373ac22d42c656788ab7",
+    "test/dialogues_007.json": "24c5c86501aa50d045f4ba8822bf06606967261365fc5ca6ffa8f7375bd54935",
+    "test/dialogues_008.json": "e4ecce8acdd5b3657de7a7660b9bcd339d88a629147711ad2545b695666279c5",
+    "test/dialogues_009.json": "5d30edca006e4b4159a8027d68c3bcd241447d2257deb51b467b9aeefa7b1158",
+    "test/dialogues_010.json": "b4fc2c16d0cb46e14d0def357f4a941ee61fad3c6c8dd430ac8bae6145f1e4d0",
+    "test/dialogues_011.json": "1c2e312ce653bdd4ba1fe74b44ef20b36bab74b8ccf7bc2e591c632d5492a21b",
+    "test/dialogues_012.json": "30ccd033dfeb5032cb74ca237ee4679fb00abf9b2e21b0c686da543ec3ac8ca6",
+    "test/dialogues_013.json": "b31c288da94b084e4963e7eda27e11922c7c230e9de0bb159856facb442684bc",
+    "test/dialogues_014.json": "52c79021d28c2bb2bb69210f360c61c49250696eaf1b04fdfa89e1fd9a7be2c7",
+    "test/dialogues_015.json": "4e14295fac05ce179d72ec30b67f6b01e24e2d4c4836b95cc842d8ae4a93131f",
+    "test/dialogues_016.json": "b0515e87357d8537df046a38d2418257b38e16e9df1a960c9de2bd3d21e19c8b",
+    "test/dialogues_017.json": "ec669b6b24667e01033069827200312b9af4a182789a15784c43b4be5cf0668e",
+    "test/dialogues_018.json": "51e761019af71be0558667b69d917b120def65b6434f019e7e0c95584ad7fdbc",
+    "test/dialogues_019.json": "2bf4a842c133c427beb7162408488f39ab04cc8e7178ff51c489b41678652834",
+    "test/dialogues_020.json": "9619574d5043827ea2e397702b88033dc013e4ac870f410a8016c8b223f55ec4",
+    "test/dialogues_021.json": "7259172a6ba19f5d065fe95b4ae41755c6ac32cf2fec80fae6d52d94b8a10a1d",
+    "test/dialogues_022.json": "ffed1c89eb5c589c159b70062433e0655c5955ef9f1dd0b3c0e4ddb1db9ac74b",
+    "test/dialogues_023.json": "c3466bc38d356b2abb6a71e61f502e0b5c82cf35584b3c655d01a89165e8fe80",
+    "test/dialogues_024.json": "728b605675f7d4da54dfe8c3746eabfdec884f75c9306f5cdb3d8eb3ab315e5c",
+    "test/dialogues_025.json": "50e8aa3052aa720279068de31d7c7225d08b035ac62e488aadca0e1edd39145d",
+    "test/dialogues_026.json": "981946b39930b73c78b63af1ec220c71b15e24529f24b48d435f917a1375ff7d",
+    "test/dialogues_027.json": "d05108c80386d35891f511a425e4a194a22a74c22a14d3f12e3b7a54252c4f96",
+    "test/dialogues_028.json": "8548c8881eb5445ec8f9d8877ada1371c4698890ec76c96408929957d36b4d79",
+    "test/dialogues_029.json": "97fd99e95c0d5169f57e85a7799214de7bf7495d3613652a6ac8a494f10021fb",
+    "test/dialogues_030.json": "dabf6b8051f03ad1049a4c6b89f48986a5d597d0e637ccf555faa0241ecdbe87",
+    "test/dialogues_031.json": "c78c04a16cde6eccbd4092d70d7e6053651e4bdab89a993a4dafa78eedf47c0f",
+    "test/dialogues_032.json": "b7b739ccdd51ce4cd60d0b4d4ccaa751831bf448965e9bacfe5b7a123bc0f806",
+    "test/dialogues_033.json": "a9f5b0c275a55ba40374ea10c723e88c37b8f0dabd55c2a9d3679de2495e224d",
+    "test/dialogues_034.json": "d412ac423182dfe367d1549be9580bd7a964b695f5fd1a4d9d77c849763294a9",
+    "test/schema.json": "0b4af32e01695aec4788681fe6b22fb7ee908907269f5ac7167d01f4c4132bcb",
+    "train/dialogues_001.json": "5ce28a6e656bc88c1da29c983d243d5a81eb37de92698da3864d1cf02894ca24",
+    "train/dialogues_002.json": "56a06f9762593b27f5b34225de4ce37da5e83c9c5747e56bca2899f147d88b3e",
+    "train/dialogues_003.json": "aae3d8d141c8c36bc5268ca573044b4e82d4534947c169d951a1f229b9852029",
+    "train/dialogues_004.json": "4f4aa821e01d7d9efd44c2e89264d37e428045e7058bf3b3c6be0eaec09eddce",
+    "train/dialogues_005.json": "e19563efc34dead580435331d39ec3183c79230fa361b2e2d79035af242dd90b",
+    "train/dialogues_006.json": "6b4829cb18185f063b81d271b847aa6915ef970cb592a2366edbec56d4b4c746",
+    "train/dialogues_007.json": "59adf47264e106df1ce4a59d2c88e95b5a12497e6f5e3e5464381c2a7526837c",
+    "train/dialogues_008.json": "36614c125ce310dd162b62d624b8bcd117053cf727978458b6c36b6592f6e757",
+    "train/dialogues_009.json": "d8cc086374bbce168a03169341687eaa9f886fe25f8b8dd5bd6832f6f441951d",
+    "train/dialogues_010.json": "d8658cd35bd4b6d274720d14308ec721f238d70cc37ea947c38f9d83a0267c1b",
+    "train/dialogues_011.json": "66f7eb72a46fa379d85e53ae607e5920a4fa14a4a99765d91ee67f3675fdf4d7",
+    "train/dialogues_012.json": "483b09fc9ad3d5b7285d2e1bc44057f1286ea3e73d7ff191fcec5e1acb364412",
+    "train/dialogues_013.json": "c6592a97753a8d3be8bae0099b3877e21f293a12d8daf9bcdcbec7289d5f1be3",
+    "train/dialogues_014.json": "5cd6cc68c676a2546a3312eda0f29be170ab5f0d6c602c9548ffa2c095037c7b",
+    "train/dialogues_015.json": "b698e8db9b0898186453ec9fcec5f80ab043cfe301447d28dc577e99bd3acfd3",
+    "train/dialogues_016.json": "5a7d85a3058f38bf40290782721865c3d816f43841e0cd302b21167eefecf449",
+    "train/dialogues_017.json": "0eb666f375ba2cc6362c88c02cfd255b702a2b8216e30fce200f630bcca99fa0",
+    "train/dialogues_018.json": "ceadf059b7c4ec5e31b7b53ee696198c7a5baa2ff03544b81b4adbe9cb7eca05",
+    "train/dialogues_019.json": "96adb06dd0605bb3536bc5e795d045d745a035e9d1c2ed05f7e89937fe883fb9",
+    "train/dialogues_020.json": "b2a3cd6d8e677c6a9d342f5703a947525b17b906348cd944a4da1c449ff4f3a4",
+    "train/dialogues_021.json": "f13f15b1b62f62d4ae6b71db4f37a1843861d8c1c8907fd0fde19451c08576e9",
+    "train/dialogues_022.json": "01a403f462a62b324f94de598c279b5adbaee55ac10c7aed72d798aa5924c510",
+    "train/dialogues_023.json": "73bf6f4be084de8fafa347257f39cf7c312bc488178dd2ce667f6e5f8baddb82",
+    "train/dialogues_024.json": "fc951b44990efac041bbbd993172b954d3d55af8230a00ce78ba8bbd50daf82a",
+    "train/dialogues_025.json": "8305b0d85317d77c5b6ebf128ba4d5e2410e248071a49eb2e05b1ee347c1833d",
+    "train/dialogues_026.json": "2b2e2c497c870d39c575892c7aae38b08cd4e39bd3a795be1e8550330e747800",
+    "train/dialogues_027.json": "63b5dd62e100afa001b596cda967f5bc86f93dc1072bd00bdc57a198ff691268",
+    "train/dialogues_028.json": "225af9eebcb34f90ab1c9634c5771c9e6179019fdb903884ff70a5833b77620c",
+    "train/dialogues_029.json": "87b61fd3495d851df7fa66ce43084431a7cd19154c1de32c0d6949bf6c74bae9",
+    "train/dialogues_030.json": "82b282eb98a4a26832b5e87d85fdfa8e19b1073a5a903123f7a28d056c4ec2b7",
+    "train/dialogues_031.json": "45e31767734dc89d825b8f84c37fdd258250bb1e0b63d8a8e775c99dde07547e",
+    "train/dialogues_032.json": "70a0916baba1e2fbeaef8bc8c2086cd3f31555a8eaec6d0eed80e483ed2b9a59",
+    "train/dialogues_033.json": "74c23ae93203ed5672015ce13d01c01d80d4f3a3ccd64c8f62f52e0b7c411871",
+    "train/dialogues_034.json": "782a499577aba5dc0f11edb6ed803cb8023bd4828a914cb4ff712966604e36cb",
+    "train/dialogues_035.json": "d6cf92ad829d275f15a62409ab8d24187a5e120b09d8f545d16d898ed4a36fd7",
+    "train/dialogues_036.json": "34223f6b06febfc5b86b0b20324e98b42e9ab4ca7e9c9797c6ba4e49e86e5cce",
+    "train/dialogues_037.json": "6e6bd6787f30640305ce0dc1b1dac8fa3d9b53ab0dd28c224519ff727cea916f",
+    "train/dialogues_038.json": "936ee784006908d323d558b84e1646dd932a3b4978bc03deafa1da6e2776e6f0",
+    "train/dialogues_039.json": "155da94cb95bdbc95e52062459e46b98cce4c8e049b956c5f285ce7a821a08c3",
+    "train/dialogues_040.json": "c807c28a3d1dbbe8ecaddd96ed97ac7b67918b12181e07eb89fb046ef6084891",
+    "train/dialogues_041.json": "d24455e00ea88b20a94cfd54581b30b224c207b20a197484ef9b27022af47f05",
+    "train/dialogues_042.json": "51d94d5d602cbf51c819c8f79a25f45174ebc3191c8ea3b2278d5b6c96742d51",
+    "train/dialogues_043.json": "98c9cc7865bc70e67123cc4e64daad8843d5750552bae2559d7bb95aae782c0a",
+    "train/dialogues_044.json": "8d3024399540122bef422925f2508ead00bcd85e4f07e16236de87747555fe5f",
+    "train/dialogues_045.json": "056df88c7bbff91bcc9b8fe009bfc6f01400aa59feae549cace7d5caa823dcb0",
+    "train/dialogues_046.json": "79c92a6fbb92481deb5fe00127359c6029724b49ade4913704a08ce397938eeb",
+    "train/dialogues_047.json": "fbe4e810316077148a2d96c8197928486a547946b44b9fce96eafa4f6fa4e0e7",
+    "train/dialogues_048.json": "882d7c255da334163b024a6fd511c5eaeedfd507da4db350e4ed2cde393cc787",
+    "train/dialogues_049.json": "fa48932032d150414a97d12f9cde4d1ac00bcc593bb30c43a45f2b802f293ed5",
+    "train/dialogues_050.json": "40543b657e832ab34b4bb4733ecbf1e7d1f15566674e49191c70261d29490aba",
+    "train/dialogues_051.json": "e8eef63422e756f420c60ddfd3bcae3fc5caddf3370c31fa7fa3648a3579bbdc",
+    "train/dialogues_052.json": "6736abeb95425a570f6ae5b1dd75967849957cabbdc550a9372a9a7646aba898",
+    "train/dialogues_053.json": "2825a26dbed8e7aba44677fd2f387d131991921506a5c8647a75c1c905571491",
+    "train/dialogues_054.json": "68e7ed4999fc4f21615e9f61a613309ab0560ed53e5e5837ccb96956ee2c5c2f",
+    "train/dialogues_055.json": "c1e4d78a6137b9e3232f0d8a0045f81ac0bbda937cc6187621406f6279885034",
+    "train/dialogues_056.json": "b4c4293c6cc1eea766025b0ba658e52070d6ef743afb73b1fb5531d280776977",
+    "train/dialogues_057.json": "7586422916e6f7c943b97b304f2724e6eefbe4ee1dd42b9d45413c1fc457cfc2",
+    "train/dialogues_058.json": "7ff43d0030fa5f32eb92aa87f3b4086d760d55ebefe0318b17ccf6c11795556e",
+    "train/dialogues_059.json": "d5597d0c8e9a904aeeb722e8d8c3a8d15a92eacf1713241fe9c05bd470b625a5",
+    "train/dialogues_060.json": "12d510c5644954820f48eb80601d599722672f6759aefdd7774d55d6b509f333",
+    "train/dialogues_061.json": "1b1b9c6c8a8113f49e18998512f7d5fea2141be7bec48aac201f306586ac15ce",
+    "train/dialogues_062.json": "4c4d76ffc33419e835087d081ff1d469f0b9e65b8d5c372b43d4680c286bbd45",
+    "train/dialogues_063.json": "ab015c005d3e1d26bdcd970aee1992d7084453d57f82e2be9795846157eb8fa9",
+    "train/dialogues_064.json": "ac2fac08f9f1673be6bd1cf6cec44dbd8d35861f658567313ef8d7b7f8c1908c",
+    "train/dialogues_065.json": "a9bd32fb9cce88b4bd0a4a11b136423401ba6e14fb5be306fe1eda9e485e8760",
+    "train/dialogues_066.json": "9b6145e988296f133c5414db17798098b97ef01bda44b7b1740ade97c268770e",
+    "train/dialogues_067.json": "d16cfeda3585639f9ccbac0b5d1fa5c755d9b87bafa95ac737ddd40d7b1fe7a7",
+    "train/dialogues_068.json": "ba2f245f26ba2c13463d34f8a8d1635347974a9f0e423bda53ca4bc15fb82a17",
+    "train/dialogues_069.json": "319035b2843a089f352f2e7fbb06544c7d68d86ebbba57ebc3bbf3725c07a9cd",
+    "train/dialogues_070.json": "ca37b41fefd5af07b4d9fba75c3268d6831f2ce49f5bf4e6d5412e39c764f0a8",
+    "train/dialogues_071.json": "59a78ab61ef8e419c7c2791e028db3704254a196f73e79a890274f09e7e65801",
+    "train/dialogues_072.json": "c0e8dd91f70c150ef02118b15152da7f973dcf261112a1604bfa4823d276829c",
+    "train/dialogues_073.json": "e2b9aa0843a8cdfabaf24fecae2bf4b280ea8aed75670d6e955d25df58dc8494",
+    "train/dialogues_074.json": "0c4fd25b8d66f46ee5a8332410a093473dc57655e1edc2e59ec1d53e2e1a7756",
+    "train/dialogues_075.json": "4e1ce624c664a402ee31f69083fc263346aef3ed70d866dc940f4565c1c3e9b8",
+    "train/dialogues_076.json": "72567237e51a2282a34d66acbc6beeb23b400f29da404d98de6f796686c720ec",
+    "train/dialogues_077.json": "2ec1a3ed1a85498992f4fcfecbd8e9a6b4a72968b8da4cd3502d170edffd9437",
+    "train/dialogues_078.json": "288a96936c4426a40e50eb6e220a93cce32177827b416f656c4c78e43aebad16",
+    "train/dialogues_079.json": "a2817b6b744c4a03fb4f5cf36100a233ea0af7d96b784b237ea9ab1dd3dd4aad",
+    "train/dialogues_080.json": "4b166ba32851d5164271d83ed671135682c344aca1ffa4095c1b38cd63a89600",
+    "train/dialogues_081.json": "b34c8b63682242361d30ca5ced6d1a55719f4ed8f151f2a52854b61831e5a45c",
+    "train/dialogues_082.json": "11751fd14c9580880d1b3157e10103477cd9a7333a689eda89c6f00a21660da6",
+    "train/dialogues_083.json": "c4b2d5f1bbdbe6b53fd96d3fde936c66ecfe35674cae3c79e207c0b1c397616e",
+    "train/dialogues_084.json": "f728459cbdbb4f69f87dfbc00af0584b9a44b841a568717e7dab7c3146f492cb",
+    "train/dialogues_085.json": "f22be96c2ff0a95c4c883a64f9677e0a0106fac25ea42a523df91700ead7bfa3",
+    "train/dialogues_086.json": "c1ebb9b572cd00cc4ec09e7ad775aadec6310e2fe1cc064e0ed18480992a04a4",
+    "train/dialogues_087.json": "1b95dda470d3f0809bbbeb86cb99a9a322a81fd1a96e96735d953d5409331810",
+    "train/dialogues_088.json": "cbb055520fdd1d7cfffe7b911829a00774cc8190c2d07cb29787cca7f5d51fbf",
+    "train/dialogues_089.json": "357d12d7b5fcc9a2414cafc3a9bf6b31449b1f11474d16be5b7747e1999423b4",
+    "train/dialogues_090.json": "78310f5e8e4c5a48cb600d36ba762448d13ab15e820aa5f56cc6f25994b6902a",
+    "train/dialogues_091.json": "c80f229312047567f61db69223c79e1921662f88f63f9718a1ec51b5204612b0",
+    "train/dialogues_092.json": "b9656f9135cefd1fe1bd175f4b45d74c2c2a558137a1f2d509771ccf7e8aff4b",
+    "train/dialogues_093.json": "fb6ec8f4c975d7bf7e5a18645ef16614a393dab96e623074410ff5bd9a60d8ca",
+    "train/dialogues_094.json": "309f412040022ca48c75c7b980fd65ff3f93e9c486305e2cd29a2bafbb57d7b0",
+    "train/dialogues_095.json": "0411f940d9e3f659c6ab1037e14094612d088b9ee98a62043658fe1b76fa700f",
+    "train/dialogues_096.json": "8d004b5c6a865428bf25093356f46a0a84b4bd3b749f4172f9d0e606a6d70217",
+    "train/dialogues_097.json": "ac32e0ccd38e439655ef8a6fc5436e5d14c5dbcf44faeb1fac48b17e3a7bad34",
+    "train/dialogues_098.json": "b08094174ff819f259ea64c199e8d3c5141006b11e00b428be21d5b7e452bc0b",
+    "train/dialogues_099.json": "fb7110d90b179fe43eaee15393422ae7fb0d522190a69495023f0cf9cadebcbb",
+    "train/dialogues_100.json": "4cdafb648909b34c0f609e61f5c4db5511a880e3d4ba7c726bf4e78e3fe09590",
+    "train/dialogues_101.json": "142dc7b5452d6aaafb25fa9637b3f5126ac83194b907016af5e85659220d9cba",
+    "train/dialogues_102.json": "15da667bc211a0abb82203184c09e19756cff59feecf1e8578632854254af05e",
+    "train/dialogues_103.json": "8c5b4c3df6b7fb43e74b745bca2cfff0b2555be20d13859e6c6c502bb1f27326",
+    "train/dialogues_104.json": "4e02e3fc67c89d50365feaa2a1424bf5a8de5edaef02f3191cc35cf46918f8b2",
+    "train/dialogues_105.json": "fdf5795a36fe9b59721df5a3d35fe37efdc5d555573ee4f9a939409d737c7376",
+    "train/dialogues_106.json": "98b72cb9cea0b320fbc58e80977d48879005159156d4e7c19b7905a6723f3d5f",
+    "train/dialogues_107.json": "ae315294f293e65edbdd58f0476c8693605a791872db840788e334f637df9b4c",
+    "train/dialogues_108.json": "584a1c096b49fac0b66d8ba08f39ca2cef41d93c98851f1b10e86cf995170b1e",
+    "train/dialogues_109.json": "ec28252137a7ceae1a3843bf39d3c9a78a4bd139b13c70165982b0c05c391502",
+    "train/dialogues_110.json": "48f2d6256d96385350e1b58e7cc3b499f1be78584790250e89d9d0d11cc03dd0",
+    "train/dialogues_111.json": "740087b7e2a5305c4ef16a7227dcc61f9af3cf054690ee682a823070a9e2b2c1",
+    "train/dialogues_112.json": "0120d9160a30b1b15c21613122250d2a036609b0ba1e3ed33b5b396c4161e10d",
+    "train/dialogues_113.json": "895cbdca09acff80c6a194dc44a293fd6875390ad5899720bc98f004eca7d99b",
+    "train/dialogues_114.json": "619616f5a4d46200105dc2ea3ce1b1c131051edf57ca64b495f693cd8eafb4f4",
+    "train/dialogues_115.json": "3bb6c375846127053c01d51a0e6509eddfaad47f6d2a2bb3a7cfee65120bec32",
+    "train/dialogues_116.json": "c0c409d8a0cf74e37a59d1843680501c245f91f9b28fea79c15a1e66195906ef",
+    "train/dialogues_117.json": "b84563e3e581a1da03e48b780de326ad68f3004d225509d6ae89ea84b271a4c4",
+    "train/dialogues_118.json": "f8116cfa196a5e43b94c6c3657d8cf4e62c112a2f683d179ade4f13baac588fc",
+    "train/dialogues_119.json": "b374904ff28881f08e7212296848c0bf9cc18a45195f4d982123f27aa3bd3a23",
+    "train/dialogues_120.json": "d4565f5378c2205129b0c0a1feada548a62220c0a8e2b1caf6d234ffe463eab3",
+    "train/dialogues_121.json": "952e6284dbacb2bebca8ba36ac3c942edb50d248b2395706facf6c95f3b84d1c",
+    "train/dialogues_122.json": "d4d3b718ac0527099412df7774c873939060d65e82b09ba6a1bec593f5559349",
+    "train/dialogues_123.json": "469b268f44aad6fb2bba4d271163d6c774234a80123e66204357b37d0619e2c2",
+    "train/dialogues_124.json": "8dd0418beb880f5f021c8466fc92233ef5992e8adcc6380a180f4107dfccf7f1",
+    "train/dialogues_125.json": "45d59601652c9b648175125718b55e5d65b3567c09518c9d054f67bdc8b2eaba",
+    "train/dialogues_126.json": "ae4c17bab75be5eb1ec8738dedd72bd5d33657243068e657642259c8091269ac",
+    "train/dialogues_127.json": "ba42de75a55e27a239b238d94ece3c98e5b64a755e155a027d8a31e5fbf791dc",
+    "train/schema.json": "97b6c21673aa7e5c2d1ceef52aa35170c565223cdcbf33bb24c69739bda04a82"
+  },
+  "unmeasured": [
+    "human inter-annotator agreement",
+    "semantic ambiguity beyond exact text collisions",
+    "commercial customer representativeness",
+    "trained-weight compatibility with CC-BY-SA-4.0"
+  ]
+}

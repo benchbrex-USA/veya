@@ -1,0 +1,16 @@
+{
+  "n": 703,
+  "retrieval_recall_at_8": 0.8492176386913229,
+  "conditional_accuracy": 0.6968174204355109,
+  "end_to_end_accuracy": 0.5917496443812233,
+  "nll_on_hits": 0.9388716524901974,
+  "brier_on_hits": 0.42324315151335895,
+  "ece_honest": 0.11086721040688968,
+  "mean_confidence": 0.702616854788113,
+  "high_conf_wrong_0.70": 84,
+  "high_conf_wrong_0.80": 49,
+  "high_conf_wrong_0.90": 26,
+  "median_margin_correct": 0.8576240396695654,
+  "median_margin_incorrect_retrieved": 0.34886468525034453,
+  "mean_input_tokens": 148.25462304409672
+}

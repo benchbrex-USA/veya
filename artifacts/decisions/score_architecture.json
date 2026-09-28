@@ -1,0 +1,9 @@
+{
+  "decision": "KEEP CATEGORICAL",
+  "status": "CATEGORICAL SERVED IN RESEARCH RELEASE",
+  "ordinal_status": "IMPLEMENTED / LOCALLY VERIFIED / RESEARCH ONLY / NOT SERVED",
+  "alternatives": ["categorical softmax in the production head", "OrdinalHead cumulative thresholds"],
+  "evidence": "No ordinal-labeled table is in research/data. AG News and Banking77 are nominal. research/veyabench/run_ordinal_eval.py exits 2 until VEYA_ORDINAL_CSV points at a real CSV with columns text,label. OrdinalHead passes shape tests. An artifact with production=true is refused.",
+  "known_downside": "Far and near score errors count the same.",
+  "revisit": "A labeled ordinal set with exact accuracy, MAE, ranked probability score, far-error rate, NLL, and calibration against the categorical head."
+}

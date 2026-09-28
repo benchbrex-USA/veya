@@ -1,0 +1,14 @@
+{
+  "name": "candidate-set-head-micro",
+  "status": "SCAFFOLDED",
+  "train": "python -m research.configs.launch_candidate_micro",
+  "note": "The head in veya/experimental/candidate_set.py is order-equivariant and gradient-checked. A full run freezes the production encoder, trains only CandidateSetHead, and reports recall@k. Do not replace Agent.predict until that run beats the packed head on a held-out schema.",
+  "hardware": {
+    "dev": "1 CPU or Apple MPS, frozen encoder, a few thousand steps",
+    "full": "1 GPU with 16GB, frozen ModernBERT-large, batch of candidate sets"
+  },
+  "expected_artifacts": [
+    "checkpoints/candidate-head/head.pt",
+    "research/results/candidate_recall.json"
+  ]
+}

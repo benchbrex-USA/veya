@@ -29,7 +29,7 @@ synthetic workflows and should not be a silent default.
 """
 import os
 import threading
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, cast
 
 from .lang import analyse
 
@@ -279,7 +279,7 @@ class Router:
 
         workflow = match_typed_decisions_workflow(questions or {})
         if workflow and self.auto_task_detection:
-            return RouteDecision(model="typed-decisions", repo=self.models["typed-decisions"],
+            return RouteDecision(model="typed-decisions", repo=_repo_str(self.models["typed-decisions"]),
                                  reason="question ids match the %r typed-decisions workflow" % workflow,
                                  detection=None, workflow=workflow)
 
@@ -295,7 +295,7 @@ class Router:
         elif det["script"] != "latin":
             key = "multilingual"
             reason = "non-Latin script (%s, %.0f%% of letters); the English checkpoint cannot read it" % (
-                det["script"], 100 * float(det["non_latin_fraction"]))
+                det["script"], 100 * float(cast(Any, det["non_latin_fraction"])))
         elif not det["is_english"]:
             key = "multilingual"
             if det["language"]:
@@ -304,7 +304,7 @@ class Router:
                 # Unidentified Latin-script language: routed on the non-English letters alone,
                 # because no stopword list here covers it.
                 reason = ("Latin script, language not identified but %.0f%% non-English letters; "
-                          "not safe for the English checkpoint" % (100 * float(det["diacritic_rate"])))
+                          "not safe for the English checkpoint" % (100 * float(cast(Any, det["diacritic_rate"]))))
         else:
             key = "english"
             reason = "English Latin text"

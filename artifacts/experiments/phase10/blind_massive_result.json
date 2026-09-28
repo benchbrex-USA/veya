@@ -1,0 +1,206 @@
+{
+  "candidate_count": 60,
+  "completed_at": "2026-09-23T03:59:09Z",
+  "current": {
+    "end_to_end": {
+      "conditional_accuracy": {
+        "count": 682,
+        "n": 848,
+        "rate": 0.8042452830188679,
+        "wilson95": [
+          0.7761922138960651,
+          0.8295542065652037
+        ]
+      },
+      "end_to_end_accuracy": {
+        "count": 682,
+        "n": 2974,
+        "rate": 0.2293207800941493,
+        "wilson95": [
+          0.21456639279878298,
+          0.24477355328834266
+        ]
+      },
+      "mean_top1_top2_probability_margin_on_hits": 0.6652218318271821,
+      "retrieval_hits": 848,
+      "scorer_latency_on_hits": {
+        "mean_ms": 122.18234415109383,
+        "n": 848,
+        "p50_ms": 122.81679199077189,
+        "p95_ms": 141.657278969069,
+        "p99_ms": 143.90550646581687
+      }
+    },
+    "retrieval": {
+      "mean_rank": 23.19737726967048,
+      "median_rank": 21.0,
+      "mrr": 0.16211217544100143,
+      "recall_at_1": {
+        "count": 225,
+        "n": 2974,
+        "rate": 0.07565568258238063,
+        "wilson95": [
+          0.06668911489065164,
+          0.085717111149041
+        ]
+      },
+      "recall_at_16": {
+        "count": 1293,
+        "n": 2974,
+        "rate": 0.4347679892400807,
+        "wilson95": [
+          0.41704672018527755,
+          0.45265756495870046
+        ]
+      },
+      "recall_at_32": {
+        "count": 2029,
+        "n": 2974,
+        "rate": 0.6822461331540014,
+        "wilson95": [
+          0.6652861003447841,
+          0.6987359483766793
+        ]
+      },
+      "recall_at_4": {
+        "count": 527,
+        "n": 2974,
+        "rate": 0.17720242098184263,
+        "wilson95": [
+          0.16389781995457844,
+          0.19133987972696267
+        ]
+      },
+      "recall_at_8": {
+        "count": 848,
+        "n": 2974,
+        "rate": 0.285137861466039,
+        "wilson95": [
+          0.2691966731819463,
+          0.30163342066857946
+        ]
+      }
+    }
+  },
+  "data_retention": "no per-example predictions, errors, scores, ranks, confidence, or class metrics written",
+  "dataset": "Amazon MASSIVE en-US test",
+  "dataset_sha256": "c418da9a5f3a7425b5cf44941bcea032a31040dbda2da85e0dd9323785c7731e",
+  "example_count": 2974,
+  "format": "veya-phase10-blind-v1",
+  "frozen_components": {
+    "automation_policy_changed": false,
+    "calibration_refit": false,
+    "k": 8,
+    "scorer": "base_decision_head",
+    "temperature": 1.971127355603397
+  },
+  "harness_sha256": "8e350a22838cd72d4e628bc808cf62f6f83e34d6e0e4e5861ff740b98a5d4ab3",
+  "license": "CC-BY-4.0",
+  "paired_end_to_end_delta": {
+    "ci95": [
+      0.02453765971755212,
+      0.06254203093476798
+    ],
+    "delta": 0.04404841963685272,
+    "draws": 2000
+  },
+  "permutation": {
+    "score_map_changes": 0,
+    "trials": 256
+  },
+  "phase10": {
+    "end_to_end": {
+      "conditional_accuracy": {
+        "count": 813,
+        "n": 1040,
+        "rate": 0.7817307692307692,
+        "wilson95": [
+          0.7556134940237093,
+          0.8057743640574403
+        ]
+      },
+      "end_to_end_accuracy": {
+        "count": 813,
+        "n": 2974,
+        "rate": 0.27336919973100204,
+        "wilson95": [
+          0.25765090183432976,
+          0.28967223315041885
+        ]
+      },
+      "mean_top1_top2_probability_margin_on_hits": 0.63786338321602,
+      "retrieval_hits": 1040,
+      "scorer_latency_on_hits": {
+        "mean_ms": 131.54665596571598,
+        "n": 1040,
+        "p50_ms": 131.39600049180444,
+        "p95_ms": 151.46826397249242,
+        "p99_ms": 159.14934062369863
+      }
+    },
+    "retrieval": {
+      "mean_rank": 19.636180228648286,
+      "median_rank": 16.0,
+      "mrr": 0.18237637000014764,
+      "recall_at_1": {
+        "count": 219,
+        "n": 2974,
+        "rate": 0.07363819771351715,
+        "wilson95": [
+          0.064791162105827,
+          0.08358529955687527
+        ]
+      },
+      "recall_at_16": {
+        "count": 1496,
+        "n": 2974,
+        "rate": 0.5030262273032953,
+        "wilson95": [
+          0.4850639359267954,
+          0.5209807106386901
+        ]
+      },
+      "recall_at_32": {
+        "count": 2282,
+        "n": 2974,
+        "rate": 0.7673167451244116,
+        "wilson95": [
+          0.7517913483253419,
+          0.782152431625882
+        ]
+      },
+      "recall_at_4": {
+        "count": 706,
+        "n": 2974,
+        "rate": 0.23739071956960323,
+        "wilson95": [
+          0.22244346594993372,
+          0.2530155376451534
+        ]
+      },
+      "recall_at_8": {
+        "count": 1040,
+        "n": 2974,
+        "rate": 0.3496973772696705,
+        "wilson95": [
+          0.3327620784598445,
+          0.367020475454373
+        ]
+      }
+    }
+  },
+  "pre_run_freeze_sha256": "3a75ba7ee5002458d0c101eed6405663500474382e7fc6103d0f56b8e3445685",
+  "release": "0.3.5-audit-baseline.1",
+  "release_manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "retriever_sha256": "a82e369346d9ee3bbd9bc0df09bbebebea5c92c1a42b6c667b08675e918d713f",
+  "runtime": {
+    "device": "cpu",
+    "model_load_seconds": 45.7234937500034,
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "python": "3.11.0",
+    "retrieval_embedding_seconds": 39.03209941700334,
+    "torch": "2.14.0"
+  },
+  "source_revision": "cf8448dca459d700b8a250b270e57f6d1444bf3e",
+  "status": "SEALED_AGGREGATES_ONLY"
+}

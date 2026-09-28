@@ -1,0 +1,14 @@
+{
+  "format": "veya-blind-failed-run-v1",
+  "status": "DEVELOPMENT-EXPOSED / RESULT NOT RECOVERABLE",
+  "partition": "CLINC150 test",
+  "example_count_scored": 4500,
+  "candidate_count": 150,
+  "release_manifest_sha256": "f585cb1197738ddb7b9acc8b488bb89ce47c76e0973ae189dd40fc58c43d616c",
+  "harness_sha256": "0e42ca34e33c1f72ac8cea3d861f6d5acb54a42385169726c891c9fca804b203",
+  "failure": "PermissionError from the final optional ps/RSS collection after all scoring and permutation trials, before the aggregate result file was opened.",
+  "per_example_outputs_written": false,
+  "aggregate_result_written": false,
+  "rerun_permitted": false,
+  "recorded_at": "2026-09-23T07:03:14+05:30"
+}
