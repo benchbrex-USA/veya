@@ -85,3 +85,31 @@ def test_rival_score_drops_bad_cases():
     stub = _StubRival({frozenset(["world", "sports", "business"]): [0.1, 0.7, 0.2]})
     rows, _ = stub.score(cases, [0, 0])
     assert rows[0][1] is not None and rows[1][1] is None   # empty criteria -> dropped
+
+
+def test_nli_reindexes_to_option_order():
+    from veyabench.rivals.nli import NliRival
+
+    captured = {}
+    texts = option_texts(CHOICE_Q)   # ["world - international news", "sports", "business - economy"]
+
+    def fake_pipe(premise, candidate_labels=None, hypothesis_template=None, multi_label=None):
+        captured["labels"] = list(candidate_labels)
+        # The real pipeline echoes candidate_labels back SORTED BY SCORE (desc); the adapter
+        # must undo that ordering. Fake returns business(0.6) > world(0.3) > sports(0.1).
+        order = [candidate_labels[2], candidate_labels[0], candidate_labels[1]]
+        return {"labels": order, "scores": [0.6, 0.3, 0.1]}
+
+    r = NliRival()
+    r._pipe = fake_pipe                      # inject stub, skip the 1.6 GB download
+    probs = r._options_probs({"article": "x"}, CHOICE_Q, texts)
+    labels = option_labels(CHOICE_Q)         # ["world", "sports", "business"]
+    assert probs[labels.index("world")] == pytest.approx(0.3)
+    assert probs[labels.index("sports")] == pytest.approx(0.1)
+    assert probs[labels.index("business")] == pytest.approx(0.6)
+    assert captured["labels"] == texts
+
+
+def test_nli_availability_is_bool():
+    from veyabench.rivals.nli import NliRival
+    assert isinstance(NliRival().available(), bool)
