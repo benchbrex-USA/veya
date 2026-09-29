@@ -28,8 +28,6 @@ for p in (HERE, RESEARCH, REPO_ROOT):
     if p not in sys.path:
         sys.path.insert(0, p)
 
-import numpy as np  # noqa: E402
-
 import bench_apps  # noqa: E402  (imports bench_local -> veya; paths set above)
 import bench_local  # noqa: E402
 from veyabench.rivals import REGISTRY  # noqa: E402
