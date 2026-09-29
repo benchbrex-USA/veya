@@ -113,3 +113,35 @@ def test_nli_reindexes_to_option_order():
 def test_nli_availability_is_bool():
     from veyabench.rivals.nli import NliRival
     assert isinstance(NliRival().available(), bool)
+
+
+def test_st_maps_similarity_to_distribution():
+    from veyabench.rivals.st import StCentroidRival
+
+    class FakeST:
+        def encode(self, texts, convert_to_numpy=False, normalize_embeddings=False):
+            # premise + 3 options; make option index 2 most similar to premise
+            import numpy as _np
+            n = len(texts)
+            m = _np.zeros((n, 4), dtype=float)
+            m[0] = [1.0, 0.0, 0.0, 0.0]              # premise
+            m[1] = [0.2, 1.0, 0.0, 0.0]              # option 0 (low sim)
+            m[2] = [0.3, 0.0, 1.0, 0.0]              # option 1 (low sim)
+            m[3] = [0.95, 0.05, 0.0, 0.0]            # option 2 (high sim)
+            return m / _np.linalg.norm(m, axis=1, keepdims=True)
+
+    r = StCentroidRival()
+    r._model = FakeST()
+    probs = r._options_probs({"article": "x"}, CHOICE_Q, option_texts(CHOICE_Q))
+    import numpy as _np
+    p = _np.asarray(probs, float)
+    assert p.shape == (3,) and int(p.argmax()) == 2   # highest similarity wins
+
+
+@pytest.mark.skipif(os.environ.get("RUN_MODEL_DOWNLOADS") != "1",
+                    reason="set RUN_MODEL_DOWNLOADS=1 to fetch all-MiniLM-L6-v2")
+def test_st_smoke_real_model():
+    from veyabench.rivals.st import StCentroidRival
+    r = StCentroidRival(device="cpu")
+    rows, secs = r.score([({"article": "a goal was scored"}, {"topic": CHOICE_Q})], [1])
+    assert rows[0][1] is not None and abs(rows[0][1].sum() - 1.0) < 1e-6
