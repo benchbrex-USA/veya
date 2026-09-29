@@ -145,3 +145,18 @@ def test_st_smoke_real_model():
     r = StCentroidRival(device="cpu")
     rows, secs = r.score([({"article": "a goal was scored"}, {"topic": CHOICE_Q})], [1])
     assert rows[0][1] is not None and abs(rows[0][1].sum() - 1.0) < 1e-6
+
+
+def test_jev_dormant_without_credential(monkeypatch):
+    monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
+    from veyabench.rivals.jev import JevRival
+    r = JevRival()
+    assert r.available() is False
+    assert "TYPESAFE_API_KEY" in r.unavailable_reason()
+
+
+def test_jev_caps_cases(monkeypatch):
+    monkeypatch.setenv("JEV_MAX_CASES", "1")
+    from veyabench.rivals.jev import JevRival
+    r = JevRival()
+    assert r.max_cases == 1

@@ -2,10 +2,11 @@
 from .base import (Rival, first_question, option_labels, option_texts,
                    probs_from_scores, render_state, to_rows)
 
+from .jev import JevRival
 from .nli import NliRival
 from .st import StCentroidRival
 
-REGISTRY = {"nli": NliRival, "st": StCentroidRival}
+REGISTRY = {"nli": NliRival, "st": StCentroidRival, "jev": JevRival}
 
-__all__ = ["Rival", "REGISTRY", "NliRival", "StCentroidRival", "first_question",
+__all__ = ["Rival", "REGISTRY", "NliRival", "StCentroidRival", "JevRival", "first_question",
            "option_labels", "option_texts", "probs_from_scores", "render_state", "to_rows"]
