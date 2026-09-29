@@ -44,18 +44,35 @@ USE_TF=0 python research/scripts/make_rival_plot.py
 
 Writes `research/results/rival_benchmark.json` and `assets/veya_vs_rival.png`.
 
-> **Status:** harness landed; the measured numbers below are *pending a local run* (this machine has
-> no `datasets` and no `~/veya_models` checkpoints). Fill the table from `rival_benchmark.json` after
-> a run.
+> **Status: measured (quick run).** The numbers below are a real controlled run on one machine
+> (macOS CPU, `seed=13`, **N=40 per suite**, 2026-09-29) — Veya's three local checkpoints
+> (`models/production`) vs the `st-centroid` rival, on byte-identical `bench_apps` cases through the
+> same `metrics()` pipeline. Scope: **`st-centroid` only** — `nli-bart` was *not run* here, and
+> `jev-typesafe` stays *not measured* (no `TYPESAFE_API_KEY`). This is a lower-N quick run, not the
+> spec's `--n 400`; treat per-suite figures as higher-variance. Full artifacts:
+> [`research/results/rival_benchmark.json`](research/results/rival_benchmark.json),
+> ![figure](assets/veya_vs_rival.png).
 
 | suite | veya/typed-decisions | nli-bart | st-centroid | jev-typesafe |
 |---|---|---|---|---|
-| jev.ag_news | pending | pending | pending | not measured |
-| jev.emotion | pending | pending | pending | not measured |
-| jev.banking77_full | pending | pending | pending | not measured |
-| app.phishing | pending | pending | pending | not measured |
-| app.guardrails_jailbreak | pending | pending | pending | not measured |
-| app.moderation_toxicity | pending | pending | pending | not measured |
+| jev.ag_news | **0.975** | not run | 0.525 | not measured |
+| jev.emotion | **0.725** | not run | 0.325 | not measured |
+| jev.banking77_full | 0.325 | not run | **0.475** | not measured |
+| app.support_triage | **0.500** | not run | 0.425 | not measured |
+| app.email_spam ⁽ᵗʳ⁾ | **0.975** | not run | 0.500 | not measured |
+| app.phishing ⁽ᵗʳ⁾ | **0.950** | not run | 0.575 | not measured |
+| app.guardrails_jailbreak | **0.900** | not run | 0.725 | not measured |
+| app.moderation_toxicity | 0.500 | not run | **0.525** | not measured |
+| app.rag_relevance | **0.775** | not run | 0.575 | not measured |
+| app.model_routing_domain | **0.590** | not run | 0.436 | not measured |
+| **macro (mean accuracy)** | **0.721** | — | 0.509 | — |
+| **macro ECE** *(lower better)* | 0.166 | — | 0.168 | — |
+
+**Read-out.** `veya/typed-decisions` beats `st-centroid` on **8 / 10** suites (macro 0.721 vs 0.509).
+The rival wins the two hardest/held-out suites — banking77 (77 labels at once) and moderation
+(toxic-chat) — matching the repo's stated limits. ⁽ᵗʳ⁾ `email_spam` and `phishing` were **in Veya's
+training mix**, so those near-perfect scores are not generalization evidence. `veya/english` and
+`veya/multilingual` macro accuracies were 0.719 and 0.696 on the same cases (in the JSON).
 
 ---
 

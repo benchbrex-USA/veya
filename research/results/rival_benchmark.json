@@ -1,0 +1,558 @@
+{
+  "meta": {
+    "timestamp": "2026-09-29 22:31:18",
+    "device": "None",
+    "seed": 13,
+    "n_per_task": 40,
+    "rivals": [
+      "st-centroid"
+    ],
+    "models_present": [
+      "english",
+      "multilingual",
+      "typed-decisions"
+    ]
+  },
+  "suites": {
+    "jev.ag_news": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 0.975,
+        "macro_f1": 0.9116,
+        "ece": 0.0376,
+        "brier": 0.0414,
+        "nll": 0.0766,
+        "mean_confidence": 0.9715,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 4.5,
+        "ms_per_case": 111.9,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 0.95,
+        "macro_f1": 0.8532,
+        "ece": 0.0605,
+        "brier": 0.0752,
+        "nll": 0.1299,
+        "mean_confidence": 0.9591,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 1.7,
+        "ms_per_case": 43.3,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.975,
+        "macro_f1": 0.9116,
+        "ece": 0.1847,
+        "brier": 0.0932,
+        "nll": 0.2585,
+        "mean_confidence": 0.7904,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 4.3,
+        "ms_per_case": 107.3,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.525,
+        "macro_f1": 0.4157,
+        "ece": 0.2023,
+        "brier": 0.5305,
+        "nll": 0.986,
+        "mean_confidence": 0.4844,
+        "acc_at_50_coverage": 0.8,
+        "seconds": 18.1,
+        "ms_per_case": 453.0,
+        "dropped": 0
+      }
+    },
+    "jev.emotion": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 0.675,
+        "macro_f1": 0.6564,
+        "ece": 0.2446,
+        "brier": 0.5192,
+        "nll": 1.4062,
+        "mean_confidence": 0.9036,
+        "acc_at_50_coverage": 0.8,
+        "seconds": 2.5,
+        "ms_per_case": 61.4,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 0.65,
+        "macro_f1": 0.585,
+        "ece": 0.315,
+        "brier": 0.6035,
+        "nll": 1.354,
+        "mean_confidence": 0.8691,
+        "acc_at_50_coverage": 0.85,
+        "seconds": 1.0,
+        "ms_per_case": 23.8,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.725,
+        "macro_f1": 0.6056,
+        "ece": 0.1772,
+        "brier": 0.4597,
+        "nll": 1.0027,
+        "mean_confidence": 0.7774,
+        "acc_at_50_coverage": 0.8,
+        "seconds": 2.4,
+        "ms_per_case": 59.0,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.325,
+        "macro_f1": 0.2745,
+        "ece": 0.1547,
+        "brier": 0.6966,
+        "nll": 1.4028,
+        "mean_confidence": 0.3666,
+        "acc_at_50_coverage": 0.5,
+        "seconds": 1.1,
+        "ms_per_case": 28.3,
+        "dropped": 0
+      }
+    },
+    "jev.banking77_full": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 0.3,
+        "macro_f1": 0.042,
+        "ece": 0.1929,
+        "brier": 0.8782,
+        "nll": 3.1344,
+        "mean_confidence": 0.1826,
+        "acc_at_50_coverage": 0.4,
+        "seconds": 10.0,
+        "ms_per_case": 250.8,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 0.45,
+        "macro_f1": 0.069,
+        "ece": 0.3651,
+        "brier": 0.8365,
+        "nll": 2.8213,
+        "mean_confidence": 0.765,
+        "acc_at_50_coverage": 0.55,
+        "seconds": 4.1,
+        "ms_per_case": 103.3,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.325,
+        "macro_f1": 0.0545,
+        "ece": 0.1727,
+        "brier": 0.855,
+        "nll": 2.4071,
+        "mean_confidence": 0.3648,
+        "acc_at_50_coverage": 0.35,
+        "seconds": 10.0,
+        "ms_per_case": 249.5,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.475,
+        "macro_f1": 0.1073,
+        "ece": 0.3738,
+        "brier": 0.8447,
+        "nll": 2.4179,
+        "mean_confidence": 0.1065,
+        "acc_at_50_coverage": 0.8,
+        "seconds": 3.1,
+        "ms_per_case": 77.9,
+        "dropped": 0
+      }
+    },
+    "app.support_triage": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 0.575,
+        "macro_f1": 0.4333,
+        "ece": 0.224,
+        "brier": 0.6009,
+        "nll": 1.3146,
+        "mean_confidence": 0.4829,
+        "acc_at_50_coverage": 0.75,
+        "seconds": 8.3,
+        "ms_per_case": 208.6,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 0.525,
+        "macro_f1": 0.4277,
+        "ece": 0.1348,
+        "brier": 0.5909,
+        "nll": 1.1594,
+        "mean_confidence": 0.6481,
+        "acc_at_50_coverage": 0.75,
+        "seconds": 3.1,
+        "ms_per_case": 77.7,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.5,
+        "macro_f1": 0.3222,
+        "ece": 0.1104,
+        "brier": 0.6582,
+        "nll": 1.4536,
+        "mean_confidence": 0.3986,
+        "acc_at_50_coverage": 0.65,
+        "seconds": 8.0,
+        "ms_per_case": 200.2,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.425,
+        "macro_f1": 0.2058,
+        "ece": 0.1139,
+        "brier": 0.7566,
+        "nll": 1.8496,
+        "mean_confidence": 0.465,
+        "acc_at_50_coverage": 0.55,
+        "seconds": 1.3,
+        "ms_per_case": 31.8,
+        "dropped": 0
+      }
+    },
+    "app.email_spam": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "ece": 0.0311,
+        "brier": 0.019,
+        "nll": 0.0376,
+        "mean_confidence": 0.9689,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 12.1,
+        "ms_per_case": 303.6,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "ece": 0.0,
+        "brier": 0.0,
+        "nll": 0.0,
+        "mean_confidence": 1.0,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 7.2,
+        "ms_per_case": 180.8,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.975,
+        "macro_f1": 0.9746,
+        "ece": 0.1201,
+        "brier": 0.0839,
+        "nll": 0.1655,
+        "mean_confidence": 0.8756,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 15.8,
+        "ms_per_case": 394.3,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.5,
+        "macro_f1": 0.4505,
+        "ece": 0.1064,
+        "brier": 0.5215,
+        "nll": 0.7152,
+        "mean_confidence": 0.5663,
+        "acc_at_50_coverage": 0.45,
+        "seconds": 0.9,
+        "ms_per_case": 23.3,
+        "dropped": 0
+      }
+    },
+    "app.phishing": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "ece": 0.022,
+        "brier": 0.0094,
+        "nll": 0.0249,
+        "mean_confidence": 0.978,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 13.1,
+        "ms_per_case": 326.7,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "ece": 0.0024,
+        "brier": 0.0002,
+        "nll": 0.0025,
+        "mean_confidence": 0.9976,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 7.9,
+        "ms_per_case": 196.4,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.95,
+        "macro_f1": 0.9333,
+        "ece": 0.0702,
+        "brier": 0.0898,
+        "nll": 0.1671,
+        "mean_confidence": 0.8798,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 17.2,
+        "ms_per_case": 429.9,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.575,
+        "macro_f1": 0.5248,
+        "ece": 0.072,
+        "brier": 0.4931,
+        "nll": 0.6871,
+        "mean_confidence": 0.605,
+        "acc_at_50_coverage": 0.6,
+        "seconds": 1.2,
+        "ms_per_case": 29.1,
+        "dropped": 0
+      }
+    },
+    "app.guardrails_jailbreak": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 0.825,
+        "macro_f1": 0.8222,
+        "ece": 0.1775,
+        "brier": 0.3154,
+        "nll": 0.6151,
+        "mean_confidence": 0.9637,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 10.2,
+        "ms_per_case": 255.4,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 0.9,
+        "macro_f1": 0.9,
+        "ece": 0.0829,
+        "brier": 0.1645,
+        "nll": 0.315,
+        "mean_confidence": 0.9533,
+        "acc_at_50_coverage": 0.95,
+        "seconds": 4.1,
+        "ms_per_case": 102.7,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.9,
+        "macro_f1": 0.8997,
+        "ece": 0.121,
+        "brier": 0.1686,
+        "nll": 0.294,
+        "mean_confidence": 0.8341,
+        "acc_at_50_coverage": 1.0,
+        "seconds": 10.8,
+        "ms_per_case": 270.1,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.725,
+        "macro_f1": 0.7248,
+        "ece": 0.1744,
+        "brier": 0.462,
+        "nll": 0.6547,
+        "mean_confidence": 0.5576,
+        "acc_at_50_coverage": 0.7,
+        "seconds": 1.0,
+        "ms_per_case": 23.8,
+        "dropped": 0
+      }
+    },
+    "app.moderation_toxicity": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 0.5,
+        "macro_f1": 0.3333,
+        "ece": 0.3212,
+        "brier": 0.6418,
+        "nll": 0.9107,
+        "mean_confidence": 0.8212,
+        "acc_at_50_coverage": 0.6,
+        "seconds": 7.8,
+        "ms_per_case": 195.9,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 0.475,
+        "macro_f1": 0.322,
+        "ece": 0.4364,
+        "brier": 0.8581,
+        "nll": 1.5223,
+        "mean_confidence": 0.9114,
+        "acc_at_50_coverage": 0.5,
+        "seconds": 3.0,
+        "ms_per_case": 75.6,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.5,
+        "macro_f1": 0.3333,
+        "ece": 0.2472,
+        "brier": 0.5679,
+        "nll": 0.7782,
+        "mean_confidence": 0.7472,
+        "acc_at_50_coverage": 0.6,
+        "seconds": 7.8,
+        "ms_per_case": 194.0,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.525,
+        "macro_f1": 0.4203,
+        "ece": 0.1507,
+        "brier": 0.509,
+        "nll": 0.7022,
+        "mean_confidence": 0.5959,
+        "acc_at_50_coverage": 0.55,
+        "seconds": 0.8,
+        "ms_per_case": 20.8,
+        "dropped": 0
+      }
+    },
+    "app.rag_relevance": {
+      "veya/english": {
+        "n": 40,
+        "accuracy": 0.75,
+        "macro_f1": 0.7494,
+        "ece": 0.1298,
+        "brier": 0.3919,
+        "nll": 0.6339,
+        "mean_confidence": 0.7522,
+        "acc_at_50_coverage": 0.75,
+        "seconds": 7.5,
+        "ms_per_case": 188.0,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 40,
+        "accuracy": 0.65,
+        "macro_f1": 0.6491,
+        "ece": 0.1882,
+        "brier": 0.4166,
+        "nll": 0.6631,
+        "mean_confidence": 0.8048,
+        "acc_at_50_coverage": 0.85,
+        "seconds": 2.7,
+        "ms_per_case": 66.7,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 40,
+        "accuracy": 0.775,
+        "macro_f1": 0.7749,
+        "ece": 0.2986,
+        "brier": 0.4479,
+        "nll": 0.647,
+        "mean_confidence": 0.6326,
+        "acc_at_50_coverage": 0.65,
+        "seconds": 8.2,
+        "ms_per_case": 204.6,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 40,
+        "accuracy": 0.575,
+        "macro_f1": 0.5248,
+        "ece": 0.1449,
+        "brier": 0.4814,
+        "nll": 0.6753,
+        "mean_confidence": 0.6351,
+        "acc_at_50_coverage": 0.6,
+        "seconds": 1.0,
+        "ms_per_case": 25.8,
+        "dropped": 0
+      }
+    },
+    "app.model_routing_domain": {
+      "veya/english": {
+        "n": 39,
+        "accuracy": 0.5897,
+        "macro_f1": 0.3152,
+        "ece": 0.1982,
+        "brier": 0.6114,
+        "nll": 1.5708,
+        "mean_confidence": 0.7664,
+        "acc_at_50_coverage": 0.8421,
+        "seconds": 7.9,
+        "ms_per_case": 202.3,
+        "dropped": 0
+      },
+      "veya/multilingual": {
+        "n": 39,
+        "accuracy": 0.359,
+        "macro_f1": 0.1737,
+        "ece": 0.3564,
+        "brier": 0.8912,
+        "nll": 2.0719,
+        "mean_confidence": 0.6723,
+        "acc_at_50_coverage": 0.3684,
+        "seconds": 3.0,
+        "ms_per_case": 77.9,
+        "dropped": 0
+      },
+      "veya/typed-decisions": {
+        "n": 39,
+        "accuracy": 0.5897,
+        "macro_f1": 0.3889,
+        "ece": 0.1533,
+        "brier": 0.6223,
+        "nll": 1.4578,
+        "mean_confidence": 0.6361,
+        "acc_at_50_coverage": 0.6842,
+        "seconds": 8.1,
+        "ms_per_case": 207.2,
+        "dropped": 0
+      },
+      "st-centroid": {
+        "n": 39,
+        "accuracy": 0.4359,
+        "macro_f1": 0.2322,
+        "ece": 0.1868,
+        "brier": 0.719,
+        "nll": 1.5053,
+        "mean_confidence": 0.3383,
+        "acc_at_50_coverage": 0.5263,
+        "seconds": 1.0,
+        "ms_per_case": 24.6,
+        "dropped": 0
+      }
+    }
+  }
+}
