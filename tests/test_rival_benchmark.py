@@ -160,3 +160,25 @@ def test_jev_caps_cases(monkeypatch):
     from veyabench.rivals.jev import JevRival
     r = JevRival()
     assert r.max_cases == 1
+
+
+def test_require_datasets_exits_when_missing(monkeypatch):
+    import importlib.util as _u
+    import bench_rival
+    real = _u.find_spec
+
+    def fake(name, *a, **k):
+        return None if name == "datasets" else real(name, *a, **k)
+
+    monkeypatch.setattr(bench_rival.importlib.util, "find_spec", fake)
+    with pytest.raises(SystemExit) as ei:
+        bench_rival._require_datasets()
+    assert ei.value.code == 2
+
+
+def test_select_rivals_skips_unavailable():
+    import bench_rival
+    rivals = bench_rival.select_rivals("all", device=None)
+    names = {r.name for r in rivals}
+    assert "jev-typesafe" not in names          # no credential on this machine
+    assert names <= {"nli-bart", "st-centroid"}
