@@ -24,6 +24,41 @@ Every checkpoint answered **byte-identical questions** in each run (fixed seed).
 
 ---
 
+## Measured head-to-head (rivals)
+
+The headline table above mixes **Veya (measured here)** with **Jev (third-party published, mismatched
+prompts/sample sizes)**. The rival harness closes that gap: it runs rival decision models on
+**byte-identical** `bench_apps` cases through the *same* `metrics()` pipeline as Veya's checkpoints,
+so accuracy / macro-F1 / ECE / latency are directly comparable on one machine.
+
+- **Runnable now:** `nli-bart` (`facebook/bart-large-mnli` zero-shot) and `st-centroid`
+  (`all-MiniLM-L6-v2` nearest-centroid).
+- **Dormant:** `jev-typesafe` activates only with `TYPESAFE_API_KEY` + `typesafe_sdk`; otherwise it is
+  recorded as *not measured* — never fabricated.
+
+```
+pip install 'veya[train]'        # needs `datasets` to build the suites
+USE_TF=0 python research/scripts/bench_rival.py --rival all --n 400
+USE_TF=0 python research/scripts/make_rival_plot.py
+```
+
+Writes `research/results/rival_benchmark.json` and `assets/veya_vs_rival.png`.
+
+> **Status:** harness landed; the measured numbers below are *pending a local run* (this machine has
+> no `datasets` and no `~/veya_models` checkpoints). Fill the table from `rival_benchmark.json` after
+> a run.
+
+| suite | veya/typed-decisions | nli-bart | st-centroid | jev-typesafe |
+|---|---|---|---|---|
+| jev.ag_news | pending | pending | pending | not measured |
+| jev.emotion | pending | pending | pending | not measured |
+| jev.banking77_full | pending | pending | pending | not measured |
+| app.phishing | pending | pending | pending | not measured |
+| app.guardrails_jailbreak | pending | pending | pending | not measured |
+| app.moderation_toxicity | pending | pending | pending | not measured |
+
+---
+
 ## Languages
 
 ### All 51 MASSIVE languages — intent, 20 options (random = 0.050)
