@@ -29,7 +29,7 @@ classifiers = [
 # pinned checkpoint. Caps are set one major above what the test suite runs on
 # (torch 2.x, transformers 5.x, numpy 2.x, safetensors 0.x, hub 1.x).
 dependencies = [
-    "torch>=2.0.0,<3",
+    "torch>=2.14.0,<3",
     "transformers>=4.48.0,<6",
     "safetensors>=0.4.0,<1",
     "huggingface_hub>=0.20.0,<2",
