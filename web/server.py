@@ -594,6 +594,29 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(raw)
 
+    def _take_body(self) -> tuple[bytes | None, int]:
+        """Read the request body once, up front, keeping keep-alive in sync.
+
+        Error paths that answer before parsing the body must either consume it
+        or refuse connection reuse: unread bytes otherwise desynchronize the
+        next request on the same socket, and proxies that pool keep-alive
+        origin connections (cloudflared included) then parse the next request
+        line as e.g. '{}POST'. Oversized or unparsable bodies mark the
+        connection for closure instead of draining forever; the body is
+        returned as None in that case.
+        """
+        try:
+            length = int(self.headers.get("Content-Length", "0") or 0)
+        except ValueError:
+            self.close_connection = True
+            return None, -1
+        if length > MAX_REQUEST_BYTES:
+            self.close_connection = True
+            return None, length
+        if length <= 0:
+            return b"", length
+        return self.rfile.read(length), length
+
     def _shutdown_reject(self) -> bool:
         """503 + Retry-After while draining; new work must go elsewhere."""
         if not _SHUTTING_DOWN:
@@ -760,6 +783,7 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(raw)
 
     def do_POST(self) -> None:
+        raw_body, length = self._take_body()
         if self.path != "/api/infer":
             self.send(404, {"code": "not_found"})
             return
@@ -779,13 +803,11 @@ class Handler(BaseHTTPRequestHandler):
         status = 500
         error_code: str | None = None
         try:
-            try:
-                length = int(self.headers.get("Content-Length", "0") or 0)
-            except ValueError as exc:
-                raise RequestError("Invalid Content-Length.") from exc
+            if length < 0:
+                raise RequestError("Invalid Content-Length.")
             if length <= 0:
                 raise RequestError("Request body is required.")
-            if length > MAX_REQUEST_BYTES:
+            if raw_body is None:
                 status, error_code = 413, "request_too_large"
                 self.send(
                     status,
@@ -824,7 +846,7 @@ class Handler(BaseHTTPRequestHandler):
                     retry_after,
                 )
                 return
-            data = parse_json(self.rfile.read(length))
+            data = parse_json(raw_body)
             body = validate(data)
             primitive = data["primitive"]
             candidate_count = (
