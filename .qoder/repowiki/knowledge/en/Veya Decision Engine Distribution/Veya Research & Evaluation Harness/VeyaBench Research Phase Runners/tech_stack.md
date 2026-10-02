@@ -1,0 +1,1 @@
+NumPy-based metrics and cosine-similarity hard-negative mining in `protocol.py`; shared rival adapters in `rivals/` (NLI, sentence-transformers, Jev/TypeSafe) consumed across multiple phase runners.

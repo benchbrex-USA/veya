@@ -1,0 +1,4 @@
+- Experiment manifests in `research/configs/` follow a fixed schema with keys `name`, `status`, `train`, `hardware`, `expected_artifacts`, and optional `note` / `compare_against` / `metrics`.
+- Dataset entries in `research/data/registry.json` record provenance via paired `source` + `version` strings plus a human-readable `split_role` that documents which row ranges train vs. evaluate.
+- Dialogue datasets (SGD, Phase10) ship a `schema.json` alongside split files to describe the turn/action vocabulary, keeping schema separate from instance data.
+- Each dataset directory carries its own license file (`LICENSE`, `LICENSE.txt`) next to the data, mirroring the `license` field declared in `registry.json`.

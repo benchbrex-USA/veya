@@ -1,0 +1,20 @@
+# ClusterIP only: the gateway speaks plain HTTP and sends HSTS
+# unconditionally (web/server.py headers_common), so TLS must terminate
+# upstream (Ingress / load balancer) at the origin named by
+# VEYA_PUBLIC_ORIGIN. Never route the in-container model service (127.0.0.1:8080)
+# through this Service; only the gateway port 8000 exists here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: veya
+  labels:
+    app.kubernetes.io/name: veya
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: veya

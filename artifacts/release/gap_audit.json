@@ -1,0 +1,277 @@
+{
+  "format": "veya-gap-audit-v1",
+  "generated": "2026-09-30T00:00:00Z",
+  "scope_reference": "artifacts/release/production_scope.json",
+  "method": "Filesystem-verified audit of G-node requirements against research/veyabench modules, tests/, web serving path, CI workflows, and artifacts/release evidence. Every classification was checked against actual files present at audit time.",
+  "nodes": [
+    {
+      "id": "G0",
+      "name": "Repository governance and system map",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "artifacts/release/system_map.json",
+        "artifacts/release/production_scope.json"
+      ],
+      "notes": "System map and production scope contract exist with evidence-backed module classification and boundary definitions."
+    },
+    {
+      "id": "G1",
+      "name": "Production scope contract",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "artifacts/release/production_scope.json"
+      ],
+      "notes": "Machine-readable scope (veya-production-scope-v1) with supported/unsupported boundaries: languages, decision primitives, candidate-set caps."
+    },
+    {
+      "id": "G2",
+      "name": "Structured gap audit artifact",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "artifacts/release/gap_audit.json"
+      ],
+      "notes": "This audit itself: machine-readable per-node classification with evidence paths."
+    },
+    {
+      "id": "G3",
+      "name": "Contamination / train-test overlap detection",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "research/veyabench/contamination.py",
+        "tests/test_contamination.py"
+      ],
+      "notes": "exact_overlap, n-gram Jaccard, fuzzy SequenceMatcher, and semantic-neighbor (cosine >= 0.92) checks with a contamination-report contract; dedicated test suite present."
+    },
+    {
+      "id": "G4",
+      "name": "Calibration reporting (ECE, Brier, reliability, risk-coverage)",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "research/veyabench/calibration_report.py",
+        "veya/calibration.py",
+        "tests/test_calibration_report.py",
+        "tests/test_reliability.py"
+      ],
+      "notes": "Per-slice ECE (15 bins), Brier with frozen temperature, reliability diagram, risk-coverage deciles, accepted-vs-deferred accuracy; core calibration machinery in veya/calibration.py with tests."
+    },
+    {
+      "id": "G5",
+      "name": "Selective prediction with epsilon guarantee and per-slice gates",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "veya/selective.py",
+        "research/veyabench/selective_gates.py",
+        "research/veyabench/sample_size.py",
+        "tests/test_selective_extra.py",
+        "tests/test_selective_gates.py",
+        "tests/test_sample_size.py",
+        "artifacts/release/selective_policy.json"
+      ],
+      "notes": "select_threshold with epsilon parameter and risk_ucb95 / supports_epsilon_claim fields; G1-G4 per-slice gates; Wilson-bound sample-size inversion reproducing protocol reference values."
+    },
+    {
+      "id": "G6",
+      "name": "Freeze record integrity (hash-pinned evaluation freezes)",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "research/veyabench/freeze_record.py",
+        "tests/test_freeze_record.py",
+        "veya/manifest.py",
+        "artifacts/release/manifest.json"
+      ],
+      "notes": "build/validate/hash over canonical sort_keys JSON (veya-freeze-record-v1); release manifest is hash-pinned (veya-release-manifest-v2)."
+    },
+    {
+      "id": "G7",
+      "name": "Perturbation robustness suites (surface + paraphrase noise)",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "research/veyabench/surface_noise.py",
+        "research/veyabench/paraphrase_noise.py",
+        "research/veyabench/phase11_noise.py",
+        "tests/test_surface_noise.py",
+        "tests/test_paraphrase_noise.py",
+        "tests/test_phase11_noise.py"
+      ],
+      "notes": "S4 surface noise (typo, OCR, punctuation strip, abbreviation) and S5 paraphrase noise (polite/formal/casual/question) with stable SHA-256 determinism; label-preserving wrap verified."
+    },
+    {
+      "id": "G8",
+      "name": "Blind prospective verdict (P1-P6 pre-registered gates)",
+      "status": "EXTERNAL_BLOCKER",
+      "evidence": [
+        "research/veyabench/selective_gates.py",
+        "research/veyabench/sample_size.py",
+        "research/veyabench/freeze_record.py",
+        "research/veyabench/calibration_report.py",
+        "research/veyabench/drift_monitor.py"
+      ],
+      "notes": "All constituent gate/report modules exist and are tested, but a unified blind_verdict.py P1-P6 orchestrator is NOT present in research/veyabench/ and prospective blind evaluation data has not been collected. Blocked on prospective data collection; orchestrator composition remains to be built."
+    },
+    {
+      "id": "G9",
+      "name": "Contract validation and error handling at serving boundary",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "web/contracts.py",
+        "web/server.py",
+        "tests/test_web_gateway.py",
+        "tests/test_server_security.py"
+      ],
+      "notes": "Whitelisted request/response contracts with validation and standardized upstream error mapping; gateway and security regression tests cover the error paths."
+    },
+    {
+      "id": "G10",
+      "name": "Concurrency-safe model serialization",
+      "status": "PARTIAL",
+      "evidence": [
+        "web/model_server.py",
+        "web/server.py"
+      ],
+      "notes": "_INFER_LOCK guards inference serialization in the serving path, but no dedicated concurrency test suite and no formal documentation of the locking contract. Needs stress tests and documented guarantees."
+    },
+    {
+      "id": "G11",
+      "name": "Latency/throughput runtime performance audit",
+      "status": "PARTIAL",
+      "evidence": [
+        "artifacts/release/runtime_audit.json",
+        "research/veyabench/run_release_eval.py",
+        "research/veyabench/run_runtime_audit.py"
+      ],
+      "notes": "runtime_audit.json and per-request queue_delay_ms / http_503_count / error-rate / concurrency-inflection post-processing exist in run_release_eval.py, but no formal repeatable load test against production-level traffic profiles has been executed as a gated artifact."
+    },
+    {
+      "id": "G12",
+      "name": "Reliability: graceful shutdown, structured errors, integrity checks",
+      "status": "PARTIAL",
+      "evidence": [
+        "web/server.py",
+        "tests/test_server_security.py"
+      ],
+      "notes": "Hash validation and structured error responses exist; missing graceful shutdown handling, health-dependent failover, and documented restart/recovery semantics."
+    },
+    {
+      "id": "G13",
+      "name": "Transport security headers (CSP, HSTS, audit logging)",
+      "status": "PARTIAL",
+      "evidence": [
+        "web/server.py",
+        "tests/test_server_security.py"
+      ],
+      "notes": "Content-Security-Policy header is set and tested; HSTS and security-relevant audit logging are not yet present (slated for Task 22 hardening pass)."
+    },
+    {
+      "id": "G14",
+      "name": "Supply-chain integrity (lock file, SBOM, pinned dependencies)",
+      "status": "MISSING",
+      "evidence": [
+        "pyproject.toml"
+      ],
+      "notes": "Dependencies declared in pyproject.toml but no committed lock file, no SBOM, no vendored hash pinning. Slated for Task 16."
+    },
+    {
+      "id": "G15",
+      "name": "License and third-party inventory",
+      "status": "MISSING",
+      "evidence": [
+        "LICENSE",
+        "pyproject.toml"
+      ],
+      "notes": "Top-level LICENSE exists but no per-dependency license inventory or compatibility review. Slated for Task 17."
+    },
+    {
+      "id": "G16",
+      "name": "Shadow-mode serving with structured telemetry",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "web/server.py",
+        "tests/test_web_gateway.py"
+      ],
+      "notes": "VEYA_SHADOW_MODE opt-in flag adds shadow: true telemetry and X-Veya-Shadow response header; _safe_telemetry includes timestamp (UTC ISO 8601), confidence, max_probability, automation, config_hash. Known residual gap: max_probability not whitelisted in web/contracts.py result payload, so it can log null."
+    },
+    {
+      "id": "G17",
+      "name": "Statistical drift monitoring",
+      "status": "IMPLEMENTED_AND_VERIFIED",
+      "evidence": [
+        "research/veyabench/drift_monitor.py",
+        "tests/test_drift_monitor.py"
+      ],
+      "notes": "Time partitioning (ISO week/day), period stats, and drift triggers: risk breach via Wilson UCB95, coverage drop, distribution shift via KS test with Stephens correction (numpy-only), config mismatch."
+    },
+    {
+      "id": "G18",
+      "name": "Operational health endpoints (deep health, readiness, metrics)",
+      "status": "MISSING",
+      "evidence": [
+        "web/server.py"
+      ],
+      "notes": "Only a basic /api/health path returning status ok with upstream timeout check. No readiness/liveness distinction, no deep health (model load state, calibration state), no metrics exposition endpoint."
+    },
+    {
+      "id": "G19",
+      "name": "Containerization and orchestration (Docker/K8s manifests)",
+      "status": "MISSING",
+      "evidence": [],
+      "notes": "No Dockerfile, docker-compose, or Kubernetes manifests anywhere in the repository."
+    },
+    {
+      "id": "G20",
+      "name": "Live traffic shadow evaluation in production",
+      "status": "EXTERNAL_BLOCKER",
+      "evidence": [
+        "web/server.py",
+        "research/veyabench/drift_monitor.py"
+      ],
+      "notes": "Shadow telemetry and drift-monitor tooling are ready and tested, but running a live shadow evaluation requires actual production traffic, which does not exist yet. Blocked on deployment/traffic."
+    },
+    {
+      "id": "G21",
+      "name": "CI/CD tiered quality gates",
+      "status": "PARTIAL",
+      "evidence": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/release.yml",
+        ".github/workflows/security.yml"
+      ],
+      "notes": "Three workflows exist (ci, release, security) with ruff lint scoped to veya/ at line-length 120, but no tiered gate structure (e.g., required-vs-informational checks, per-node release gates tied to this audit)."
+    },
+    {
+      "id": "G22",
+      "name": "Reproducible release metadata (deterministic build provenance)",
+      "status": "MISSING",
+      "evidence": [
+        "artifacts/release/manifest.json",
+        "veya/release_bundle.py",
+        "veya/manifest.py"
+      ],
+      "notes": "Hash-pinned release manifest exists, but no reproducible-build metadata beyond it: no deterministic build provenance, build environment capture, or verifiable rebuild reproduction. Marked MISSING pending Task 16-era supply-chain work."
+    },
+    {
+      "id": "G23",
+      "name": "Operator documentation and runbooks",
+      "status": "MISSING",
+      "evidence": [
+        "web/README.md"
+      ],
+      "notes": "Developer-facing web README exists; no operator runbooks (incident response, rollback, redeploy, drift-alert triage)."
+    },
+    {
+      "id": "G24",
+      "name": "Final production-readiness verdict matrix",
+      "status": "MISSING",
+      "evidence": [],
+      "notes": "Depends on closure of all other G-nodes; final readiness matrix not yet produced. This gap_audit.json is its input."
+    }
+  ],
+  "summary": {
+    "total_nodes": 25,
+    "IMPLEMENTED_AND_VERIFIED": 10,
+    "IMPLEMENTED_NOT_PRODUCTION_WIRED": 0,
+    "PARTIAL": 5,
+    "MISSING": 7,
+    "EXTERNAL_BLOCKER": 2,
+    "NOT_APPLICABLE_TO_SCOPE": 0
+  }
+}

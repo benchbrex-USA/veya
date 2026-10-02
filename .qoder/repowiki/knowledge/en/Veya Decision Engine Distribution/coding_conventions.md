@@ -1,0 +1,2 @@
+- Typed questions are declared with a `type` field of `choice`, `score`, or `noul` alongside `instructions` and `criteria`, and this schema is the contract between `veya_core`, `web_server`, and `research`.
+- Checkpoints and calibration metadata live under `data_artifacts/` and are loaded at runtime via `huggingface_hub` rather than vendored into the package.

@@ -1,0 +1,1 @@
+PyTorch inference on MPS/CPU, PyArrow parquet reader for AG News, `veya` library's calibration, shortlist embedding, and server utilities; no ML framework beyond raw torch optimizers.

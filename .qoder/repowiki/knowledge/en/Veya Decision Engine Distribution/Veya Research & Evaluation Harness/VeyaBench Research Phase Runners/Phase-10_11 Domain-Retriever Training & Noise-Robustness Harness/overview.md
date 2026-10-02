@@ -1,0 +1,1 @@
+End-to-end harnesses that build Phase-10 frozen-backbone retrievers and Phase-11 noise-robust ablations over Banking77, SGD, and CLINC150 with deterministic splits, augmentation, and hard-negative lineage.

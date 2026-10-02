@@ -1,0 +1,30 @@
+# Build-context guards. The image only ever copies veya/, web/,
+# models/production/, and artifacts/release/; everything listed here stays out
+# of the context transfer.
+.git
+.github
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.venv
+.coverage
+__pycache__
+*.pyc
+*.egg-info
+build/
+dist/
+# Only artifacts/release/ ships — keep historical experiment outputs (~500 MB)
+# and older decision/scope journals out of the context.
+artifacts/experiments/
+artifacts/decisions/
+artifacts/commercialization/
+research/
+notebooks/
+tests/
+docs/
+assets/
+*.md
+.dockerignore
+Dockerfile
+docker-compose.yml
+k8s/

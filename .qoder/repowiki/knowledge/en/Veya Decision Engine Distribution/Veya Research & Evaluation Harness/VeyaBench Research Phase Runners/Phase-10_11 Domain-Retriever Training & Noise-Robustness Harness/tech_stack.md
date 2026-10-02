@@ -1,0 +1,1 @@
+PyTorch + numpy training loop over frozen ModernBERT-large encoder vectors produced via `veya.shortlist.embed_fn_from_agent`; retrieval model is `veya.experimental.domain_retriever.ProjectionPair` with InfoNCE cross-entropy scaled by temperature 0.07; release provenance comes from `veya.release_bundle.load_release_manifest` and `veya.shortlist_artifact.file_sha256`.

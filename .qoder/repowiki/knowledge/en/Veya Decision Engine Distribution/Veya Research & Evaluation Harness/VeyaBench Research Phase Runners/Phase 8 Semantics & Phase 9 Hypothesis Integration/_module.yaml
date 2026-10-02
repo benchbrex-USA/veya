@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: research/phase_runners/semantics_integration_phases_8_to_9
+title: Phase 8 Semantics & Phase 9 Hypothesis Integration
+scope:
+    - research/veyabench/build_phase8_semantics.py
+    - research/veyabench/run_phase8_eval.py
+    - research/veyabench/run_phase9_hypothesis.py
+    - research/veyabench/run_phase9_integrate.py
+source_files: []
+depends_on: []
+related_to: []

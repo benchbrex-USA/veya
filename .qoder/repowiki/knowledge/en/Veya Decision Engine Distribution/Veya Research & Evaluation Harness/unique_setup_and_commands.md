@@ -1,0 +1,1 @@
+All scripts must be invoked with `USE_TF=0` to prevent a TensorFlow/abseil runtime deadlock on macOS Python 3.9; the full head-to-head Colab run is produced by `scripts/build_benchmark_nb.py` followed by executing `scripts/veya_benchmark_colab.ipynb`, while the CPU sweep across 51 languages uses `scripts/bench_local.py`.

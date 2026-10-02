@@ -1,0 +1,1 @@
+Python + PyTorch/HuggingFace transformers; datasets stored as parquet/csv/jsonl; results and Colab notebooks stored as JSON.

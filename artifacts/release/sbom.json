@@ -1,0 +1,143 @@
+{
+  "format": "veya-sbom-v1",
+  "generated": "2026-09-29T18:38:50Z",
+  "python_version": "3.11.0",
+  "packages": [
+    {
+      "name": "filelock",
+      "version": "3.32.3",
+      "license": "MIT",
+      "source": "https://github.com/tox-dev/py-filelock",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "fsspec",
+      "version": "2026.7.0",
+      "license": "BSD-3-Clause",
+      "source": "https://github.com/fsspec/filesystem_spec",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.0",
+      "license": "MIT",
+      "source": "https://github.com/pytest-dev/iniconfig",
+      "category": "dev",
+      "direct": false
+    },
+    {
+      "name": "Jinja2",
+      "version": "3.1.6",
+      "license": "BSD",
+      "source": "https://github.com/pallets/jinja/",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "MarkupSafe",
+      "version": "3.0.3",
+      "license": "BSD-3-Clause",
+      "source": "https://github.com/pallets/markupsafe/",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "mpmath",
+      "version": "1.3.0",
+      "license": "BSD",
+      "source": "http://mpmath.org/",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "networkx",
+      "version": "3.6.1",
+      "license": "BSD-3-Clause",
+      "source": "https://networkx.org/",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "numpy",
+      "version": "2.4.6",
+      "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "source": "https://numpy.org",
+      "category": "runtime",
+      "direct": true
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "license": "Apache-2.0 OR BSD-2-Clause",
+      "source": "https://github.com/pypa/packaging",
+      "category": "dev",
+      "direct": false
+    },
+    {
+      "name": "pluggy",
+      "version": "1.6.0",
+      "license": "MIT",
+      "source": "https://pypi.org/project/pluggy/",
+      "category": "dev",
+      "direct": false
+    },
+    {
+      "name": "Pygments",
+      "version": "2.21.0",
+      "license": "BSD-2-Clause",
+      "source": "https://pygments.org",
+      "category": "dev",
+      "direct": false
+    },
+    {
+      "name": "pytest",
+      "version": "9.1.1",
+      "license": "MIT",
+      "source": "https://docs.pytest.org/en/latest/",
+      "category": "dev",
+      "direct": false
+    },
+    {
+      "name": "setuptools",
+      "version": "78.1.0",
+      "license": "MIT",
+      "source": "https://github.com/pypa/setuptools",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "sympy",
+      "version": "1.14.0",
+      "license": "BSD",
+      "source": "https://sympy.org",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "torch",
+      "version": "2.14.0",
+      "license": "Apache-2.0 AND Apache-2.0 WITH LLVM-exception AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT",
+      "source": "https://pytorch.org",
+      "category": "runtime",
+      "direct": true
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "license": "PSF-2.0",
+      "source": "https://github.com/python/typing_extensions",
+      "category": "runtime",
+      "direct": false
+    },
+    {
+      "name": "veya",
+      "version": "0.3.5",
+      "license": "Apache-2.0",
+      "source": "https://huggingface.co/veyadynamics/veya",
+      "category": "self",
+      "direct": false
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Shared rival adapters (NLI, sentence-transformers, Jev/TypeSafe) plus the veyabench evaluation scripts and dataset-split ledger used to benchmark Veya against external classifiers.

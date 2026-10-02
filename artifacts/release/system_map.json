@@ -1,0 +1,54 @@
+{
+  "format": "veya-system-map-v1",
+  "modules": {
+    "veya/__init__.py": {"category": "production", "purpose": "package entry point; public API and veya.load checkpoint loading (hash-pinned in the release manifest)"},
+    "veya/agent.py": {"category": "production", "purpose": "Agent: ModernBERT decision model, packed choice/score/noul inference and system_one multi-question answering (hash-pinned)"},
+    "veya/common.py": {"category": "production", "purpose": "shared utilities: sequence building, collation, confidence_from_probs, ECE, safe_automation_coverage (hash-pinned)"},
+    "veya/selective.py": {"category": "production", "purpose": "selective prediction: policy loading, score_probabilities, risk-coverage, Wilson intervals (hash-pinned)"},
+    "veya/release_bundle.py": {"category": "production", "purpose": "release bundle loading with SHA-256 verification; packed vs shortlist-k8 routing; public_choice and answer_questions (hash-pinned)"},
+    "veya/manifest.py": {"category": "production", "purpose": "checkpoint manifest authoring and SHA-256 computation (hash-pinned)"},
+    "veya/server.py": {"category": "production", "purpose": "model server: /v1/* inference endpoints, /health, /version; process-wide _INFER_LOCK serializes inference (hash-pinned)"},
+    "veya/router.py": {"category": "production", "purpose": "route selection across english/multilingual/typed-decisions checkpoints via script and language detection (hash-pinned)"},
+    "veya/shortlist.py": {"category": "production", "purpose": "shortlist candidate retrieval for choice; PRODUCTION_SHORTLIST_K=8, trigger above 19 candidates (hash-pinned)"},
+    "veya/shortlist_artifact.py": {"category": "production", "purpose": "shortlist projection artifact loading with hash and checkpoint binding checks (hash-pinned)"},
+    "veya/reranker.py": {"category": "production", "purpose": "reranker head scoring shortlisted choice candidates (hash-pinned)"},
+    "veya/calibration.py": {"category": "production", "purpose": "per-cardinality temperature calibration loading, hash-bound to the checkpoint (hash-pinned)"},
+    "veya/presets.py": {"category": "production", "purpose": "preset model and question configurations (hash-pinned)"},
+    "veya/lang.py": {"category": "production", "purpose": "script/language detection and defer_reason gate returning 'unsupported_language' (hash-pinned)"},
+    "veya/email.py": {"category": "production", "purpose": "email classification helpers (hash-pinned)"},
+    "veya/train.py": {"category": "research", "purpose": "reference trainer streaming the HF typed-decisions dataset; not part of the served runtime"},
+    "veya/experimental/": {"category": "research", "purpose": "research-only modules (hypothesis, ordinal, candidate_set, domain_retriever, top8); declared package, not hash-pinned, not loaded by the release manifest"},
+    "web/server.py": {"category": "production", "purpose": "web gateway / HTTP serving: static site, /api/infer, /api/health, /api/version; rate limiting, MAX_INFLIGHT=2, CSP and origin controls (not hash-pinned)"},
+    "web/contracts.py": {"category": "production", "purpose": "request/response validation: primitive whitelist, candidate limits (2-100 choice, 2-10 score, 1-8 questions), 12 KB state cap, upstream response whitelisting (not hash-pinned)"},
+    "web/model_server.py": {"category": "production", "purpose": "model server process launcher: load_release_manifest startup path (not hash-pinned)"},
+    "web/static/": {"category": "production", "purpose": "static site assets served by the gateway (not hash-pinned)"},
+    "research/": {"category": "research", "purpose": "benchmarks, evaluation harnesses, training scripts, and datasets"},
+    "research/veyabench/": {"category": "evaluation", "purpose": "evaluation protocols and harnesses (blind CLINC150, MASSIVE, robustness gates)"},
+    "models/production/": {"category": "production", "purpose": "frozen audited checkpoint, tokenizer, shortlist_k8.pt, calibrations, choice_router.json — all hash-pinned via the manifest"},
+    "artifacts/release/manifest.json": {"category": "production", "purpose": "release manifest v2: SHA-256 pins for runtime files and every served artifact"}
+  },
+  "production_entry_points": ["web/server.py", "web/model_server.py", "veya/server.py"],
+  "serving_boundaries": {
+    "http_gateway": "web/server.py",
+    "model_inference": "web/model_server.py → veya/release_bundle.load_release_manifest → veya/release_bundle.py → veya/agent.py",
+    "choice_routing": "veya/release_bundle.py (packed ≤19 vs shortlist_k8 >19)",
+    "selective_prediction": "veya/selective.py",
+    "calibration": "veya/calibration.py + veya/release_bundle route temperature",
+    "language_gate": "veya/lang.py"
+  },
+  "hash_pinned_boundary": {
+    "description": "veya/*.py runtime files listed in manifest.runtime_files are SHA-256-pinned; release_bundle.load_release_manifest recomputes every hash at startup and refuses to load on mismatch. web/* and veYa/experimental are outside this boundary.",
+    "runtime_files": ["veya/__init__.py", "veya/agent.py", "veya/calibration.py", "veya/common.py", "veya/email.py", "veya/lang.py", "veya/manifest.py", "veya/presets.py", "veya/release_bundle.py", "veya/reranker.py", "veya/router.py", "veya/selective.py", "veya/server.py", "veya/shortlist.py", "veya/shortlist_artifact.py"]
+  },
+  "critical_dependencies": {
+    "torch": "inference engine (>=2.0,<3)",
+    "transformers": "model architectures (>=4.48,<6)",
+    "safetensors": "model weight loading (>=0.4,<1)",
+    "huggingface_hub": "checkpoint download (>=0.20,<2)",
+    "numpy": "softmax/projection math (>=1.20,<3)",
+    "tokenizers": "text tokenization (shipped via transformers)"
+  },
+  "optional_dependencies": {
+    "datasets": "training only (veya/train.py); not needed by the shipped runtime"
+  }
+}

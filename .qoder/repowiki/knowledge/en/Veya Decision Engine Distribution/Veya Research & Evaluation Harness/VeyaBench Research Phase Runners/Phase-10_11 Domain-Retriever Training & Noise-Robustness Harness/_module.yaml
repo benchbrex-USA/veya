@@ -1,0 +1,17 @@
+schema_version: 1
+module_path: research/phase_runners/context_sparse_sgd_phases_10_to_11
+title: Phase-10/11 Domain-Retriever Training & Noise-Robustness Harness
+scope:
+    - research/veyabench/phase10_data.py
+    - research/veyabench/phase11_noise.py
+    - research/veyabench/phase11_protocol.py
+    - research/veyabench/run_phase10_blind_massive.py
+    - research/veyabench/run_phase10_diagnostics.py
+    - research/veyabench/run_phase10_train.py
+    - research/veyabench/run_phase10_validate.py
+    - research/veyabench/run_phase11_train.py
+    - research/veyabench/run_phase11_validate.py
+    - research/veyabench/run_phase11b_backbone_capacity.py
+source_files: []
+depends_on: []
+related_to: []

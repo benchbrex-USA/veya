@@ -1,0 +1,16 @@
+# Environment values shared by every replica. `public-origin` is validated at
+# gateway import time (web/server.py): it must be an HTTPS origin with a
+# hostname and no path/query/fragment/userinfo, or the pod fails fast. It
+# drives canonical/OG URLs, /robots.txt, and /sitemap.xml, so it must match the
+# externally visible origin terminated in front of the Service.
+# `shadow-mode`: "1" or "true" marks telemetry entries as shadow
+# (_shadow_enabled, web/server.py); "0" serves normal traffic.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: veya-config
+  labels:
+    app.kubernetes.io/name: veya
+data:
+  public-origin: "https://veya.example.com"  # Override per environment
+  shadow-mode: "0"

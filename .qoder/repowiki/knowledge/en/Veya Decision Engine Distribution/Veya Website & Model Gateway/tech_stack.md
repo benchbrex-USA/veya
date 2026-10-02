@@ -1,0 +1,1 @@
+Pure stdlib Python HTTP server (`http.server.BaseHTTPRequestHandler` + `ThreadingHTTPServer`); no web framework. Client side is vanilla ES modules (`.mjs`) with no build step, served alongside the Python gateway.

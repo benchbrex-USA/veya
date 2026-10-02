@@ -437,11 +437,58 @@ result["shortlist"]["intent"]["labels"]  # the top 20 labels sent to the model
 
 ## Fine-Tuning
 
-Fine-tune Veya on your own domain data. The notebook runs on Kaggle's free 2xT4 GPUs and does
-the whole loop: build the dataset, train with RLCD (proper-scoring-rule rewards, GRPO-style
-policy gradient), fit calibration temperatures, evaluate, and push the result to the Hub.
+Fine-tune Veya on your own domain data. The training math lives in one place --
+[`veya/train.py`](veya/train.py) -- so the notebook, the reference single-process
+trainer, and the shipped runtime cannot drift apart:
 
 * **[`notebooks/veya_finetune_typed_decisions_2xT4_kaggle.ipynb`](notebooks/veya_finetune_typed_decisions_2xT4_kaggle.ipynb)**
+  runs the whole loop on Kaggle's free 2xT4 GPUs (DDP via `torchrun`): build the
+  dataset, train with RLCD (proper-scoring-rule rewards, GRPO-style policy
+  gradient + soft cross-entropy distillation), fit calibration temperatures,
+  evaluate, and push the result to the Hub. It imports the reward, the
+  calibration fit, and the held-out split from `veya.train`.
+* **`veya.train.run_finetune`** is the tested single-process reference path
+  (CPU / MPS / one GPU) using the identical objective.
+
+Three guarantees are baked into `veya/train.py`:
+
+* **Calibration matches serving.** `fit_temperature_soft` clamps to
+  `[TEMP_MIN, TEMP_MAX]` -- the same band `veya.common.clamp_temperature` applies
+  at load -- so the temperature the trainer reports is the one the runtime uses.
+* **Calibration is held out.** `split_items` fits temperature on rows the model
+  never trained on, so the reported ECE is honest.
+* **Reproducible.** `set_global_seed` seeds `random`, `numpy`, and `torch`
+  (CPU + CUDA) per rank.
+
+The objective exposes the **CE-only vs CE+PG ablation** as config flags
+(`rl_weight` / `ce_weight`), and `act_weight` decides whether the defer/escalate
+head receives gradient (default `0.0`, matching the historical recipe). Streaming
+the HF `typed-decisions` dataset needs the extra: `pip install 'veya[train]'`.
+
+To run the **CE-only vs CE+PG ablation** on a single device, flip the weights and
+compare the held-out calibration each run reports:
+
+```python
+from veya.train import TrainConfig, load_typed_decisions_items, run_finetune
+
+items = load_typed_decisions_items("models/production")  # needs `veya[train]`
+
+# CE-only (pure distillation): rl_weight=0
+run_finetune("models/production", "out/ce_only", items,
+             TrainConfig(rl_weight=0.0, ce_weight=1.0))
+
+# CE + policy gradient (full RLCD): both non-zero
+run_finetune("models/production", "out/ce_pg", items,
+             TrainConfig(rl_weight=1.0, ce_weight=1.0))
+
+# Train the defer/escalate head too: act_weight > 0
+run_finetune("models/production", "out/ce_pg_act", items,
+             TrainConfig(rl_weight=1.0, ce_weight=1.0, act_weight=0.1))
+```
+
+For the multi-GPU recipe the Kaggle notebook wraps the same `compute_rcld_loss`
+and `fit_temperature_soft` in `torchrun --nproc_per_node=2`, so the objective is
+identical to the single-process path above.
 
 Fine-tuning is where most of the value is. On the typed-decisions benchmark the base
 checkpoints score near chance zero-shot (0.36 and 0.35 against a 0.318 random baseline),
@@ -449,7 +496,9 @@ while the fine-tuned checkpoint reaches **0.766** on the same 2,000 decisions --
 TypeSafe Jev's published 0.727 and above the 0.735 teacher self-agreement ceiling. Treat Veya
 as a fast base to specialise, not as a zero-shot decision engine.
 
-Runtime on 2xT4 is roughly 4-5 hours for 4 epochs over ~30k questions.
+Runtime scales with epochs and world size: the shipped checkpoint records a
+1-epoch, single-GPU run at ~2 hours, while the full 4-epoch 2xT4 recipe over
+~30k questions takes roughly 4-5 hours.
 
 ---
 

@@ -1,0 +1,15 @@
+schema_version: 1
+module_path: research/phase_runners/interaction_adaptation_phases_6_to_7
+title: Phase-6 Reranker & Phase-7 Encoder Adaptation Pipelines
+scope:
+    - research/veyabench/phase6_protocol.py
+    - research/veyabench/phase6_score.py
+    - research/veyabench/run_phase6_baseline.py
+    - research/veyabench/run_phase6_final.py
+    - research/veyabench/run_phase6_interaction.py
+    - research/veyabench/run_phase6_train.py
+    - research/veyabench/run_phase7_adapt.py
+    - research/veyabench/run_phase7_update_audit.py
+source_files: []
+depends_on: []
+related_to: []

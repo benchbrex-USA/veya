@@ -1,0 +1,1 @@
+Python package providing a fast, non-autoregressive transformer decision model that outputs calibrated probabilities for choice/score/noul questions over arbitrary state.

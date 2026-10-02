@@ -1,0 +1,1 @@
+Test suite covering Veya's routing, decision model, server, packaging, and experimental retriever components via pytest-based unit tests plus a small Node.js client test.

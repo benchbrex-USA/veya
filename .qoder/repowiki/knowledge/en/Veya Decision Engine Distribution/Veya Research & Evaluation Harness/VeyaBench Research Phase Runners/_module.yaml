@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: research/phase_runners
+title: VeyaBench Research Phase Runners
+scope:
+    - research/veyabench/
+source_files: []
+depends_on: []
+related_to: []

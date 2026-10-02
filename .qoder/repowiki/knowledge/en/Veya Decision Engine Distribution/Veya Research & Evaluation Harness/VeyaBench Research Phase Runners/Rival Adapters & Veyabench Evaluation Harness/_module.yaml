@@ -1,0 +1,17 @@
+schema_version: 1
+module_path: research/phase_runners/shared_rivals_and_runners
+title: Rival Adapters & Veyabench Evaluation Harness
+scope:
+    - research/veyabench/rivals/
+    - research/veyabench/protocol.py
+    - research/veyabench/run_blind_clinc150.py
+    - research/veyabench/run_commercial_blind_hwu64.py
+    - research/veyabench/run_commercial_query_robustness.py
+    - research/veyabench/run_ordinal_eval.py
+    - research/veyabench/run_release_eval.py
+    - research/veyabench/run_route_gap_audit.py
+    - research/veyabench/run_runtime_audit.py
+    - research/veyabench/write_baseline.py
+source_files: []
+depends_on: []
+related_to: []

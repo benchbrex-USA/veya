@@ -1,0 +1,1 @@
+Rivals depend on optional third-party packages loaded lazily: `transformers` (BART-MNLI zero-shot classification), `sentence_transformers` (all-MiniLM-L6-v2 embeddings), and `typesafe_sdk` (Jev/TypeSafe System One client gated by `TYPESAFE_API_KEY`). Evaluation harnesses use numpy for softmax, recall-at-k, permutation deltas, and risk-coverage curves.

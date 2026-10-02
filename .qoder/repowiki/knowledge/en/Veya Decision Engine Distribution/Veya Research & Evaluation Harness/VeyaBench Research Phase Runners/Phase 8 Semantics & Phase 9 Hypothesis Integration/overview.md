@@ -1,0 +1,1 @@
+Builds training-side candidate semantics for Banking77 and runs the Phase-8 frozen-weight comparison plus the Phase-9 hypothesis scorer experiment, training, gating, and integration verification.

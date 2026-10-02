@@ -1,0 +1,36 @@
+{
+  "cardinality_temperatures": {
+    "choice:3-5": 7.2626,
+    "choice:11+": 2.285,
+    "choice:6-10": 2.4002,
+    "choice:2": 2.285,
+    "score:3-5": 6.4219,
+    "noul:2": 10.0
+  },
+  "checkpoint_hash": "multilingual_checkpoint_hash_unknown",
+  "checkpoint_id": "models/production multilingual",
+  "dataset_hash": "t4_colab_typed_decisions_heldout_1000",
+  "fitted_at": "2026-09-19T04:45:43Z",
+  "fitting_split": "typed_decisions_heldout",
+  "fitting_role": "calibration",
+  "fit_split_hashes": {},
+  "format": "veya-calibration-v1",
+  "global_temperature": 6.4219,
+  "min_observations": 32,
+  "method": "temperature-nll",
+  "notes": "Fitted on T4 Colab benchmark (seed=13) typed_decisions held-out split (n=1000). Per-language MASSIVE/XNLI temps available in benchmark but not included here; this artifact covers the core typed_decisions buckets. For production multilingual use, per-language calibration is recommended.",
+  "primitive_temperatures": {
+    "choice": 7.2626,
+    "noul": 10.0,
+    "score": 6.4219
+  },
+  "scorer_id": "base_decision_head",
+  "sample_counts": {
+    "choice:3-5": 1000,
+    "choice:11+": 150,
+    "choice:6-10": 300,
+    "choice:2": 150,
+    "score:3-5": 300,
+    "noul:2": 58
+  }
+}

@@ -1,0 +1,1 @@
+Each runner expects `artifacts/release/manifest.json` to exist (produced by an earlier release step) and writes its artifacts under `artifacts/experiments/phase6/` or `phase7/`. Phase-6 training additionally requires `artifacts/experiments/phase6/val_predictions.json` produced by `run_phase6_baseline.py` before it can validate. MPS is auto-detected when available.

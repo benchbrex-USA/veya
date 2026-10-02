@@ -1,0 +1,1 @@
+Same-origin HTTP website and bounded gateway that serves the Veya UI, proxies validated requests to an audited model service, and enforces request/response contracts.

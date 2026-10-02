@@ -1,0 +1,4 @@
+Three sibling top-level trees with no runtime coupling, consumed externally by the website build and by readers of the repo:
+- `docs/` is a flat collection of Markdown and JSON artifacts organized by concern: `audit/` holds data-lineage and freeze manifests; `commercialization/workflows/<workflow>/` groups per-workflow contracts, data-quality notes, phase reports, and verification docs under a `SCOPING_PLAN.md`; `phase10/`, `phase11/` follow the same report triad (`architecture_decision.md`, `final_report.md`, `verification_report.md`) plus a `blind_*_freeze.json` manifest; root files `CHANGE_PROTOCOL.md`, `WEBSITE_ARCHITECTURE.md`, `WEBSITE_REDESIGN_AUDIT.md` govern site change process.
+- `assets/` is a leaf asset store of PNG/SVG brand marks and benchmark comparison figures, regenerated from `make_logo.py` (pure Python, no dependencies).
+- `notebooks/` contains a single Kaggle-hosted Jupyter notebook for finetuning on dual T4 GPUs.

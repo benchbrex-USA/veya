@@ -1,0 +1,1 @@
+Markdown + JSON for all docs; Python script using only stdlib (`os`) to regenerate SVGs from embedded vector primitives in `assets/make_logo.py`; Jupyter notebooks for the Kaggle artifact.

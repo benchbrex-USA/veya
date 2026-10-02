@@ -1,0 +1,100 @@
+{
+  "format": "veya-prospective-blind-config-v1",
+  "notes": [
+    "STATUS: BLOCKED_EXTERNAL (gap_audit G6/G8). The prospective blind evaluation is",
+    "blocked on one thing: supply a target-domain labeled dataset matching the schema",
+    "in docs/PROSPECTIVE_BLIND_WORKFLOW.md. Minimum action: fill in test_data.path and",
+    "test_data.sha256 below, save as artifacts/release/prospective_blind_config.json,",
+    "and run the documented command. Do not change any other field.",
+    "epsilon/c_min are pre-registration decisions fixed BEFORE the dataset is unblinded;",
+    "the frozen thresholds themselves (selective_policy.json) may never be changed.",
+    "calibration_data pins research/data/banking77/test.csv: the frozen temperature was",
+    "fit on its rows 1100-1300 (fitting_split banking77_test_1100_1300). test_data must",
+    "stay disjoint from it in path and content hash (fail closed).",
+    "operational stays null until P6 operational measurements exist; a run with null",
+    "operational measurements can only produce a FAIL verdict on P6."
+  ],
+  "manifest": {
+    "path": "artifacts/release/manifest.json",
+    "sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de"
+  },
+  "selective_policy_artifact": {
+    "path": "artifacts/release/selective_policy.json",
+    "sha256": "80e7be582c9c890cf73da701cbd86a71c6d908331186ee68f1021763011cd620"
+  },
+  "temperature_artifact": {
+    "path": "models/production/calibration_shortlist_k8.json",
+    "sha256": "b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50"
+  },
+  "freeze_record": {
+    "format": "veya-freeze-record-v1",
+    "model_checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "tokenizer_version_sha256": "1a05a7ee4bf1053a02e4374b29ae7a51076d9bb2fe98d598cc941515383c9ee9",
+    "inference_code_commit": "d52c8ee4fcc87016561a5b007099dc76b80c73ce",
+    "scorer_id": "base_decision_head",
+    "shortlist_config_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "calibration_method": "temperature-nll fitted on banking77_test_1100_1300 (veya-route-calibration-v1)",
+    "temperature_artifact_sha256": "b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50",
+    "selective_policy_algorithm": "max_probability threshold chosen on the banking77_test_880_1100 validation split",
+    "selective_policy_sha256": "80e7be582c9c890cf73da701cbd86a71c6d908331186ee68f1021763011cd620",
+    "epsilon": 0.1,
+    "c_min": 0.8,
+    "perturbation_definitions_version": "phase11-generic-noise-v1, blind-surface-noise-v1, blind-template-paraphrase-v1",
+    "metric_implementation_version": "veyabench-metrics-v1",
+    "exclusion_rules": [
+      "exclude exact development-set duplicates",
+      "exclude blind cases flagged by the preregistered contamination screens (tolerance 0)"
+    ],
+    "random_seeds": {
+      "bootstrap": 17
+    },
+    "bootstrap_draws": 1000,
+    "bootstrap_confidence": 0.95,
+    "production_preprocessing_version": "veya-preprocess-v1"
+  },
+  "policy": {
+    "format": "veya-selective-policy-v1",
+    "route": "shortlist_k8_packed_rerank",
+    "scorer_id": "base_decision_head",
+    "score": "max_probability",
+    "operating_epsilon": "0.10",
+    "thresholds": {
+      "disabled": null,
+      "0.02": 0.9796500892257723,
+      "0.05": 0.9541679372957224,
+      "0.10": 0.896261827143334
+    },
+    "validation_split": "banking77_test_880_1100",
+    "validation_hash": "0bc7c16b40ef60f9cc29a7ffd41302984d2e97bca89f67c62bcffd3591156ef3",
+    "test_split": "banking77_test_1300_end",
+    "test_hash": "32393a1a7de5865dc4470b10bb340cf5dcdacb958f8d092a8891468919ff8fd5",
+    "test_status": "DEVELOPMENT-EXPOSED",
+    "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "chosen_on": "validation",
+    "runtime_policy": "report a prediction but defer automation; the validation-selected 5% threshold observed 6.99% risk on development-exposed reporting data"
+  },
+  "calibration_data": {
+    "path": "research/data/banking77/test.csv",
+    "sha256": "d12d6e3bc4c3103966ae786dc435913c0c563dfa328f5a3646d0e62cfeeb474d"
+  },
+  "test_data": {
+    "path": "data/target_domain/REPLACE_WITH_TARGET_DOMAIN_LABELED_DATASET.jsonl",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "training_texts_path": [
+    "research/data/banking77/train.csv",
+    "research/data/banking77/test.csv"
+  ],
+  "temperature": 1.971127355603397,
+  "domain": "target-domain",
+  "coverage_retention_min": 0.95,
+  "collapse_floor": {
+    "coverage": 0.05,
+    "accuracy": 0.3
+  },
+  "contamination_tolerance": 0,
+  "epsilon": 0.1,
+  "c_min": 0.8,
+  "operational": null
+}

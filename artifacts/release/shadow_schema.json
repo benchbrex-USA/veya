@@ -1,0 +1,157 @@
+{
+  "format": "veya-shadow-schema-v1",
+  "description": "Schema for shadow deployment data collection (commercialization gate G20; see artifacts/release/gap_audit.json). Each record represents one production-like request processed by Veya in shadow mode. Collection switches on VEYA_SHADOW_MODE=1|true (web/server.py _shadow_enabled): responses then carry the X-Veya-Shadow: true header and every telemetry log line (web/server.py _safe_telemetry) carries \"shadow\": true. Deploy the shadow stack with the kustomize overlay k8s/shadow-overlay (namePrefix shadow-, shadow-mode ConfigMap key forced to \"1\"). A record joins the telemetry log line, the release hash headers of GET /readyz, the eventual ground-truth label, and the analysis-grade payloads required by the research/veyabench modules.",
+  "status": "BLOCKED_EXTERNAL",
+  "blocked_reason": "Requires production traffic routed to the shadow deployment. No live traffic exists yet (gap_audit.json G20: \"Shadow telemetry and drift-monitor tooling are ready and tested, but running a live shadow evaluation requires actual production traffic, which does not exist yet.\").",
+  "record_schema": {
+    "description": "One record per request. Raw telemetry field names must be preserved verbatim because the research/veyabench analysis modules read them directly (drift_monitor.py reads `timestamp`, `automation`, `ground_truth`, `correct`, `candidate_count`, `route`, `latency_ms`, `confidence`, `config_hash`).",
+    "timestamp": {
+      "type": "string",
+      "format": "ISO-8601 (UTC)",
+      "description": "Telemetry field `timestamp` (web/server.py: datetime.now(timezone.utc).isoformat()). Required by research/veyabench/drift_monitor.py partition_by_time (day/week/month period keys)."
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Telemetry field `request_id`; echoed back as the X-Request-Id header on error responses."
+    },
+    "model_hash": {
+      "type": "string",
+      "description": "SHA-256 of the serving checkpoint. Source: X-Veya-Model-Hash on GET /readyz (web/server.py handle_readyz), taken from the audited model service /version payload `checkpoint_sha256`."
+    },
+    "policy_hash": {
+      "type": "string",
+      "description": "SHA-256 of the selective policy artifact held by the serving stack. Source: X-Veya-Policy-Hash on GET /readyz, from /version `selective_policy_sha256`."
+    },
+    "config_hash": {
+      "type": "string",
+      "description": "Telemetry field `config_hash` = release manifest SHA-256 (web/server.py: version[\"release_manifest_sha256\"]). drift_monitor.py raises the config_mismatch trigger when a period contains more than one distinct value."
+    },
+    "primitive": {
+      "type": "string",
+      "enum": ["choice", "noul", "score", "systemone"],
+      "description": "Decision primitive. Enum per web/contracts.py Primitive; production_scope.json refers to the score family as \"score-categorical\"."
+    },
+    "prediction": {
+      "type": "object",
+      "description": "Whitelisted model output returned to the caller (web/contracts.py validate_response): decision, answer, probabilities, legend (score), answers (systemone), calibration_version, defer_reason. The eventual ground-truth comparison populates `correct`."
+    },
+    "confidence": {
+      "type": "number",
+      "nullable": true,
+      "description": "Telemetry field `confidence` in [0, 1], answer-time only; null when the decision is defer. drift_monitor.py skips null confidences when building its histogram."
+    },
+    "max_probability": {
+      "type": "number",
+      "nullable": true,
+      "description": "Telemetry field `max_probability`: the model's peak output probability in [0, 1]. The gateway captures it server-side from the raw model-service payload before the response whitelist (web/contracts.py validate_response) strips it, so the client-facing HTTP response never carries the score (web/server.py _telemetry_max_probability); the audited bundle serves the field directly (veya/release_bundle.py public_choice) and plain agent responses have it derived from the served distribution. Null on defer, on error paths, and for multi-question systemone requests (no single top-level distribution). Carried verbatim in shadow records alongside `confidence` for selective-risk and drift analysis."
+    },
+    "automation": {
+      "type": "string",
+      "enum": ["answer", "defer"],
+      "nullable": true,
+      "description": "Raw telemetry selective decision (web/server.py _safe_telemetry, result.automation). \"answer\" = accepted/automated; \"defer\" = not automated; null = decision unavailable (error paths). research/veyabench/drift_monitor.py counts accepted = (automation == \"answer\"); this exact field name and its values must be preserved."
+    },
+    "selective_decision": {
+      "type": "string",
+      "enum": ["accept", "defer"],
+      "description": "Normalized view of `automation` (\"answer\" -> \"accept\"); collected alongside the raw field for reporting. Analysis modules consume `automation`, not this alias."
+    },
+    "latency_ms": {
+      "type": "number",
+      "description": "Telemetry field `latency_ms` (integer milliseconds, end-to-end request latency)."
+    },
+    "ground_truth": {
+      "type": "object",
+      "nullable": true,
+      "description": "Eventual ground-truth label; null until labeled. drift_monitor.py computes error_n/risk/risk_ucb95 for a period as soon as any record in it carries ground truth."
+    },
+    "correct": {
+      "type": "boolean",
+      "nullable": true,
+      "description": "Whether the prediction matched ground_truth; null until labeled (or when the request errored). drift_monitor.py counts an error when automation == \"answer\" and `correct` is falsy; selective_gates.py requires it on every case."
+    },
+    "slice_metadata": {
+      "type": "object",
+      "description": "Collection-time context; candidate_count and route are telemetry fields.",
+      "properties": {
+        "candidate_count": {
+          "type": "integer",
+          "description": "Telemetry field `candidate_count`; feeds the drift_monitor.py candidate-count and input-length distributions."
+        },
+        "input_length": {
+          "type": "integer",
+          "description": "Observed input length at collection time (not a telemetry field; optional)."
+        },
+        "language": {
+          "type": "string",
+          "description": "Request language when known; the production scope currently supports en only (production_scope.json)."
+        },
+        "route": {
+          "type": "string",
+          "description": "Telemetry field `route` (e.g. shortlist_k8_packed_rerank); used as drift_monitor.py's label_distribution fallback and for routing comparisons."
+        }
+      }
+    },
+    "slice_tag": {
+      "type": "string",
+      "description": "Protocol slice condition for robustness gates and drift slices, required by research/veyabench/selective_gates.py and blind_verdict.py case contracts (\"clean\" is CLEAN_SLICE; KNOWN_SLICE_CONDITIONS also covers the phase11-generic-noise-v1, blind-surface-noise-v1, and blind-template-paraphrase-v1 families)."
+    },
+    "incumbent_outcome": {
+      "type": "object",
+      "nullable": true,
+      "description": "Human/incumbent system decision, null if unavailable. Not consumed by current veyabench modules; collected for incumbent-vs-Veya comparison studies."
+    }
+  },
+  "sample_size_requirements": {
+    "description": "Minimum sample sizes needed for the statistical release gates, computed by Wilson-interval inversion.",
+    "method": "research/veyabench/sample_size.py required_n(epsilon, anticipated_coverage, max_errors, confidence=0.95) -> {accepted, total, wilson_ucb_at_accepted}; total = ceil(accepted / anticipated_coverage). Consumed by blind_verdict.py _sample_size_check (protocol Section 7); reference values unit-tested in tests/test_sample_size.py.",
+    "parameters": {
+      "epsilon": 0.02,
+      "confidence": 0.95,
+      "anticipated_coverage": "Frozen c_min from the veya-freeze-record-v1 freeze record (research/veyabench/freeze_record.py requires epsilon, c_min, bootstrap_confidence); the drift_monitor.drift_triggers coverage_floor default is 0.05.",
+      "max_errors": "Observed accepted-decision error count on the labeled sample (0..3 cover the protocol reference table)."
+    },
+    "reference_values": {
+      "note": "Required accepted counts are coverage-independent (protocol Section 7 table); totals scale as ceil(accepted / anticipated_coverage) and must be recomputed against the actual c_min.",
+      "max_errors_0": {"required_accepted": 189, "total_at_coverage_0.05": 3780, "total_at_coverage_0.1977": 957, "total_at_coverage_0.60": 315},
+      "max_errors_1": {"required_accepted": 280, "total_at_coverage_0.1977": 1417},
+      "max_errors_2": {"required_accepted": 361, "total_at_coverage_0.1977": 1827},
+      "max_errors_3": {"required_accepted": 437, "total_at_coverage_0.1977": 2211}
+    },
+    "minimum_labeled_samples": ".venv/bin/python -c \"from research.veyabench.sample_size import required_n; print(required_n(epsilon=0.02, anticipated_coverage=<c_min>, max_errors=<observed_errors>, confidence=0.95))\" — e.g. 189 accepted (957 total at the 0.1977 blind-CLINC150-validation coverage, 593/3000 at threshold 0.02) with zero accepted errors."
+  },
+  "acceptance_criteria": {
+    "note": "Every gate below is implemented and fail-closed: a statistic that cannot support its claim fails the gate it feeds (research/veyabench/selective_gates.py). Thresholds marked \"frozen\" come from the pre-registered veya-freeze-record-v1.",
+    "primary_gates": {
+      "P1_data_validity": "research/veyabench/contamination.py — flagged overlaps <= contamination_tolerance (blind_verdict.py DEFAULT_CONTAMINATION_TOLERANCE = 0).",
+      "P2_selective_safety": "Gate G1_clean_safety — clean-slice risk_ucb95 <= frozen epsilon.",
+      "P3_useful_coverage": "Clean-slice coverage >= frozen c_min (blind_verdict.py).",
+      "P4_shift_robustness": "Gates G2_shift_safety AND G3_coverage_retention AND G4_collapse_floor.",
+      "P5_calibration_transfer": "Freeze record pins temperature_artifact_sha256; the frozen temperature is applied, never refit on evaluation data.",
+      "P6_operational_viability": "Caller-supplied operational measurements (blind_verdict.py _operational_failures on config[\"operational\"])."
+    },
+    "risk_gate": "risk_UCB95 <= epsilon (Wilson upper bound on accepted-decision risk): per-slice via selective_gates.py (G1 clean; G2 every shifted slice) and per-period via drift_monitor.drift_triggers, trigger \"risk_breach\".",
+    "coverage_gate": "P3: clean-slice coverage >= frozen c_min; drift_monitor.drift_triggers coverage_floor default 0.05.",
+    "retention_gate": "G3_coverage_retention: shifted_coverage / clean_coverage >= coverage_retention_min; blind_verdict.py DEFAULT_COVERAGE_RETENTION_MIN = 0.95.",
+    "collapse_floor_gate": "G4_collapse_floor: no slice below blind_verdict.py DEFAULT_COLLAPSE_FLOOR = {\"coverage\": 0.05, \"accuracy\": 0.30}.",
+    "calibration_gate": "P5_calibration_transfer as above. Per-slice ECE (15 bins, veya.common.ece_score), Brier, reliability diagram, and risk-coverage deciles are reported descriptively by research/veyabench/calibration_report.py; no hard ECE threshold is encoded in code.",
+    "drift_gate": "No drift_monitor.drift_triggers alert: risk_breach (period risk_ucb95 > epsilon), config_mismatch (more than one config_hash in a period), coverage_drop (period coverage < 0.8 * first-period baseline coverage), distribution_shift (confidence-histogram KS p < 0.01 vs the first period)."
+  },
+  "analysis_commands": {
+    "note": "research/veyabench analysis modules are library-only (no --data CLI): invoke them from the repository root with the project interpreter, e.g. .venv/bin/python -c \"...\". <shadow_data.json> is the JSON array of shadow records per record_schema.",
+    "selective_gates": ".venv/bin/python -c \"import json; from research.veyabench.selective_gates import gate_report; cases = json.load(open('<shadow_data.json>')); policy = json.load(open('artifacts/release/selective_policy.json')); print(json.dumps(gate_report(cases, policy, 0.02, 0.95, {'coverage': 0.05, 'accuracy': 0.30}), indent=2))\" — requires a policy whose operating_epsilon enables a threshold: the shipped selective_policy.json has operating_epsilon \"disabled\" (runtime defers all automation, veya/selective.py apply_threshold semantics), so gate runs need a copy with operating_epsilon set to one of \"0.02\"/\"0.05\"/\"0.10\".",
+    "drift_analysis": ".venv/bin/python -c \"import json; from research.veyabench.drift_monitor import drift_report, drift_triggers; records = json.load(open('<shadow_data.json>')); report = drift_report(records, period='week'); print(json.dumps(report, indent=2)); print(json.dumps(drift_triggers(report, epsilon=0.02), indent=2))\"",
+    "calibration_report": ".venv/bin/python -c \"import json; from research.veyabench.calibration_report import calibration_report, calibration_summary; payloads = json.load(open('<shadow_calibration_payloads.json>')); print(json.dumps(calibration_summary(calibration_report(payloads, threshold=0.9796500892257723)), indent=2))\" — payloads need per-slice logits/labels/confidence/correct/scores under the frozen temperature; the gateway whitelist does not expose logits, so capture them from the audited model service side.",
+    "full_verdict": ".venv/bin/python -c \"import json; from research.veyabench.blind_verdict import run_blind_verdict, verdict_summary; config = json.load(open('<shadow_verdict_config.json>')); verdict = run_blind_verdict(config); print(json.dumps(verdict, indent=2)); print(verdict_summary(verdict))\" — config must carry freeze_record, cases, training_texts, and policy (blind_verdict.py); each case follows the blind case contract (text, gold_label, prediction, correct, probabilities, logits, slice_tag)."
+  },
+  "report_format": {
+    "name": "veya-shadow-evaluation-v1",
+    "description": "The shadow evaluation report is a JSON document whose verdict layer uses the veya-blind-verdict-v1 structure produced by research/veyabench/blind_verdict.py run_blind_verdict (format, freeze_record_hash, contamination, gates, calibration, sample-size check, primary_gates, verdict language), with drift and gate annexes in their own registered formats.",
+    "component_formats": {
+      "verdict": "veya-blind-verdict-v1",
+      "drift_report": "veya-drift-report-v1",
+      "gates_report": "veya-selective-gates-v1",
+      "contamination_report": "veya-contamination-report-v1"
+    }
+  }
+}

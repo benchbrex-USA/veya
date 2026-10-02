@@ -1,0 +1,3 @@
+- Phase-gated experiments are implemented as sibling `run_phaseNN_*.py` scripts under `veyabench/`, each targeting a single training/audit/comparison task.
+- Datasets are loaded from fixed paths under `research/data/<dataset>/` with optional `registry.json` / `schema.json` descriptors rather than via a data loader registry.
+- Experiment hyperparameters and dataset selections are externalized as JSON manifests under `research/configs/` instead of being hard-coded in scripts.

@@ -1,0 +1,6 @@
+- Heavy dependencies (`torch`, `transformers`, `safetensors.torch`, `huggingface_hub`) are imported inside functions rather than at module top, so importing the package without using them avoids pulling in large binaries.
+- Public API surfaces are explicitly enumerated in `veya/__init__.py` via `__all__`; internal helpers stay private (prefixed with `_`).
+- Question definitions go through `Agent._to_internal` (and the server's `_validate_request`) which normalizes `{type, instructions, criteria}` into the compact `{t, ins, crit}` shape before sequence construction.
+- Error handling raises domain-specific exceptions (`RequestTooLarge`, `ValueError` with descriptive messages) and returns a uniform `{decision, defer_reason, answers, usage}` structure for deferred/invalid cases instead of raising.
+- Production thresholds are declared as module-level constants (`PRODUCTION_SHORTLIST_ABOVE`, `PRODUCTION_SHORTLIST_K`, `PACKED_MARKER_CEILING`, `DEFAULT_SHORTLIST_K`) and validated against each other in router/bundle loaders rather than being scattered as magic numbers.
+- Concurrent access to shared mutable state is guarded by explicit locks: a process-wide `threading.Lock` around inference in `server.py` and a per-`Router` `threading.RLock` around model lifecycle.

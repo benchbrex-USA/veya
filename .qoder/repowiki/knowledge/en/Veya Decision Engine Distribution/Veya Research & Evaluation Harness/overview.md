@@ -1,0 +1,1 @@
+Held-out research branch that trains, audits, and benchmarks Veya's shortlist/reranker/context layers against curated datasets and archives the resulting JSON artifacts.

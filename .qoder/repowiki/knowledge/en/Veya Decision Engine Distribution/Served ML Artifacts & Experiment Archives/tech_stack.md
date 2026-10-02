@@ -1,0 +1,1 @@
+PyTorch safetensors weights (`model.safetensors`, `shortlist_k8.pt`), HuggingFace-style tokenizer configs, JSON manifests with explicit `format` version strings (e.g. `veya-calibration-v1`, `veya-choice-router-v1`, `veya-phase12-wf98-graph-v1`), and `.npz` embeddings for experiment baselines.

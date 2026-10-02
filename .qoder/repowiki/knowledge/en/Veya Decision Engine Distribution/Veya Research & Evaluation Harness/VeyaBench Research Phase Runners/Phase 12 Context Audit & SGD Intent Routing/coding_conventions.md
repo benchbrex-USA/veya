@@ -1,0 +1,5 @@
+- Every script validates data integrity by re-hashing files listed in `source_files_sha256` from `sgd_inventory.json` before parsing them, raising `ValueError` on mismatch.
+- Scripts enforce the sealed-test boundary by checking `inventory['phase12_split']['test_dialogues_parsed']` (or equivalent flags) and rejecting execution when the seal is broken.
+- All JSON reports use the `format` field with a versioned name like `veya-phase12-*-v1` and include `source_commit`, `inventory_sha256`, and `test_dialogues_opened` for traceability.
+- Context-mode strings are centralized in the `MODES` tuple in `phase12_context.py` and imported by runners instead of being re-declared locally.
+- Per-example records carry `initial_user_turn` and `service_transition` booleans so downstream summaries can slice by first-turn vs. later turns and service-transition vs. same-service cases.

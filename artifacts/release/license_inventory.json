@@ -1,0 +1,156 @@
+{
+  "format": "veya-license-inventory-v1",
+  "generated": "2026-09-29T18:42:39Z",
+  "summary": {
+    "total_runtime_deps": 5,
+    "permissive": 9,
+    "copyleft": 1,
+    "unknown": 1,
+    "requires_review": 5
+  },
+  "project_license": {
+    "name": "Apache-2.0",
+    "file": "LICENSE",
+    "sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9"
+  },
+  "runtime_dependencies": [
+    {
+      "package": "torch",
+      "version": "2.14.0",
+      "license": "Apache-2.0 AND Apache-2.0 WITH LLVM-exception AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT",
+      "status": "CLEARED",
+      "notes": "pyproject spec torch>=2.0.0,<3; installed in .venv and satisfies the spec. License-Expression from installed package metadata; every component of the AND-expression is permissive (Apache-2.0, BSD-2-Clause, BSD-3-Clause, BSL-1.0, MIT, LLVM-exception)."
+    },
+    {
+      "package": "transformers",
+      "version": "5.17.0",
+      "license": "Apache-2.0",
+      "status": "CLEARED",
+      "notes": "pyproject spec transformers>=4.48.0,<6. Not installed in the scanned .venv at inventory time; license taken from PyPI-published metadata (the same record 'pip show' reads) for 5.17.0, the newest release inside the spec (License field: 'Apache 2.0 License'). The version shown is the inspected PyPI release, not a local install."
+    },
+    {
+      "package": "safetensors",
+      "version": "0.8.0",
+      "license": "Apache-2.0",
+      "status": "CLEARED",
+      "notes": "pyproject spec safetensors>=0.4.0,<1. Not installed in the scanned .venv at inventory time; license taken from PyPI-published metadata for 0.8.0, the newest release inside the spec (classifier 'License :: OSI Approved :: Apache Software License'). The version shown is the inspected PyPI release, not a local install."
+    },
+    {
+      "package": "huggingface_hub",
+      "version": "1.33.0",
+      "license": "Apache-2.0",
+      "status": "CLEARED",
+      "notes": "pyproject spec huggingface_hub>=0.20.0,<2. Not installed in the scanned .venv at inventory time; license taken from PyPI-published metadata for 1.33.0, the newest 1.x release inside the spec (License field: 'Apache-2.0'); the overall latest PyPI release (2.0.0) is outside the spec cap. The version shown is the inspected PyPI release, not a local install."
+    },
+    {
+      "package": "numpy",
+      "version": "2.4.6",
+      "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "status": "CLEARED",
+      "notes": "pyproject spec numpy>=1.20.0,<3; installed in .venv and satisfies the spec. License-Expression from installed package metadata; every component is permissive or public-domain (BSD-3-Clause, 0BSD, MIT, Zlib, CC0-1.0)."
+    }
+  ],
+  "model_assets": [
+    {
+      "asset": "english decision checkpoint (models/production; hub veyadynamics/veya)",
+      "source": "fine-tuned from answerdotai/ModernBERT-large (https://huggingface.co/answerdotai/ModernBERT-large); bundles the ModernBERT tokenizer",
+      "license": "Apache-2.0",
+      "status": "CLEARED",
+      "notes": "Base checkpoint recorded as answerdotai/ModernBERT-large in models/production/rl_agent_config.json and tests/test_packaging.py; architecture ModernBertForMaskedLM in models/production/encoder/config.json (model_type modernbert, 28 layers). HF model card license tag for the base is apache-2.0 (verified 2026-09-29). Fine-tuned weights, calibration and shortlist artifacts ship under the project's Apache-2.0 LICENSE. The K=8 shortlist projection (models/production/shortlist_k8.pt) was trained on banking77 train.csv rows 0:800, seed-17 shuffle (CC-BY-4.0) per artifacts/release/manifest.json; dataset-side terms are tracked under banking77 in dataset_assets. English Choice is the audited RESEARCH RELEASE surface per the release manifest."
+    },
+    {
+      "asset": "typed-decisions checkpoint (models/production/typed-decisions; hub veyadynamics/veya-typed-decisions)",
+      "source": "fine-tuned from answerdotai/ModernBERT-large; training data LocalLLaMA/typed-decisions (https://huggingface.co/datasets/LocalLLaMA/typed-decisions)",
+      "license": "Apache-2.0",
+      "status": "CLEARED",
+      "notes": "Base checkpoint answerdotai/ModernBERT-large per models/production/typed-decisions/rl_agent_config.json (Apache-2.0, verified via the HF model card). Training dataset is the synthetic LocalLLaMA/typed-decisions benchmark, license apache-2.0 per its HF dataset card (verified 2026-09-29), streamed by veya/train.py and not redistributed in this repository. Fine-tuned weights ship under the project's Apache-2.0 LICENSE. Checkpoint is research-only ('research only; benchmark-specialized' per README.md; outside the audited release scope per artifacts/release/production_scope.json)."
+    },
+    {
+      "asset": "multilingual checkpoint (models/production/multilingual; hub veyadynamics/veya-multilingual)",
+      "source": "fine-tuned from jhu-clsp/mmBERT-base (https://huggingface.co/jhu-clsp/mmBERT-base)",
+      "license": "MIT",
+      "status": "CLEARED",
+      "notes": "Base checkpoint recorded as jhu-clsp/mmBERT-base in models/production/multilingual/rl_agent_config.json; HF model card license tag is mit (verified 2026-09-29). mmBERT-base is a ModernBERT-architecture model trained from scratch by JHU CLSP, and its MIT grant covers the tokenizer files it distributes. The bundled multilingual tokenizer follows the Gemma-style vocabulary and special tokens (in-repo comments in research/scripts/build_benchmark_nb.py and veya/agent.py describe extra_special_tokens 'inherited from the mmBERT/Gemma tokenizer'); re-confirm the Gemma-vocabulary provenance if the tokenizer files are ever redistributed outside the mmBERT MIT grant. Checkpoint is RESEARCH ONLY per the release manifest (multilingual has no production evaluation)."
+    }
+  ],
+  "dataset_assets": [
+    {
+      "dataset": "banking77",
+      "source": "https://github.com/PolyAI-LDN/task-specific-datasets (recorded in research/data/registry.json)",
+      "license": "CC-BY-4.0",
+      "status": "REQUIRES_LEGAL_REVIEW",
+      "notes": "Attribution-style license: not copyleft, but outside the G15 pre-cleared permissive set (MIT/BSD/Apache/ISC), and CC-BY imposes attribution, license-notice and changes-indication conditions on redistribution. Redistributed in-repo as research/data/banking77/train.csv and test.csv (file hashes in docs/audit/data_lineage.json); attribution is currently recorded in research/data/registry.json. Train rows 0:800 (seed-17 shuffle) trained the shipped K=8 shortlist projection per artifacts/release/manifest.json. Legal review needed to confirm attribution placement before any redistribution outside this repository."
+    },
+    {
+      "dataset": "ag_news",
+      "source": "https://huggingface.co/datasets/fancyzhx/ag_news (local copy research/data/ag_news/data/test-00000-of-00001.parquet, hub sha eb185aade064a813bc0b7f42de02595523103ca4)",
+      "license": "unknown",
+      "status": "REQUIRES_LEGAL_REVIEW",
+      "notes": "No license is declared: the HF dataset tags and card both carry license 'unknown' (verified 2026-09-29), and the card text describes the AG corpus as gathered by the ComeToMyHead academic news search engine and provided for research purposes, which is not a redistribution grant. research/data/registry.json records 'unknown (dataset card: academic research use)'. 800 test rows are used for packed-choice calibration and validation after seed-17 shuffle per docs/audit/data_lineage.json. Redistribution status unresolved; treat as restricted until a license is identified."
+    },
+    {
+      "dataset": "clinc150 (CLINC OOS)",
+      "source": "https://github.com/clinc/oos-eval (local copy research/data/clinc150/data_full.json)",
+      "license": "CC-BY-3.0",
+      "status": "REQUIRES_LEGAL_REVIEW",
+      "notes": "The governing copy is the LICENSE file shipped with the data, research/data/clinc150/LICENSE (sha256 e6bc9e9c474700b708f568bac9e5a8a9bcb2b1dad53442f5ba449fcb848b8e76): Creative Commons Attribution 3.0 Unported. research/data/phase10/registry.json records the license as 'dataset repository license recorded locally'. Attribution-style license outside the pre-cleared permissive set; note this is CC-BY 3.0 (not 4.0), whose attribution and moral-rights wording differs. Used for phase 1-9 development partitions, the sealed blind validation evaluation (artifacts/release/blind_clinc150_val_result.json) and phase10 schema-held-out validation."
+    },
+    {
+      "dataset": "hwu64 (NLU Evaluation Data, home domain)",
+      "source": "https://github.com/xliuhw/NLU-Evaluation-Data (local copy research/data/hwu64/NLU-Data-Home-Domain-Annotated-All.csv)",
+      "license": "CC-BY-4.0",
+      "status": "REQUIRES_LEGAL_REVIEW",
+      "notes": "Local license research/data/hwu64/LICENSE (sha256 9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411, matching license_sha256 in research/data/hwu64/registry.json) is Creative Commons Attribution 4.0 International. Attribution-style license outside the pre-cleared permissive set; attribution conditions apply on redistribution. Consumed as the one-shot blind commercialization evaluation (artifacts/commercialization/blind_hwu64_result.json; registry role ONE_SHOT_BLIND_CONSUMED)."
+    },
+    {
+      "dataset": "amazon_massive (MASSIVE, en-US)",
+      "source": "https://huggingface.co/datasets/AmazonScience/massive (local copy research/data/massive/massive-test.parquet)",
+      "license": "CC-BY-4.0",
+      "status": "REQUIRES_LEGAL_REVIEW",
+      "notes": "Local license research/data/massive/LICENSE (sha256 c2e6ea015269147de02117ebdd91f30ef09831251f5345fa8365273b1db1d435) is Creative Commons Attribution 4.0 International with a 'Copyright Amazon.com Inc. or its affiliates' header. research/data/phase10/registry.json records CC-BY-4.0 for the amazon_massive_en_us entry (registered future blind candidate). Attribution-style license outside the pre-cleared permissive set; attribution conditions apply on redistribution."
+    },
+    {
+      "dataset": "schema_guided_dialogue (SGD / DSTC-8)",
+      "source": "https://github.com/google-research-datasets/dstc8-schema-guided-dialogue (copies at research/data/sgd/ and docs/audit/data/external/sgd/)",
+      "license": "CC-BY-SA-4.0",
+      "status": "REQUIRES_LEGAL_REVIEW",
+      "notes": "Local license files research/data/sgd/LICENSE.txt and docs/audit/data/external/sgd/LICENSE.txt are identical (sha256 71a43a169b52bb1b39510b65ec5b43b4bbb59196d449a835fe58b50af6a72742, matching source_sha256.license in research/data/phase10/registry.json): Creative Commons Attribution-ShareAlike 4.0 International. The ShareAlike clause is a copyleft-style obligation: adaptations of the dataset must be offered under the same license. The repository redistributes the full dataset (train/dev dialogues, schemas, SGD-X), and derived training rows exist in research/data/phase10/ (schema_guided_dialogue entries, license CC-BY-SA-4.0 in research/data/phase10/registry.json), so external redistribution of SGD or of the derived files requires legal review. The dataset README adds an AS-IS, no-warranty disclaimer from Google."
+    },
+    {
+      "dataset": "typed-decisions (training data for the typed-decisions checkpoint)",
+      "source": "https://huggingface.co/datasets/LocalLLaMA/typed-decisions",
+      "license": "Apache-2.0",
+      "status": "CLEARED",
+      "notes": "Synthetic benchmark dataset for typed probabilistic decisions (noul/choice/score); license apache-2.0 per the HF dataset card (verified 2026-09-29). Streamed at training time by veya/train.py (LocalLLaMA/typed-decisions) and not redistributed in this repository. Apache-2.0 is in the pre-cleared permissive set."
+    },
+    {
+      "dataset": "phase10 derived training/validation files",
+      "source": "derived in-repo from banking77 (CC-BY-4.0), schema_guided_dialogue (CC-BY-SA-4.0) and clinc150 (CC-BY-3.0); see research/data/phase10/registry.json",
+      "license": "mixed upstream: CC-BY-4.0 / CC-BY-SA-4.0 / CC-BY-3.0",
+      "status": "REQUIRES_LEGAL_REVIEW",
+      "notes": "research/data/phase10/{candidates.json, train.jsonl, development.jsonl, schema_held_out_validation.jsonl} derive from the listed upstream datasets (registry: banking77 3075 examples, schema_guided_dialogue 1820, clinc150 3000 train-partition rows). SGD-derived content carries ShareAlike terms and the remaining content carries CC-BY attribution terms, so redistribution of these derived files outside the repository requires legal review. The phase10 retriever trained on them is a research artifact and is not part of the audited release manifest."
+    }
+  ],
+  "redistribution_notes": "Project code, checkpoints, calibration artifacts and fine-tuned weights ship under Apache-2.0 (LICENSE, sha256 recorded above; pyproject license field). All five declared runtime dependencies are permissively licensed (Apache-2.0 and BSD-family, including torch's multi-component License-Expression and numpy's 'BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0'), so the shipped runtime stack introduces no copyleft obligation. transformers, safetensors and huggingface_hub were not installed in the local .venv at scan time; their licenses were verified from PyPI-published metadata at the newest releases inside the pyproject caps (transformers 5.17.0, safetensors 0.8.0, huggingface-hub 1.33.0), all Apache-2.0. The optional [veya[train]] extra (datasets, Apache-2.0 at 3.6.0, the newest 3.x) and dev/test tooling (pytest, packaging, typing-extensions and other scan-listed packages, all permissive-style MIT/BSD/Apache/PSF) are excluded from runtime_dependencies per the G15 rule and appear as NOT_APPLICABLE in the captured scan output; transitive dependencies are likewise outside the G15 scope. Summary buckets count all inventoried entries (runtime dependencies + model assets + dataset assets = 5 + 3 + 8 = 16; permissive 9, copyleft 1, unknown 1, requires_review 5), while total_runtime_deps counts only [project.dependencies]. Model bases are Apache-2.0 (answerdotai/ModernBERT-large) and MIT (jhu-clsp/mmBERT-base), both redistribution-permitting; the shipped K=8 shortlist projection was trained on banking77 (CC-BY-4.0) rows, and this inventory makes no claim about whether dataset terms attach to model weights - dataset-side obligations are recorded under banking77 instead. Datasets redistributed inside this repository: banking77 (CC-BY-4.0), clinc150 (CC-BY-3.0), hwu64 (CC-BY-4.0), amazon_massive (CC-BY-4.0), schema_guided_dialogue (CC-BY-SA-4.0, copies at research/data/sgd and docs/audit/data/external/sgd), ag_news (license unknown) and the phase10 derived files (mixed CC-BY/CC-BY-SA). Every REQUIRES_LEGAL_REVIEW entry must be cleared by legal before redistribution outside this repository; the SGD ShareAlike clause additionally reaches adaptations such as the phase10 derived files. This inventory records evidence and per-policy status only; it is not legal advice.",
+  "references": {
+    "dependency_scan_script": "research/scripts/scan_dependency_licenses.py",
+    "dependency_scan_command": ".venv/bin/python research/scripts/scan_dependency_licenses.py",
+    "pyproject": "pyproject.toml",
+    "release_manifest": "artifacts/release/manifest.json",
+    "production_scope": "artifacts/release/production_scope.json",
+    "data_lineage": "docs/audit/data_lineage.json",
+    "dataset_registries": [
+      "research/data/registry.json",
+      "research/data/hwu64/registry.json",
+      "research/data/phase10/registry.json"
+    ],
+    "local_license_files": [
+      "LICENSE",
+      "research/data/clinc150/LICENSE",
+      "research/data/hwu64/LICENSE",
+      "research/data/massive/LICENSE",
+      "research/data/sgd/LICENSE.txt",
+      "docs/audit/data/external/sgd/LICENSE.txt"
+    ]
+  }
+}

@@ -50,13 +50,24 @@ below_floor = [".".join(str(p) for p in v) for v in classifier_versions if v < f
 check("classifiers/none below requires-python", below_floor, [])
 
 # Checkpoints run on answerdotai/ModernBERT-large, which transformers only knows from 4.48.
-transformers_floor = re.search(r'"transformers>=([\d.]+)"', pyproject)
+# The floor regex tolerates an optional upper bound, e.g. "transformers>=4.48.0,<6".
+transformers_floor = re.search(r'"transformers>=([\d.]+)', pyproject)
 check_true("pyproject/pins a transformers floor", transformers_floor is not None)
 check_true(
     "transformers/floor covers ModernBERT",
     transformers_floor is not None and version_tuple(transformers_floor.group(1)) >= (4, 48),
     "ModernBERT support starts in transformers 4.48",
 )
+
+# Runtime deps must cap the next major so a surprise release cannot break a
+# pinned checkpoint. Every core dependency line needs a ",<N" upper bound.
+core_deps = ["torch", "transformers", "safetensors", "huggingface_hub", "numpy"]
+uncapped = [
+    dep
+    for dep in core_deps
+    if not re.search(r'"%s>=[\d.]+,<\d+"' % re.escape(dep), pyproject)
+]
+check("pyproject/caps every core dependency major", uncapped, [])
 
 for field in ("python_requires", "install_requires", "classifiers"):
     check_true(

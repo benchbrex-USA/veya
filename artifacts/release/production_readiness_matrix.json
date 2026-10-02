@@ -1,0 +1,568 @@
+{
+  "format": "veya-production-readiness-matrix-v1",
+  "generated": "2026-09-30T00:00:00Z",
+  "release": "0.3.5-audit-baseline.1",
+  "scope": "Veya v1 — English, choice/noul/score/systemone, ≤100 candidates, selective automation with defer, target-domain",
+  "method": "Evidence-recomputed convergence review (supersedes the 2026-09-29 matrix). Every node status was derived from filesystem evidence and executed tests, not asserted: the focused 11-suite gate (artifact integrity, release metadata, telemetry max_probability, shadow deployment, blind verdict, prospective blind CLI, activation procedure, security hardening, health probes, reliability hardening, concurrency) ran 169 passed / 0 failed; the full tests/ suite ran 442 passed / 1 failed / 3 skipped. The single failure (tests/test_commercialization.py::test_commercialization_freezes_match_artifacts) is a stale manifest-hash cross-reference in the commercialization-track frozen blind record (predates the Task 29 manifest re-mint); it does not contradict any G0-G24 requirement and is recorded under residual_risks. Release integrity is now clean: manifest SHA-256 cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de, all 15 runtime files match, 0 drift. G24 cannot PASS while G6/G8/G15/G20 remain BLOCKED_EXTERNAL.",
+  "certification_status": "IMPLEMENTATION_READY_PRODUCTION_CERTIFICATION_BLOCKED",
+  "nodes": [
+    {
+      "id": "G0",
+      "area": "Governance",
+      "requirement": "Repository governance and system map",
+      "status": "PASS",
+      "evidence": [
+        "artifacts/release/system_map.json",
+        "artifacts/release/production_scope.json"
+      ],
+      "verification": {
+        "command": "ls artifacts/release/system_map.json artifacts/release/production_scope.json",
+        "result": "Both files present"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G1",
+      "area": "Scope",
+      "requirement": "Machine-readable production scope contract (languages, primitives, candidate caps, defer semantics, fail-closed behavior)",
+      "status": "PASS",
+      "evidence": [
+        "artifacts/release/production_scope.json",
+        "artifacts/release/manifest.json"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_artifact_integrity.py -q",
+        "result": "Passed; manifest hash cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de verified, 15/15 runtime files match, 0 drift"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G2",
+      "area": "Audit",
+      "requirement": "Structured gap audit artifact with per-node classification",
+      "status": "PASS",
+      "evidence": [
+        "artifacts/release/gap_audit.json"
+      ],
+      "verification": {
+        "command": "ls artifacts/release/gap_audit.json",
+        "result": "Present; pre-implementation baseline, superseded by this matrix"
+      },
+      "remaining_risk": "gap_audit.json is the pre-implementation baseline; its PARTIAL/MISSING classifications are superseded by this matrix"
+    },
+    {
+      "id": "G3",
+      "area": "Evaluation integrity",
+      "requirement": "Contamination / train-test overlap detection",
+      "status": "PASS",
+      "evidence": [
+        "research/veyabench/contamination.py",
+        "tests/test_contamination.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests -q",
+        "result": "Full suite: 442 passed, 1 failed (commercialization stale-pin, see residual_risks), 3 skipped; test_contamination.py included and passing"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G4",
+      "area": "Calibration",
+      "requirement": "Calibration reporting (ECE, Brier, reliability, risk-coverage)",
+      "status": "PASS",
+      "evidence": [
+        "research/veyabench/calibration_report.py",
+        "veya/calibration.py",
+        "tests/test_calibration_report.py",
+        "tests/test_reliability.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests -q",
+        "result": "test_calibration_report.py and test_reliability.py passing in the full-suite run"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G5",
+      "area": "Selective safety",
+      "requirement": "Selective prediction with epsilon guarantee and per-slice gates",
+      "status": "PASS",
+      "evidence": [
+        "veya/selective.py",
+        "research/veyabench/selective_gates.py",
+        "research/veyabench/sample_size.py",
+        "artifacts/release/selective_policy.json",
+        "artifacts/release/activation_procedure.json",
+        "tests/test_selective_gates.py",
+        "tests/test_selective_extra.py",
+        "tests/test_sample_size.py",
+        "tests/test_activation_procedure.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_activation_procedure.py tests/test_selective_gates.py -q",
+        "result": "28 activation-procedure tests passed; selective_policy.json operating_epsilon is \"disabled\" and manifest automation.status is DISABLED — every decision defers"
+      },
+      "remaining_risk": "Shipped policy operates with operating_epsilon \"disabled\"; frozen thresholds (0.02/0.05/0.10) activate only after a blind evaluation verdict (G8). Activation is governed by activation_procedure.json and remains disabled."
+    },
+    {
+      "id": "G6",
+      "area": "Prospective evaluation",
+      "requirement": "Prospective evaluation harness (freeze records, gates, sample-size, contamination, drift) with one-command CLI entry",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": [
+        "research/veyabench/run_prospective_blind.py",
+        "artifacts/release/prospective_blind_config.template.json",
+        "research/veyabench/freeze_record.py",
+        "research/veyabench/blind_verdict.py",
+        "research/veyabench/contamination.py",
+        "research/veyabench/selective_gates.py",
+        "research/veyabench/calibration_report.py",
+        "research/veyabench/sample_size.py",
+        "research/veyabench/drift_monitor.py",
+        "docs/PROSPECTIVE_BLIND_WORKFLOW.md",
+        "tests/test_prospective_blind_cli.py",
+        "tests/test_freeze_record.py",
+        "tests/test_blind_verdict.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_prospective_blind_cli.py tests/test_freeze_record.py tests/test_blind_verdict.py -q",
+        "result": "18 prospective-blind CLI tests passed (plus freeze/verdict suites); pipeline verified end-to-end with the fail-closed unfilled-template path (exit 2)"
+      },
+      "remaining_risk": "Harness and one-command CLI implemented and tested; no target-domain labeled dataset exists, so the prospective run fail-closes by design",
+      "blocked_on": "Target-domain labeled dataset matching docs/PROSPECTIVE_BLIND_WORKFLOW.md schema",
+      "next_action": "Supply the labeled dataset, fill test_data.path and test_data.sha256 in a copy of artifacts/release/prospective_blind_config.template.json, and run the documented one-command CLI"
+    },
+    {
+      "id": "G7",
+      "area": "Robustness",
+      "requirement": "Perturbation robustness suites (surface + paraphrase noise)",
+      "status": "PASS",
+      "evidence": [
+        "research/veyabench/surface_noise.py",
+        "research/veyabench/paraphrase_noise.py",
+        "tests/test_surface_noise.py",
+        "tests/test_paraphrase_noise.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests -q",
+        "result": "test_surface_noise.py and test_paraphrase_noise.py passing in the full-suite run"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G8",
+      "area": "Production evidence",
+      "requirement": "Blind prospective verdict (P1-P6 pre-registered gates)",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": [
+        "research/veyabench/run_prospective_blind.py",
+        "artifacts/release/prospective_blind_config.template.json",
+        "docs/PROSPECTIVE_BLIND_WORKFLOW.md",
+        "research/veyabench/blind_verdict.py",
+        "tests/test_blind_verdict.py",
+        "research/veyabench/selective_gates.py",
+        "research/veyabench/sample_size.py",
+        "research/veyabench/freeze_record.py",
+        "research/veyabench/calibration_report.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_prospective_blind_cli.py tests/test_blind_verdict.py -q",
+        "result": "All passing; verdict orchestrator and CLI verified. No artifacts/release/prospective_blind_result.json exists — no blind verdict has been produced"
+      },
+      "remaining_risk": "P1-P6 verdict orchestrator implemented and tested; requires blind evaluation data collection on target-domain labeled data. Selective activation (activation_procedure.json) is conditional on this gate",
+      "blocked_on": "Blind evaluation data collection (same blocker as G6)",
+      "next_action": "Run the prospective blind evaluation via the G6/G8 CLI with a pre-registered freeze record; use the verdict to select an operating epsilon for the selective policy"
+    },
+    {
+      "id": "G9",
+      "area": "API contracts",
+      "requirement": "Contract validation and structured errors at the serving boundary",
+      "status": "PASS",
+      "evidence": [
+        "web/contracts.py",
+        "web/server.py",
+        "tests/test_web_gateway.py",
+        "tests/test_server_security.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests -q",
+        "result": "test_web_gateway.py and test_server_security.py passing in the full-suite run"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G10",
+      "area": "Concurrency",
+      "requirement": "Concurrency-safe model serialization with documented guarantees",
+      "status": "PASS",
+      "evidence": [
+        "docs/CONCURRENCY.md",
+        "tests/test_concurrency.py",
+        "veya/server.py",
+        "web/model_server.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_concurrency.py -q",
+        "result": "Passed in the focused 11-suite gate (169 passed total)"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G11",
+      "area": "Performance",
+      "requirement": "Latency/throughput runtime performance audit",
+      "status": "PASS",
+      "evidence": [
+        "artifacts/release/runtime_audit.json",
+        "research/veyabench/run_runtime_audit.py"
+      ],
+      "verification": {
+        "command": "ls artifacts/release/runtime_audit.json",
+        "result": "Present; audit binds the re-minted manifest hash cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de"
+      },
+      "remaining_risk": "Single-host CPU baseline (macOS arm64, n=20 per primitive); not a production-scale load test"
+    },
+    {
+      "id": "G12",
+      "area": "Reliability",
+      "requirement": "Graceful shutdown, timeouts, overload 503, structured error envelopes",
+      "status": "PASS",
+      "evidence": [
+        "web/server.py",
+        "tests/test_reliability_hardening.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_reliability_hardening.py -q",
+        "result": "Passed in the focused 11-suite gate"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G13",
+      "area": "Security",
+      "requirement": "Transport security headers, HSTS, audit logging",
+      "status": "PASS",
+      "evidence": [
+        "web/server.py",
+        "tests/test_security_hardening.py",
+        "tests/test_server_security.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_security_hardening.py -q",
+        "result": "Passed in the focused 11-suite gate"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G14",
+      "area": "Supply chain",
+      "requirement": "Lock file, SBOM, hash-pinned dependencies and artifacts",
+      "status": "PASS",
+      "evidence": [
+        "requirements.lock",
+        "artifacts/release/sbom.json",
+        "artifacts/release/manifest.json",
+        "tests/test_artifact_integrity.py",
+        "research/veyabench/build_sbom.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_artifact_integrity.py -q && shasum -a 256 artifacts/release/manifest.json",
+        "result": "Strict integrity tests passing (31 tests); manifest re-minted (Task 29) with SHA-256 cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de; all 15 runtime files match their pins, 0 drift — the former veya/selective.py post-manifest drift is resolved"
+      },
+      "remaining_risk": "The commercialization-track frozen blind record (artifacts/commercialization/blind_hwu64_result.json) still pins the pre-re-mint manifest hash c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648; historical record, left unmodified (see residual_risks)"
+    },
+    {
+      "id": "G15",
+      "area": "Licensing",
+      "requirement": "License and third-party inventory with compatibility review",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": [
+        "artifacts/release/license_inventory.json",
+        "artifacts/release/legal_review_packet.json",
+        "research/scripts/scan_dependency_licenses.py",
+        "LICENSE"
+      ],
+      "verification": {
+        "command": "ls artifacts/release/legal_review_packet.json && .venv/bin/python -c \"import json;d=json.load(open('artifacts/release/legal_review_packet.json'));print(len(d.get('flagged_datasets',d.get('datasets',[]))))\"",
+        "result": "Legal review packet present with 6 flagged datasets and exact legal questions per dataset; no authorized legal disposition exists"
+      },
+      "remaining_risk": "6 redistributed datasets plus phase10 derived files require an authorized legal disposition before production redistribution",
+      "blocked_on": "Authorized legal reviewer disposition for the 6 flagged datasets (banking77, ag_news, clinc150, hwu64, amazon_massive, schema_guided_dialogue) and phase10 derived files",
+      "next_action": "An authorized legal reviewer provides an immutable disposition per dataset as specified in artifacts/release/legal_review_packet.json"
+    },
+    {
+      "id": "G16",
+      "area": "Observability",
+      "requirement": "Shadow-mode serving with structured telemetry and request IDs",
+      "status": "PASS",
+      "evidence": [
+        "web/server.py",
+        "artifacts/release/shadow_schema.json",
+        "tests/test_web_gateway.py",
+        "tests/test_telemetry_max_probability.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_telemetry_max_probability.py tests/test_web_gateway.py -q",
+        "result": "15 telemetry max_probability tests passed; max_probability is captured server-side before the response whitelist strips it, client response unchanged; 80 regression tests around the change passed (Task 30)"
+      },
+      "remaining_risk": "None — the former telemetry max_probability gap is closed"
+    },
+    {
+      "id": "G17",
+      "area": "Monitoring",
+      "requirement": "Statistical drift monitoring (risk, coverage, distribution shift, config mismatch)",
+      "status": "PASS",
+      "evidence": [
+        "research/veyabench/drift_monitor.py",
+        "tests/test_drift_monitor.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests -q",
+        "result": "test_drift_monitor.py passing in the full-suite run"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G18",
+      "area": "Operations",
+      "requirement": "Health endpoints (/healthz, /readyz, /startupz) with fail-closed readiness",
+      "status": "PASS",
+      "evidence": [
+        "web/server.py",
+        "tests/test_health_probes.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_health_probes.py -q",
+        "result": "Passed in the focused 11-suite gate"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G19",
+      "area": "Deployment",
+      "requirement": "Containerization and orchestration (Docker, Kubernetes manifests)",
+      "status": "PASS",
+      "evidence": [
+        "Dockerfile",
+        "docker-compose.yml",
+        ".dockerignore",
+        "k8s/deployment.yaml",
+        "k8s/service.yaml",
+        "k8s/hpa.yaml",
+        "k8s/configmap.yaml",
+        "k8s/kustomization.yaml"
+      ],
+      "verification": {
+        "command": "ls Dockerfile docker-compose.yml k8s/*.yaml",
+        "result": "All manifests present"
+      },
+      "remaining_risk": "Manifests only — no live cluster deployment; release image digest is not_built (artifacts/release/release_metadata.json)"
+    },
+    {
+      "id": "G20",
+      "area": "Shadow evaluation",
+      "requirement": "Live-traffic shadow evaluation in production",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": [
+        "docs/SHADOW_DEPLOYMENT.md",
+        "artifacts/release/shadow_schema.json",
+        "k8s/shadow-overlay/kustomization.yaml",
+        "web/server.py",
+        "tests/test_shadow_deployment.py",
+        "research/veyabench/drift_monitor.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_shadow_deployment.py -q",
+        "result": "13 shadow-deployment tests passed; real local shadow stack (VEYA_SHADOW_MODE + kustomize overlay semantics) verified end-to-end. No live production routing exists"
+      },
+      "remaining_risk": "Local shadow path verified end-to-end; live-traffic shadow evaluation requires production cluster access, traffic mirroring, and a ground-truth labeling feed",
+      "blocked_on": "Live production routing / cluster access / ground-truth feed",
+      "next_action": "Provide production cluster access, traffic-mirroring credentials, and a ground-truth labeling feed; deploy the shadow overlay per docs/SHADOW_DEPLOYMENT.md and analyze records with drift_monitor / selective_gates / blind_verdict"
+    },
+    {
+      "id": "G21",
+      "area": "CI/CD",
+      "requirement": "Tiered quality gates (PR gate, main gate, release-candidate gate)",
+      "status": "PASS",
+      "evidence": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/release-gate.yml"
+      ],
+      "verification": {
+        "command": "ls .github/workflows/ci.yml .github/workflows/release-gate.yml",
+        "result": "Both workflow files present"
+      },
+      "remaining_risk": "The production-evidence-gate job in release-gate.yml is a manual placeholder pending prospective data (see G8)"
+    },
+    {
+      "id": "G22",
+      "area": "Release engineering",
+      "requirement": "Reproducible release metadata (build provenance)",
+      "status": "PASS",
+      "evidence": [
+        "research/veyabench/release_metadata.py",
+        "artifacts/release/release_metadata.json",
+        "tests/test_release_metadata.py"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -m pytest tests/test_release_metadata.py -q && .venv/bin/python -m research.veyabench.release_metadata",
+        "result": "Release metadata tests passing; metadata regenerated after the matrix/report update so evaluation_references hash the current matrix and report artifacts"
+      },
+      "remaining_risk": "CI provenance fields are \"local\" (no remote pipeline run yet)"
+    },
+    {
+      "id": "G23",
+      "area": "Documentation",
+      "requirement": "Operator documentation and runbooks",
+      "status": "PASS",
+      "evidence": [
+        "docs/OPERATIONS.md",
+        "docs/RUNBOOK.md",
+        "docs/PRODUCTION_SCOPE.md",
+        "docs/CONCURRENCY.md",
+        "docs/PROSPECTIVE_BLIND_WORKFLOW.md",
+        "docs/SHADOW_DEPLOYMENT.md"
+      ],
+      "verification": {
+        "command": "ls docs/OPERATIONS.md docs/RUNBOOK.md docs/PRODUCTION_SCOPE.md docs/CONCURRENCY.md docs/PROSPECTIVE_BLIND_WORKFLOW.md docs/SHADOW_DEPLOYMENT.md",
+        "result": "All present; OPERATIONS.md covers the selective activation procedure (Task 34)"
+      },
+      "remaining_risk": "None"
+    },
+    {
+      "id": "G24",
+      "area": "Governance",
+      "requirement": "Final production-readiness verdict matrix",
+      "status": "BLOCKED_EXTERNAL",
+      "evidence": [
+        "artifacts/release/production_readiness_matrix.json",
+        "docs/PRODUCTION_READINESS.md"
+      ],
+      "verification": {
+        "command": ".venv/bin/python -c \"import json;m=json.load(open('artifacts/release/production_readiness_matrix.json'));print(m['summary'])\"",
+        "result": "Matrix recomputed from evidence; 25 nodes, 20 PASS, 5 BLOCKED_EXTERNAL, 0 FAIL, 0 NOT_IN_SCOPE. Under the rule that the final production claim requires every scope-critical node PASS, G24 itself is blocked while G6/G8/G15/G20 remain BLOCKED_EXTERNAL"
+      },
+      "remaining_risk": "Final production certification blocked on G6/G8 (target-domain labeled data), G15 (legal disposition), and G20 (live shadow traffic)",
+      "blocked_on": "Convergence: G6, G8, G15, G20 all BLOCKED_EXTERNAL",
+      "next_action": "Resolve the three minimum external actions below, recompute this matrix, and flip G24 to PASS only when every scope-critical node is PASS"
+    }
+  ],
+  "summary": {
+    "total": 25,
+    "pass": 20,
+    "blocked_external": 5,
+    "fail": 0,
+    "not_in_scope": 0
+  },
+  "blocked_external_nodes": ["G6", "G8", "G15", "G20", "G24"],
+  "minimum_external_actions": [
+    {
+      "blocks": ["G6", "G8"],
+      "action": "Supply target-domain labeled dataset matching docs/PROSPECTIVE_BLIND_WORKFLOW.md schema and run the one-command CLI"
+    },
+    {
+      "blocks": ["G15"],
+      "action": "Authorized legal reviewer provides immutable disposition for 6 datasets"
+    },
+    {
+      "blocks": ["G20"],
+      "action": "Provide production cluster access, traffic mirroring credentials, and ground-truth labeling feed"
+    }
+  ],
+  "residual_risks": [
+    "Commercialization-track stale cross-reference: artifacts/commercialization/blind_hwu64_result.json (status BLIND_COMPLETE_CONSUMED) pins the pre-re-mint manifest hash c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648, so tests/test_commercialization.py::test_commercialization_freezes_match_artifacts fails against the re-minted manifest (cd1e2029...). The frozen blind record was left unmodified because it documents which runtime mint produced the blind result; the re-mint (Task 29) is tracked separately. This is a commercialization-track bookkeeping item, not a G0-G24 requirement failure.",
+    "Selective automation is disabled: selective_policy.json operating_epsilon is \"disabled\" and manifest automation.status is DISABLED — the validation-selected 5% threshold observed 6.99% risk on development-exposed reporting data. Activation requires a blind evaluation verdict (G8) and follows artifacts/release/activation_procedure.json.",
+    "6 research datasets redistributed in-repo need legal review before redistribution outside the repository: banking77 (CC-BY-4.0), ag_news (unknown), clinc150 (CC-BY-3.0), hwu64 (CC-BY-4.0), amazon_massive (CC-BY-4.0), schema_guided_dialogue (CC-BY-SA-4.0, ShareAlike); the phase10 derived files carry mixed CC-BY/CC-BY-SA terms (see artifacts/release/legal_review_packet.json).",
+    "runtime_audit.json is a single-host CPU baseline (macOS arm64, n=20 per primitive) and no live Kubernetes cluster or built release image exists yet (docker_image_digest \"not_built\")."
+  ],
+  "verification": {
+    "evidence_files_checked": [
+      "artifacts/release/production_readiness_matrix.json",
+      "artifacts/release/manifest.json",
+      "artifacts/release/release_metadata.json",
+      "artifacts/release/prospective_blind_config.template.json",
+      "artifacts/release/legal_review_packet.json",
+      "artifacts/release/activation_procedure.json",
+      "artifacts/release/shadow_schema.json",
+      "artifacts/release/selective_policy.json",
+      "artifacts/release/gap_audit.json",
+      "artifacts/release/production_scope.json",
+      "artifacts/release/system_map.json",
+      "artifacts/release/sbom.json",
+      "artifacts/release/license_inventory.json",
+      "artifacts/release/runtime_audit.json",
+      "artifacts/commercialization/blind_hwu64_result.json",
+      "requirements.lock",
+      "Dockerfile",
+      "docker-compose.yml",
+      ".dockerignore",
+      "k8s/deployment.yaml",
+      "k8s/service.yaml",
+      "k8s/hpa.yaml",
+      "k8s/configmap.yaml",
+      "k8s/kustomization.yaml",
+      "k8s/shadow-overlay/kustomization.yaml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/release-gate.yml",
+      "docs/PRODUCTION_READINESS.md",
+      "docs/PROSPECTIVE_BLIND_WORKFLOW.md",
+      "docs/SHADOW_DEPLOYMENT.md",
+      "docs/OPERATIONS.md",
+      "docs/PRODUCTION_SCOPE.md",
+      "docs/CONCURRENCY.md",
+      "docs/RUNBOOK.md",
+      "research/veyabench/run_prospective_blind.py",
+      "research/veyabench/freeze_record.py",
+      "research/veyabench/contamination.py",
+      "research/veyabench/surface_noise.py",
+      "research/veyabench/paraphrase_noise.py",
+      "research/veyabench/selective_gates.py",
+      "research/veyabench/calibration_report.py",
+      "research/veyabench/sample_size.py",
+      "research/veyabench/drift_monitor.py",
+      "research/veyabench/release_metadata.py",
+      "research/veyabench/blind_verdict.py",
+      "research/veyabench/build_sbom.py",
+      "research/scripts/scan_dependency_licenses.py",
+      "web/contracts.py",
+      "web/server.py",
+      "web/model_server.py",
+      "veya/server.py",
+      "veya/calibration.py",
+      "veya/selective.py",
+      "LICENSE"
+    ],
+    "tests_executed": [
+      "tests/test_artifact_integrity.py",
+      "tests/test_release_metadata.py",
+      "tests/test_telemetry_max_probability.py",
+      "tests/test_shadow_deployment.py",
+      "tests/test_blind_verdict.py",
+      "tests/test_prospective_blind_cli.py",
+      "tests/test_activation_procedure.py",
+      "tests/test_security_hardening.py",
+      "tests/test_health_probes.py",
+      "tests/test_reliability_hardening.py",
+      "tests/test_concurrency.py",
+      "tests/ (full project suite)"
+    ],
+    "focused_gate_result": "169 passed, 0 failed (11 suites)",
+    "full_suite_result": "442 passed, 1 failed (stale commercialization manifest pin, see residual_risks), 3 skipped, 6 subtests passed",
+    "manifest_integrity": {
+      "manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+      "runtime_files_matching": 15,
+      "drift": 0
+    },
+    "selective_automation_status": "DISABLED (operating_epsilon \"disabled\", defer all)"
+  },
+  "references": {
+    "gap_audit_baseline": "artifacts/release/gap_audit.json",
+    "production_scope": "artifacts/release/production_scope.json",
+    "release_manifest": "artifacts/release/manifest.json",
+    "release_metadata": "artifacts/release/release_metadata.json",
+    "activation_procedure": "artifacts/release/activation_procedure.json",
+    "legal_review_packet": "artifacts/release/legal_review_packet.json",
+    "prospective_blind_config_template": "artifacts/release/prospective_blind_config.template.json",
+    "human_readable_report": "docs/PRODUCTION_READINESS.md"
+  }
+}

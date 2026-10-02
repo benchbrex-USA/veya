@@ -1,0 +1,87 @@
+# Shadow-evaluation overlay (G20). Build/deploy with:
+#   kustomize build k8s/shadow-overlay   |   kubectl apply -k k8s/shadow-overlay
+#
+# The overlay reuses the entire base stack (../) and turns it into a disjoint,
+# single-replica shadow deployment:
+#
+#   - namePrefix renames every resource: shadow-veya (Deployment, Service,
+#     HPA) and shadow-veya-config (ConfigMap). The built-in nameReference
+#     transformer rewrites the Deployment's configMapKeyRef and the HPA's
+#     scaleTargetRef to the prefixed names automatically.
+#   - the ConfigMap shadow-mode key is forced to "1": VEYA_SHADOW_MODE is
+#     sourced from it (k8s/deployment.yaml env), web/server.py _shadow_enabled
+#     then flags every telemetry entry with "shadow": true and answers carry
+#     the X-Veya-Shadow: true header.
+#   - the selector label value app.kubernetes.io/name is changed from "veya"
+#     to "shadow-veya" on the Deployment (spec.selector and pod template) and
+#     on the Service selector. namePrefix does NOT change label values, so
+#     without this patch the shadow pods and the production pods would carry
+#     identical labels: both Deployments would adopt each other's pods
+#     (overlapping selectors) and both Services would route to both stacks.
+#     With the value patch, shadow and production routing stay strictly
+#     disjoint even when both stacks coexist in one cluster.
+#
+# The transformed base Service (shadow-veya) IS the separate shadow routing
+# surface, so this overlay deliberately ships no second shadow-service.yaml:
+# a dedicated Service file would be a redundant duplicate of that resource.
+#
+# Patch targets deliberately omit "name:" and select by kind only: the base
+# contains exactly one resource of each kind, and kind-only targets resolve
+# identically regardless of whether kustomize applies the overlay's namePrefix
+# before or after patches. JSON6902 paths escape the "/" in the label key as
+# ~1 (app.kubernetes.io~1name). "op: add" sets-or-replaces the label value,
+# so the patches also hold if the base commonLabels behavior ever changes.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../  # Reference base
+
+namePrefix: shadow-
+
+patches:
+  # Force shadow telemetry. web/server.py reads this key via the
+  # VEYA_SHADOW_MODE env var (k8s/deployment.yaml, optional configMapKeyRef).
+  - target:
+      kind: ConfigMap
+    patch: |-
+      - op: replace
+        path: /data/shadow-mode
+        value: "1"
+
+  # One replica: shadow traffic mirrors production requests, it does not need
+  # production capacity. Also give shadow pods a disjoint identity (selector
+  # + pod template labels) so no base Deployment can adopt them.
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: add
+        path: /spec/selector/matchLabels/app.kubernetes.io~1name
+        value: shadow-veya
+      - op: add
+        path: /spec/template/metadata/labels/app.kubernetes.io~1name
+        value: shadow-veya
+
+  # Route the shadow Service only to shadow pods (selector value patch above).
+  - target:
+      kind: Service
+    patch: |-
+      - op: add
+        path: /spec/selector/app.kubernetes.io~1name
+        value: shadow-veya
+
+  # Keep shadow capacity small; the HPA scaleTargetRef is rewritten to
+  # shadow-veya by the nameReference transformer.
+  - target:
+      kind: HorizontalPodAutoscaler
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
+      - op: replace
+        path: /spec/maxReplicas
+        value: 2

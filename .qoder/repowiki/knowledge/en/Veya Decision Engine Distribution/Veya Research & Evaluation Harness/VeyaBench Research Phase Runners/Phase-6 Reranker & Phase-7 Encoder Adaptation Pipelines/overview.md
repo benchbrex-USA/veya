@@ -1,0 +1,1 @@
+Runs that freeze a Phase-5 choice model, train a K=8 reranker head on hard shortlists (phase 6), and optionally adapt the upper encoder layers for hard-choice performance (phase 7).

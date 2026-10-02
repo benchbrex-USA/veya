@@ -1,0 +1,5 @@
+- Scripts pin device selection to MPS when available and fall back to CPU, and set `USE_TF=0` and `TOKENIZERS_PARALLELISM=false` at import time.
+- JSON payloads are written through a local `dump(path, payload)` helper that serializes numpy scalars/arrays via a custom `convert` default handler and appends a trailing newline.
+- Validation and integrity checks raise `SystemExit` with a human-readable message rather than returning error codes, used both for artifact preconditions (e.g. test-row citations, split hash mismatches) and runtime gates (permutation flips, temperature drift).
+- Metrics are reported as dicts with typed fields (`float`, `int`, `None` for empty sets) produced by dedicated `summarize` / `percentiles` helpers, keeping output schemas stable across phases.
+- Randomness is seeded deterministically per trial using `random.Random(SEED + <offset>)` so permutation, small-choice, and shuffling experiments are reproducible.

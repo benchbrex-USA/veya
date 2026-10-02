@@ -1,0 +1,5 @@
+- Long-running e2e scripts guard themselves with `if __name__ != "__main__": pytest.skip(...)` so they can be imported by pytest without running real models.
+- Tests assert behavior by calling `ok(name, condition, detail)` helpers that append pass/fail tuples and print a `PASS`/`FAIL` line per case, instead of raising on first failure.
+- HTTP security regressions spin up `veya.server.serve(port=0)` in a daemon thread, hit it via `urllib.request.Request`/`http.client`, and shut down the server in a `finally` block.
+- Fake backends implement the same agent interface (e.g. `system_one(state, questions) -> {decision, answers, usage}`) so server-layer tests can swap in deterministic stubs.
+- Feature-flag and experimental-retriever tests use `monkeypatch` to toggle configuration keys like `retriever` and assert unknown modes raise `ValueError` with a specific message.

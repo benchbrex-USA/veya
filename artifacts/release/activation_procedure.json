@@ -1,0 +1,184 @@
+{
+  "format": "veya-selective-activation-procedure-v1",
+  "status": "BLOCKED_EXTERNAL",
+  "blocked_on": "G6/G8 prospective blind evaluation PASS on target-domain labeled data",
+  "blocked_reason": "No target-domain labeled dataset has been supplied. The prospective blind runner fail-closes (exit 2) on the unfilled template placeholder and prints the minimum unblocking action: supply a target-domain labeled dataset matching the schema in docs/PROSPECTIVE_BLIND_WORKFLOW.md section 2, then fill test_data.path and test_data.sha256 in artifacts/release/prospective_blind_config.json (copied from prospective_blind_config.template.json).",
+  "release": "0.3.5-audit-baseline.1",
+  "current_state": {
+    "operating_epsilon": "disabled",
+    "automation": "defer all",
+    "policy_file": "artifacts/release/selective_policy.json",
+    "policy_sha256": "80e7be582c9c890cf73da701cbd86a71c6d908331186ee68f1021763011cd620",
+    "manifest_file": "artifacts/release/manifest.json",
+    "manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+    "manifest_automation_status": "DISABLED",
+    "runtime_audit_manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+    "policy_bindings": {
+      "route": "shortlist_k8_packed_rerank",
+      "scorer_id": "base_decision_head",
+      "score": "max_probability",
+      "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+      "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+      "chosen_on": "validation"
+    },
+    "thresholds": {
+      "disabled": null,
+      "0.02": 0.9796500892257723,
+      "0.05": 0.9541679372957224,
+      "0.10": 0.896261827143334
+    },
+    "preregistered_epsilon": "0.10"
+  },
+  "prerequisites": [
+    {
+      "gate": "G6",
+      "name": "Freeze record integrity for the prospective blind run",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "format",
+        "status",
+        "verdict.freeze_record_hash",
+        "verdict.split_provenance.disjoint"
+      ],
+      "description": "The run config freeze record (veya-freeze-record-v1) validated against the pinned re-minted manifest: checkpoint, shortlist, selective policy, temperature artifact, and git commit pins all agree, and the manifest automation status stayed DISABLED during the run (research/veyabench/run_prospective_blind.py _verify_manifest_links)."
+    },
+    {
+      "gate": "G8",
+      "name": "Blind prospective verdict (P1-P6 pre-registered gates)",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "status",
+        "verdict.all_primary_gates_pass"
+      ],
+      "description": "The one-run prospective blind verdict over the supplied target-domain labeled dataset: exit 0 from research.veyabench.run_prospective_blind, output written once with exclusive creation."
+    },
+    {
+      "gate": "P1_data_validity",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "verdict.primary_gates.P1_data_validity"
+      ],
+      "description": "Contamination screens flag <= contamination_tolerance (default 0) blind texts vs the controlled training side; split provenance and contamination run before any statistic."
+    },
+    {
+      "gate": "P2_selective_safety",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "verdict.primary_gates.P2_selective_safety"
+      ],
+      "description": "Clean-slice accepted-risk UCB95 <= frozen epsilon (G1 clean safety)."
+    },
+    {
+      "gate": "P3_useful_coverage",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "verdict.primary_gates.P3_useful_coverage"
+      ],
+      "description": "Clean-slice coverage >= frozen c_min (0.80 in the freeze record)."
+    },
+    {
+      "gate": "P4_shift_robustness",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "verdict.primary_gates.P4_shift_robustness"
+      ],
+      "description": "G2 (per-shift-slice risk UCB95 <= epsilon) AND G3 (shift coverage >= 0.95 x clean coverage) AND G4 (no slice below the collapse floor: coverage 0.05, accuracy 0.30)."
+    },
+    {
+      "gate": "P5_calibration_transfer",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "verdict.primary_gates.P5_calibration_transfer"
+      ],
+      "description": "Freeze record pins the frozen temperature artifact (models/production/calibration_shortlist_k8.json, temperature 1.971127355603397); the temperature is applied, never refit on evaluation data."
+    },
+    {
+      "gate": "P6_operational_viability",
+      "required_status": "PASS",
+      "evidence": "artifacts/release/prospective_blind_result.json",
+      "evidence_fields": [
+        "verdict.primary_gates.P6_operational_viability"
+      ],
+      "description": "Caller-supplied operational measurements with no failures; a null operational block can only FAIL P6."
+    }
+  ],
+  "activation_steps": [
+    {
+      "order": 1,
+      "action": "Verify prospective verdict",
+      "command": "cd \"/Volumes/Parth Patel/Veya\" && .venv/bin/python -c \"\nimport json\nresult = json.load(open('artifacts/release/prospective_blind_result.json'))\nassert result['format'] == 'veya-prospective-blind-result-v1', result.get('format')\nassert result['status'] == 'PASS', result.get('summary')\nverdict = result['verdict']\nassert verdict['all_primary_gates_pass'] is True\nassert len(verdict['primary_gates']) == 6 and all(verdict['primary_gates'].values())\nprint('verified:', result['summary'])\nprint('epsilon:', verdict['sample_size_check']['epsilon'])\n\"",
+      "acceptance": "exit 0 - verdict == PASS and all P1-P6 true. The printed epsilon is the preregistered epsilon the approved policy must select in step 2 (the frozen run config template pins \"0.10\")."
+    },
+    {
+      "order": 2,
+      "action": "Mint approved policy",
+      "details": "Set operating_epsilon to the exact preregistered epsilon that passed. Do not change threshold value. Bind checkpoint_hash, shortlist_sha256, scorer_id.",
+      "procedure": "Edit artifacts/release/selective_policy.json changing ONLY operating_epsilon: from \"disabled\" to the preregistered epsilon that passed the prospective blind run (\"0.10\" pinned by the frozen run config template; threshold 0.896261827143334). Every other field stays byte-identical: thresholds (\"0.02\": 0.9796500892257723, \"0.05\": 0.9541679372957224, \"0.10\": 0.896261827143334, \"disabled\": null), route \"shortlist_k8_packed_rerank\", scorer_id \"base_decision_head\", score \"max_probability\", checkpoint_hash, shortlist_sha256, chosen_on \"validation\" with validation_hash, and the validation/test splits and hashes. veya.selective.load_policy fails closed on artifact mixing (different route/checkpoint/shortlist/scorer, chosen_on != \"validation\", missing validation_hash, or operating_epsilon not present in thresholds).",
+      "verify_command": ".venv/bin/python -c \"\nimport hashlib, json\npolicy = json.load(open('artifacts/release/selective_policy.json'))\nfrozen = {'0.02': 0.9796500892257723, '0.05': 0.9541679372957224, '0.10': 0.896261827143334}\nassert policy['format'] == 'veya-selective-policy-v1'\nassert policy['operating_epsilon'] in frozen, policy['operating_epsilon']\nassert policy['thresholds'] == dict(frozen, disabled=None), policy['thresholds']\nassert policy['route'] == 'shortlist_k8_packed_rerank'\nassert policy['scorer_id'] == 'base_decision_head'\nassert policy['checkpoint_hash'] == '891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c'\nassert policy['shortlist_sha256'] == 'b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1'\ndigest = hashlib.sha256(open('artifacts/release/selective_policy.json', 'rb').read()).hexdigest()\nprint('approved operating_epsilon:', policy['operating_epsilon'])\nprint('new selective_policy_hash:', digest)\n\"",
+      "acceptance": "exit 0 - the minted policy selects a preregistered non-null threshold and keeps every binding; the printed selective_policy_hash feeds step 3."
+    },
+    {
+      "order": 3,
+      "action": "Re-mint manifest",
+      "details": "Update selective_policy_hash pin only; preserve all other frozen config.",
+      "procedure": [
+        "Edit artifacts/release/manifest.json: (a) set selective_policy_hash to the new policy SHA-256 printed by step 2, and (b) update the automation record to the enabled state citing artifacts/release/prospective_blind_result.json as evidence. Preserve every other pin byte-identically: base_checkpoint_hash, model_config_hash, tokenizer_files, runtime_files, choice.shortlist_hash, routing.choice_router_hash, calibration.packed_choice_hash, calibration.hierarchical_choice_hash, calibration.hierarchical_temperature, data_lineage and blind_evaluation pins, git_commit. There is no dedicated v2 manifest builder (veya/manifest.py build_manifest builds a different per-checkpoint record) - surgically edit only the affected fields.",
+        "Re-run the runtime audit so artifacts/release/runtime_audit.json records the new manifest_sha256 (tests/test_artifact_integrity.py::test_runtime_audit_matches_manifest asserts it): .venv/bin/python -m research.veyabench.run_runtime_audit - loads the model, ~34-90 s CPU, ~2 GB RSS.",
+        "Regenerate artifacts/release/release_metadata.json AFTER the runtime audit (order matters: the metadata hashes runtime_audit.json and manifest.json, and tests/test_release_metadata.py::test_metadata_mirrors_manifest_and_policy asserts the match): .venv/bin/python -m research.veyabench.release_metadata."
+      ],
+      "commands": [
+        ".venv/bin/python -m research.veyabench.run_runtime_audit",
+        ".venv/bin/python -m research.veyabench.release_metadata"
+      ],
+      "acceptance": "manifest selective_policy_hash matches the minted policy file; runtime_audit.json manifest_sha256 matches the re-minted manifest; release_metadata.json manifest_hash matches the re-minted manifest; every other pin is unchanged."
+    },
+    {
+      "order": 4,
+      "action": "Verify fail-closed policy loading",
+      "command": ".venv/bin/python -m pytest tests/test_selective_extra.py tests/test_artifact_integrity.py -v",
+      "additional_command": ".venv/bin/python -c \"from veya.release_bundle import load_release_manifest; load_release_manifest('artifacts/release/manifest.json', root='.')\"",
+      "acceptance": "All tests pass and the bundle loads through the production startup path (load_release_manifest -> veya.selective.load_policy), which refuses a missing or mismatched policy artifact before serving; every re-minted pin (selective_policy_hash, runtime_audit manifest_sha256) verifies."
+    },
+    {
+      "order": 5,
+      "action": "Run release-candidate gate",
+      "workflow": ".github/workflows/release-gate.yml",
+      "trigger": "push a v* version tag (the release-candidate-gate job)",
+      "command": "git tag <version> && git push origin <version>",
+      "acceptance": "The release-candidate-gate job is green: full test suite (pytest --tb=short -q), artifact integrity validation, license inventory check, freeze record validation, and Docker build validation."
+    },
+    {
+      "order": 6,
+      "action": "Run production-evidence gate",
+      "workflow": ".github/workflows/release-gate.yml",
+      "workflow_dispatch_input": "run_production_gate=true",
+      "command": "gh workflow run release-gate.yml --ref <version-tag> -f run_production_gate=true",
+      "acceptance": "The production-evidence-gate job runs (manual trigger only - it never runs on a tag push because it needs prospective evaluation data) and passes with the prospective blind evidence attached."
+    }
+  ],
+  "rollback": {
+    "action": "Set operating_epsilon back to disabled, re-mint policy+manifest, deploy previous known-good image",
+    "trigger": "Observed accepted-risk UCB exceeds approved epsilon or drift alert fires",
+    "trigger_detail": "drift_triggers risk_breach (a period's risk_ucb95 exceeds epsilon), coverage_drop, distribution_shift, or config_mismatch from research/veyabench/drift_monitor.py; or a failed G1/G2 gate on labeled data (docs/RUNBOOK.md sections 1-2). Never re-select a threshold on the data that showed the breach.",
+    "steps": [
+      "Set operating_epsilon back to \"disabled\" in artifacts/release/selective_policy.json; thresholds and all bindings stay untouched.",
+      "Re-mint the manifest (selective_policy_hash pin and automation record) and regenerate the second-order pins exactly as in activation step 3 (run_runtime_audit, then release_metadata).",
+      "Deploy the previous known-good image: git checkout <known-good-release-tag> && docker compose down && docker compose up -d (or kubectl rollout undo deployment/veya).",
+      "Confirm /readyz returns 200 and the X-Veya-Policy-Hash header matches the disabled policy hash."
+    ]
+  },
+  "notes": [
+    "This file documents the conditional procedure only; it does not enable anything. Selective automation stays disabled until every prerequisite passes.",
+    "current_state is pinned by tests/test_activation_procedure.py against the actual artifacts; refresh it in the same change as any re-mint (the test fails on drift).",
+    "The prospective blind run itself requires the manifest automation status to remain DISABLED (research/veyabench/run_prospective_blind.py refuses otherwise) - the run always precedes activation.",
+    "The frozen selective policy thresholds may never be changed; only operating_epsilon may switch, and only to a preregistered threshold key (docs/PROSPECTIVE_BLIND_WORKFLOW.md section 3).",
+    "The frozen temperature artifact is models/production/calibration_shortlist_k8.json (sha256 b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50, temperature 1.971127355603397): applied, never refit (P5)."
+  ]
+}

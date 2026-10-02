@@ -1,0 +1,297 @@
+{
+  "format": "veya-legal-review-packet-v1",
+  "generated": "2026-09-29T19:39:53Z",
+  "purpose": "Legal review required for 6 research datasets before production certification (G15)",
+  "project_license": "Apache-2.0",
+  "gate_context": {
+    "gate": "G15 (Licensing)",
+    "status": "BLOCKED_EXTERNAL",
+    "source": "artifacts/release/production_readiness_matrix.json and docs/PRODUCTION_READINESS.md",
+    "blocked_on": "Legal review of the 6 redistributed research datasets in datasets[] plus the phase10 derived training/validation files in additional_flagged_items[].",
+    "note": "This packet presents verified facts and open questions only. It contains no legal conclusions and no admission of any specific legal effect."
+  },
+  "shipping_boundary": {
+    "description": "What ships in the production artifact versus what stays repo-only, established from the Dockerfile, .dockerignore, pyproject.toml and artifacts/release/manifest.json.",
+    "docker_image_copies": [
+      "veya/",
+      "web/",
+      "models/production/",
+      "artifacts/release/"
+    ],
+    "dockerignore_excludes": [
+      "research/",
+      "docs/",
+      "tests/",
+      "notebooks/",
+      "assets/",
+      "artifacts/experiments/",
+      "artifacts/decisions/",
+      "artifacts/commercialization/",
+      "*.md"
+    ],
+    "pypi_package_contents": "packages = ['veya', 'veya.experimental', 'web'] per pyproject.toml; no research data or datasets.",
+    "public_web_surfaces": [
+      "/api/benchmark serves aggregate CLINC150 sealed-blind metrics read from artifacts/release/blind_clinc150_val_result.json (web/server.py)",
+      "The website benchmark section republishes the same aggregates (web/static/content.mjs)"
+    ],
+    "key_consequence": "No raw dataset file ships in the Docker image or the PyPI package. Dataset-derived material that does ship: the banking77-trained K=8 shortlist projection plus embedded banking77 label text (models/production/shortlist_k8.pt and shortlist_k8.pt.json), calibration temperatures fitted on banking77 test rows and on AG News test rows (models/production/calibration.json, calibration_shortlist_k8.json), and aggregate-only CLINC150 evaluation metrics (artifacts/release/blind_clinc150_val_result.json)."
+  },
+  "datasets": [
+    {
+      "name": "banking77",
+      "source": "GitHub PolyAI-LDN/task-specific-datasets (https://github.com/PolyAI-LDN/task-specific-datasets), recorded in research/data/registry.json; upstream repository license verified via GitHub API 2026-09-29 (spdx_id CC-BY-4.0). Local copies: research/data/banking77/train.csv (sha256 b06e26ac675513959a63135f11b94ea7786ed02da65db93a5650d8838cbc664b), research/data/banking77/test.csv (sha256 d12d6e3bc4c3103966ae786dc435913c0c563dfa328f5a3646d0e62cfeeb474d).",
+      "license": "CC-BY-4.0 (Creative Commons Attribution 4.0 International). No license file is bundled with the local copies; attribution is currently recorded only in research/data/registry.json.",
+      "usage": {
+        "training": true,
+        "evaluation": true,
+        "description": "Training (production-derived): the shipped K=8 shortlist projection models/production/shortlist_k8.pt was trained on banking77 train.csv rows 0:800 under the seed-17 shuffle (artifacts/release/manifest.json shortlist_training_split 'banking77_train_seed17_0_800'; research/data/registry.json: train rows 0:800 'train the shortlist projection only'). Shipped calibration temperatures were also fitted on banking77 public-test rows: choice:11+ temperature 1.8768868409628021 fitted on test rows 0:80 at 20 options, and hierarchical temperature 1.971127355603397 fitted on test rows 1100:1300 (180 rows). Evaluation/development: reranker and phase9 training (train 800:8600), phase6/9 calibration (8600:9300), validation and error analysis (9300:10003), K-selection and route calibration (test 80:1300), formerly-locked release test (test 1300:3080); all roles DEVELOPMENT-EXPOSED per docs/audit/data_lineage.json. The registry records used_for_training_weights: false for the local rows, which trained the shortlist projection only."
+      },
+      "ships_in_production": {
+        "raw_data": false,
+        "derived_weights": true,
+        "embedded_text": true,
+        "explanation": "Raw CSVs do not ship: the Docker image copies only veya/, web/, models/production/, artifacts/release/ (Dockerfile), and research/ is excluded by .dockerignore. Derived weights DO ship: models/production/shortlist_k8.pt (trained on banking77 train rows 0:800) is hash-pinned in artifacts/release/manifest.json and serves the shortlist_k8_packed_rerank route. Embedded text DOES ship: models/production/shortlist_k8.pt.json embeds all 77 banking77 label strings (e.g. 'Refund_not_showing_up', 'activate_my_card') and 77 candidate texts ('banking intent: ...') inside the manifest-pinned artifact. Calibration: models/production/calibration.json ships the choice:11+ temperature fitted on 80 banking77 test rows; models/production/calibration_shortlist_k8.json ships the hierarchical temperature fitted on 180 banking77 test rows (1100:1300)."
+      },
+      "redistribution": {
+        "redistributed_in_repo": true,
+        "files": [
+          "research/data/banking77/train.csv (git-tracked)",
+          "research/data/banking77/test.csv (git-tracked)"
+        ],
+        "implications": "Both CSV files are committed and redistribute with the repository. There is no bundled banking77 LICENSE file; attribution is recorded only in research/data/registry.json. CC-BY-4.0 attribution, license-notice and changes-indication conditions apply to this redistribution and to any redistribution of derived material outside the repository."
+      },
+      "legal_question": "Under CC-BY-4.0: (1) Does the current in-repo attribution (research/data/registry.json only, no bundled license text with the redistributed CSVs) satisfy the redistribution conditions? (2) Is training the K=8 shortlist on 800 rows and shipping the resulting weights considered creating a derivative work? (3) Do the shipped calibration temperatures fitted on banking77 test rows count as redistributed dataset-derived material? (4) Does CC-BY-4.0 require attribution in the production deployment for any of these, and where must it appear?",
+      "risk_level": "MEDIUM",
+      "recommendation_for_reviewer": "Confirm (a) sufficiency of the existing in-repo attribution and whether CC-BY-4.0 requires the license text to be bundled with the redistributed CSVs, and (b) whether the shipped shortlist weights, embedded label strings/prompt texts, and fitted calibration temperatures require attribution or notice in the production bundle. Also confirm the upstream license identification (GitHub repository license, verified 2026-09-29)."
+    },
+    {
+      "name": "ag_news",
+      "source": "Hugging Face fancyzhx/ag_news (https://huggingface.co/datasets/fancyzhx/ag_news; hub revision sha eb185aade064a813bc0b7f42de02595523103ca4). Local copy: research/data/ag_news/data/test-00000-of-00001.parquet (sha256 71de87ec66bc5737752a2502204dfa6d7fe9856ade3ea444dc6317789a4f13fb). The dataset card describes the AG corpus as gathered by the ComeToMyHead academic news search engine.",
+      "license": "unknown - no license declared. The HF dataset card and tags both carry license 'unknown' (verified 2026-09-29). The card text states the dataset is 'provided by the academic comunity for research purposes', which is a description, not a license grant.",
+      "usage": {
+        "training": true,
+        "evaluation": true,
+        "description": "Evaluation/calibration (local rows): 800 public-test rows under the seed-17 shuffle - rows 0:400 fitted the shipped choice:3-5 temperature 1.2076712505429734 (models/production/calibration.json; dataset_hash 'ag_news_test_0_400__banking77_test_20way_0_80'); rows 400:800 were used for phase3/6/7/9 validation and transfer checks; rows 800:7600 unused. Training (documented, not local): docs/audit/data_lineage.json records 'AG News is documented as part of the base checkpoint training mix'; README.md marks AG News 'in training mix'; BENCHMARKS.md audit note says 'Some datasets were in the training mix'. research/data/registry.json records used_for_training_weights: false for the local 800 rows and notes 'The public test split may overlap data the original checkpoint saw.' The two records conflict on whether AG News content trained the shipped base checkpoint - flagged for review. veya/train.py streams only LocalLLaMA/typed-decisions (Apache-2.0)."
+      },
+      "ships_in_production": {
+        "raw_data": false,
+        "derived_weights": true,
+        "embedded_text": false,
+        "explanation": "Raw parquet does not ship (research/ is excluded from the image). Shipped calibration parameter: models/production/calibration.json ships the choice:3-5 temperature 1.2076712505429734 fitted on 400 AG News rows, with dataset_hash 'ag_news_test_0_400__banking77_test_20way_0_80'. Weights: repository documentation states AG News was part of the base checkpoint training mix (README.md 'in training mix'; docs/audit/data_lineage.json), in which case the shipped English checkpoint (models/production weights + tokenizer) is derived from AG News content; research/data/registry.json records used_for_training_weights: false for the local rows. This conflict requires confirmation from the training provenance records. No AG News text is embedded in any shipped artifact."
+      },
+      "redistribution": {
+        "redistributed_in_repo": true,
+        "files": [
+          "research/data/ag_news/data/test-00000-of-00001.parquet (git-tracked)"
+        ],
+        "implications": "The parquet is committed and redistributes with the repository with no license grant attached. The dataset card's 'research purposes' wording is not a redistribution or commercial-use license, so repository redistribution and production-derived-value use are unresolved."
+      },
+      "legal_question": "ag_news has no declared license (HF card and tags: 'unknown'; card text says only 'research purposes'). (1) May the repository publicly redistribute the parquet? (2) May production ship a calibration temperature fitted on AG News rows? (3) If AG News was in the base-checkpoint training mix as the repository's own documentation states, what obligations attach to the shipped checkpoint and tokenizer? (4) If no grant can be established upstream, is removal of the parquet and re-fitting or removal of the AG-News-fitted calibration required?",
+      "risk_level": "HIGH",
+      "recommendation_for_reviewer": "Highest priority alongside SGD. Determine whether any license or grant exists for the AG News corpus (upstream maintainers may need to be contacted) and whether repository redistribution, the shipped AG-News-fitted calibration, and the possible checkpoint derivation can continue. The license inventory previously recorded the posture 'treat as restricted until a license is identified'; confirm or replace that posture."
+    },
+    {
+      "name": "clinc150 (CLINC OOS)",
+      "source": "GitHub clinc/oos-eval (https://github.com/clinc/oos-eval). Local copy: research/data/clinc150/data_full.json (sha256 36923c3705a59e08fe9c3883d8bc2dd966ef93e22cb78ac41171782a698d56e0); governing license file research/data/clinc150/LICENSE (sha256 e6bc9e9c474700b708f568bac9e5a8a9bcb2b1dad53442f5ba449fcb848b8e76).",
+      "license": "CC-BY-3.0 (Creative Commons Attribution 3.0 Unported - note the version: 3.0, not 4.0; its attribution and moral-rights wording differs from 4.0).",
+      "usage": {
+        "training": false,
+        "evaluation": true,
+        "description": "Evaluation only. Development: phase 1-9 partitions; test rows 0:4500 were scored once in a failed first blind run (aggregate persistence failed; no per-example outputs written) and remain DEVELOPMENT-EXPOSED. Sealed blind: val rows 0:3000 SEALED_BLIND_EVALUATED, aggregate-only result artifacts/release/blind_clinc150_val_result.json (per_example_outputs_written: false). Phase 10: train-partition rows 0:3000 used as schema-held-out validation (research/data/phase10/registry.json validation_role 'SCHEMA-HELD-OUT VALIDATION using train partition only'; training_role null). No weights were trained on clinc150."
+      },
+      "ships_in_production": {
+        "raw_data": false,
+        "derived_weights": false,
+        "embedded_text": false,
+        "explanation": "Raw data does not ship (research/ is excluded from the image). No weights trained on clinc150 ship. Aggregate results DO ship: artifacts/release/blind_clinc150_val_result.json (hash-pinned in artifacts/release/release_metadata.json) is inside the shipped artifacts/release/ bundle and is served publicly via web /api/benchmark and the website benchmark section (retrieval_recall_at_8 0.356, end_to_end 0.349, ECE 0.267). That file contains aggregates only - no dataset text, no labels, no per-example outputs."
+      },
+      "redistribution": {
+        "redistributed_in_repo": true,
+        "files": [
+          "research/data/clinc150/data_full.json (git-tracked)",
+          "research/data/clinc150/LICENSE (git-tracked)"
+        ],
+        "implications": "The data file and its license text are committed together, so the license travels with the redistribution. CC-BY-3.0 attribution conditions apply to this redistribution; wording differs from 4.0."
+      },
+      "legal_question": "Does the in-repo redistribution satisfy CC-BY-3.0 attribution (author, title, source, changes indicated) given the license file is bundled but no explicit attribution statement accompanies the data? Does publishing aggregate evaluation metrics derived from clinc150 (served via /api/benchmark and the website) trigger any CC-BY-3.0 condition?",
+      "risk_level": "LOW",
+      "recommendation_for_reviewer": "Confirm attribution completeness for the bundled redistribution and that aggregate-only metric publication needs no additional notice. Lowest-effort clearance item; the bundled LICENSE file covers the redistribution form."
+    },
+    {
+      "name": "hwu64 (NLU Evaluation Data, home domain)",
+      "source": "GitHub xliuhw/NLU-Evaluation-Data (https://github.com/xliuhw/NLU-Evaluation-Data). Local copy: research/data/hwu64/NLU-Data-Home-Domain-Annotated-All.csv; license file research/data/hwu64/LICENSE (sha256 9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411, matching license_sha256 in research/data/hwu64/registry.json).",
+      "license": "CC-BY-4.0 (Creative Commons Attribution 4.0 International).",
+      "usage": {
+        "training": false,
+        "evaluation": true,
+        "description": "Evaluation only: one-shot blind commercialization evaluation against frozen production weights - 3000 sampled examples, n=500 per view (clean/prefix/suffix). research/data/hwu64/registry.json role ONE_SHOT_BLIND_CONSUMED; result artifacts/commercialization/blind_hwu64_result.json (status BLIND_COMPLETE_CONSUMED, dataset block license CC-BY-4.0, license_sha256 9ba9550a..., source_commit f6071b49...). No training usage; no weights derived from it."
+      },
+      "ships_in_production": {
+        "raw_data": false,
+        "derived_weights": false,
+        "embedded_text": false,
+        "explanation": "Nothing derived from hwu64 ships in production: the CSV is not in the Docker image (research/ is excluded), and the blind result sits in artifacts/commercialization/, which is also excluded by .dockerignore. No dataset text or weights derived from hwu64 ship."
+      },
+      "redistribution": {
+        "redistributed_in_repo": true,
+        "files": [
+          "research/data/hwu64/NLU-Data-Home-Domain-Annotated-All.csv (present in working tree; NOT git-tracked - excluded by .gitignore)",
+          "research/data/hwu64/LICENSE (git-tracked)",
+          "research/data/hwu64/registry.json (git-tracked)"
+        ],
+        "implications": "The dataset content is present under research/data/hwu64/ but is deliberately not committed; git distribution includes only the LICENSE and registry. Note: license_inventory.json's redistribution_notes groups hwu64 among 'datasets redistributed inside this repository' - the git-level evidence is that the data file itself is untracked/ignored while its license and registry are committed. If a working-tree archive (rather than a git clone) is distributed, the CSV is included and CC-BY-4.0 conditions attach to it."
+      },
+      "legal_question": "Does git-excluding the dataset CSV (working-tree only) while committing its LICENSE and registry satisfy CC-BY-4.0 for the repository distribution? Does the published one-shot blind result artifact (repo-only under artifacts/commercialization/, not in the production image) require CC-BY-4.0 attribution, and is the recorded attribution sufficient?",
+      "risk_level": "LOW",
+      "recommendation_for_reviewer": "Confirm the repo distribution posture (CSV ignored; LICENSE + registry committed) is acceptable and that the blind result artifact needs no additional attribution beyond the registry record."
+    },
+    {
+      "name": "amazon_massive (MASSIVE, en-US)",
+      "source": "Hugging Face AmazonScience/massive (https://huggingface.co/datasets/AmazonScience/massive). Local copy: research/data/massive/massive-test.parquet (sha256 c418da9a5f3a7425b5cf44941bcea032a31040dbda2da85e0dd9323785c7731e); license file research/data/massive/LICENSE (sha256 c2e6ea015269147de02117ebdd91f30ef09831251f5345fa8365273b1db1d435).",
+      "license": "CC-BY-4.0 (Creative Commons Attribution 4.0 International; the license file carries a 'Copyright Amazon.com Inc. or its affiliates' header).",
+      "usage": {
+        "training": false,
+        "evaluation": true,
+        "description": "Evaluation only: phase10 one-shot sealed blind evaluation of the en-US test rows (2974 examples) against the phase10 research retriever. Freeze docs/phase10/blind_massive_freeze.json (status CONSUMED); result artifacts/experiments/phase10/blind_massive_result.json (sealed aggregates only - 'no per-example predictions, errors, scores, ranks, confidence, or class metrics written'). research/data/phase10/registry.json registered it as 'FUTURE BLIND CANDIDATE; data absent and untouched' at freeze-design time. No training usage."
+      },
+      "ships_in_production": {
+        "raw_data": false,
+        "derived_weights": false,
+        "embedded_text": false,
+        "explanation": "Nothing derived from massive ships in production: the parquet is not in the Docker image (research/ is excluded); the freeze and result files live under docs/phase10/ and artifacts/experiments/phase10/, both excluded from the image (.dockerignore excludes docs/ and artifacts/experiments/). The raw parquet is redistributed in-repo (git-tracked), see redistribution."
+      },
+      "redistribution": {
+        "redistributed_in_repo": true,
+        "files": [
+          "research/data/massive/massive-test.parquet (git-tracked)",
+          "research/data/massive/LICENSE (git-tracked)"
+        ],
+        "implications": "The test parquet and its license file are committed together; CC-BY-4.0 attribution/notice conditions apply to this redistribution."
+      },
+      "legal_question": "Does the in-repo redistribution (parquet bundled with its LICENSE file) satisfy CC-BY-4.0 conditions, including any changes-indicated requirement for a redistributed test-partition copy, and are the Amazon copyright and attribution notices correctly preserved? Do the aggregate-only blind evaluation results impose any further obligations?",
+      "risk_level": "LOW",
+      "recommendation_for_reviewer": "Confirm attribution/notice completeness for the bundled redistribution; no production artifact derives from massive, and the evaluation was aggregate-only."
+    },
+    {
+      "name": "schema_guided_dialogue (SGD / DSTC-8)",
+      "source": "GitHub google-research-datasets/dstc8-schema-guided-dialogue (https://github.com/google-research-datasets/dstc8-schema-guided-dialogue). Copies at research/data/sgd/ and docs/audit/data/external/sgd/ (the latter includes train/dev/test and SGD-X). research/veyabench/phase12_sgd_inventory.py records the expected upstream commit e852981ae34990f4358979625854259302feaa78. Citations recorded in research/data/sgd/README.md: Rastogi et al. 2020 (arXiv:1909.05855) for SGD; Lee et al. 2022 for SGD-X.",
+      "license": "CC-BY-SA-4.0 (Creative Commons Attribution-ShareAlike 4.0 International). Local license files research/data/sgd/LICENSE.txt and docs/audit/data/external/sgd/LICENSE.txt (sha256 71a43a169b52bb1b39510b65ec5b43b4bbb59196d449a835fe58b50af6a72742, matching source_sha256.license in research/data/phase10/registry.json). The README states: 'The SGD and SGD-X datasets are released under CC BY SA 4.0'. The upstream README adds an AS-IS, no-warranty disclaimer from Google.",
+      "usage": {
+        "training": true,
+        "evaluation": true,
+        "description": "Training (research-only): 1820 SGD-derived examples are designated 'TRAIN except frozen development services' in research/data/phase10/registry.json and trained the phase10 research retriever (artifacts/experiments/phase10/domain_general_k8.pt; git-tracked but NOT part of the audited release manifest and not in the Docker image). Development/validation: five services frozen for development validation (Calendar_1, Flights_1, Hotels_3, Media_1, Services_3). Evaluation: phase12 SGD provenance/label inventory audits (research/veyabench/phase12_sgd_inventory.py). No production-shipped weights were trained on SGD."
+      },
+      "ships_in_production": {
+        "raw_data": false,
+        "derived_weights": false,
+        "embedded_text": false,
+        "explanation": "No SGD-derived artifact ships in production: dialogues and derived files live under research/ (excluded from the image); the research retriever artifacts/experiments/phase10/domain_general_k8.pt is outside the release manifest and outside the image (artifacts/experiments/ is excluded by .dockerignore). No SGD text is embedded in any shipped artifact."
+      },
+      "redistribution": {
+        "redistributed_in_repo": true,
+        "files": [
+          "research/data/sgd/LICENSE.txt (git-tracked)",
+          "research/data/sgd/README.md (git-tracked)",
+          "research/data/sgd/train/schema.json, research/data/sgd/dev/schema.json (git-tracked)",
+          "research/data/sgd/{train,dev}/dialogues_*.json (present in working tree; NOT git-tracked - excluded by .gitignore)",
+          "docs/audit/data/external/sgd/ full copy including test/ and sgd_x/ (present in working tree; the docs/audit/data/ directory is currently untracked and NOT covered by .gitignore - a blanket 'git add .' would commit it)",
+          "research/data/phase10/train.jsonl, development.jsonl, schema_held_out_validation.jsonl, candidates.json (git-tracked; contain SGD-derived rows)"
+        ],
+        "implications": "SGD content is redistributed in the repository in two forms: git-tracked schemas and git-tracked phase10 derived files (which include SGD-derived training rows), plus working-tree dialogue copies (research/data/sgd and the full copy at docs/audit/data/external/sgd). The ShareAlike clause is copyleft-style: adaptations and distributions of the material must be offered under CC-BY-SA-4.0 or a compatible license. The repository's project license is Apache-2.0, and the phase10 derived files plus the research retriever are SGD adaptations, so the interaction between ShareAlike and the repository/project licensing requires legal review. The untracked audit copy at docs/audit/data/external/sgd/ is not currently gitignored and could be committed accidentally."
+      },
+      "legal_question": "CC-BY-SA-4.0 share-alike: (1) Do the git-tracked phase10 derived training/validation files (containing 1820 SGD rows) count as 'adapted material' that must be licensed under CC-BY-SA-4.0 (or a compatible license) rather than falling under the repository's Apache-2.0 project license? (2) What license and notice treatment is required for those derived files and for the research retriever weights trained on them? (3) Does in-repo redistribution of schemas and derived rows require a bundled attribution/ShareAlike notice? (4) What handling is required for the currently untracked, non-ignored full-copy directory docs/audit/data/external/sgd/? (5) Does ShareAlike constrain any future decision to ship SGD-derived model weights in production?",
+      "risk_level": "HIGH",
+      "recommendation_for_reviewer": "Highest risk alongside ag_news (unknown license). Determine the ShareAlike reach for the derived files and the research weights, the required license/notice treatment for each redistributed form, and whether SGD-derived material must be excluded from any production distribution. Also decide the disposition of the untracked audit copy (commit with ShareAlike treatment vs. remove/ignore) and confirm the phase12 commit pin (expected e852981ae34990f4358979625854259302feaa78) matches the copy actually distributed."
+    }
+  ],
+  "additional_flagged_items": [
+    {
+      "name": "phase10 derived training/validation files",
+      "source": "Derived in-repo from banking77 (CC-BY-4.0, 3075 examples), schema_guided_dialogue (CC-BY-SA-4.0, 1820 examples) and clinc150 (CC-BY-3.0, 3000 train-partition examples); see research/data/phase10/registry.json and research/data/phase10/README if present.",
+      "license": "mixed upstream: CC-BY-4.0 / CC-BY-SA-4.0 / CC-BY-3.0 (SGD-derived content carries ShareAlike terms; the rest carries CC-BY attribution terms).",
+      "usage": {
+        "training": true,
+        "evaluation": true,
+        "description": "trained the research-only phase10 retriever (domain_general_k8.pt) and ran schema-held-out validation; not part of the audited release manifest."
+      },
+      "ships_in_production": {
+        "raw_data": false,
+        "derived_weights": false,
+        "embedded_text": false,
+        "explanation": "All files live under research/ (excluded from the Docker image); the retriever trained on them is outside the release manifest. Repository redistribution only (git-tracked)."
+      },
+      "redistribution": {
+        "redistributed_in_repo": true,
+        "files": [
+          "research/data/phase10/candidates.json (git-tracked)",
+          "research/data/phase10/train.jsonl (git-tracked)",
+          "research/data/phase10/development.jsonl (git-tracked)",
+          "research/data/phase10/schema_held_out_validation.jsonl (git-tracked)"
+        ],
+        "implications": "All four content files are git-tracked and redistribute with the repository; registry.json is tracked metadata. Redistribution of these derived files outside the repository requires legal review (per license_inventory.json). If the ShareAlike clause reaches the SGD-derived rows, those files (or portions) must be offered under CC-BY-SA-4.0 terms."
+      },
+      "legal_question": "What license and notices must accompany the phase10 derived files given mixed CC-BY-4.0/CC-BY-SA-4.0/CC-BY-3.0 upstreams, and does ShareAlike require the SGD-derived portions to be licensed under CC-BY-SA-4.0 within the repository?",
+      "risk_level": "HIGH",
+      "recommendation_for_reviewer": "Review together with the SGD entry and the parent datasets; determine the correct license/notice treatment for derived files mixing attribution-only and ShareAlike upstream terms."
+    }
+  ],
+  "summary": {
+    "total_flagged": 6,
+    "by_license": {
+      "CC-BY-4.0": 3,
+      "CC-BY-3.0": 1,
+      "CC-BY-SA-4.0": 1,
+      "unknown": 1
+    },
+    "highest_risk": "SGD (CC-BY-SA-4.0) — share-alike clause may affect derived works",
+    "by_risk": {
+      "HIGH": 2,
+      "MEDIUM": 1,
+      "LOW": 3
+    },
+    "notes": [
+      "license_inventory.json contains 7 REQUIRES_LEGAL_REVIEW entries: the 6 datasets in datasets[] plus one grouped entry for the phase10 derived training/validation files, recorded in additional_flagged_items[]. summary.total_flagged counts the 6 datasets as specified for this packet.",
+      "G15 in artifacts/release/production_readiness_matrix.json is BLOCKED_EXTERNAL; its next_action lists the same 6 datasets plus the phase10 derived files.",
+      "No raw dataset files ship in the Docker image or the PyPI package. Shipped dataset-derived material is limited to: the banking77-trained K=8 shortlist plus embedded banking77 label text, calibration temperatures fitted on banking77 and ag_news test rows, and aggregate-only CLINC150 evaluation metrics.",
+      "All 6 datasets are redistributed under research/data/; clinc150, hwu64, massive and sgd bundle their license text in the repository, while banking77 has no bundled license file and ag_news has no license to bundle."
+    ]
+  },
+  "disposition_template": {
+    "instructions": "For each dataset, legal reviewer should provide: CLEARED / CLEARED_WITH_CONDITIONS / BLOCKED, with conditions or blocking reason",
+    "record_in": "artifacts/release/legal_dispositions.json",
+    "triggers_recomputation_of": "G15 status in production_readiness_matrix.json"
+  },
+  "evidence_references": {
+    "license_inventory": "artifacts/release/license_inventory.json",
+    "data_lineage": "docs/audit/data_lineage.json",
+    "release_manifest": "artifacts/release/manifest.json",
+    "release_metadata": "artifacts/release/release_metadata.json",
+    "production_readiness_matrix": "artifacts/release/production_readiness_matrix.json",
+    "dataset_registries": [
+      "research/data/registry.json",
+      "research/data/hwu64/registry.json",
+      "research/data/phase10/registry.json"
+    ],
+    "shipping_boundary": [
+      "Dockerfile",
+      ".dockerignore",
+      "pyproject.toml"
+    ],
+    "shipped_dataset_derived_artifacts": [
+      "models/production/shortlist_k8.pt",
+      "models/production/shortlist_k8.pt.json",
+      "models/production/calibration.json",
+      "models/production/calibration_shortlist_k8.json",
+      "artifacts/release/blind_clinc150_val_result.json"
+    ],
+    "evaluation_results": [
+      "artifacts/release/blind_clinc150_val_result.json",
+      "artifacts/commercialization/blind_hwu64_result.json",
+      "docs/phase10/blind_massive_freeze.json",
+      "artifacts/experiments/phase10/blind_massive_result.json"
+    ],
+    "training_script": "veya/train.py",
+    "sgd_readme": "research/data/sgd/README.md",
+    "sgd_provenance_script": "research/veyabench/phase12_sgd_inventory.py"
+  }
+}

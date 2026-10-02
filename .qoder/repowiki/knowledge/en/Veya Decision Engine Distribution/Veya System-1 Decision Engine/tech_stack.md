@@ -1,0 +1,1 @@
+PyTorch + transformers (ModernBERT/mmBERT backbones via `AutoModel` with `attn_implementation="sdpa"`), safetensors for weight loading, huggingface_hub for checkpoint download, numpy for post-processing; HTTP serving uses only the Python stdlib `http.server`.

@@ -1,0 +1,24 @@
+{
+  "cardinality_temperatures": {
+    "noul:2": 2.0205
+  },
+  "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "checkpoint_id": "models/production english",
+  "dataset_hash": "t4_colab_typed_decisions_heldout_1000_noul",
+  "fitted_at": "2026-09-19T04:45:43Z",
+  "fitting_split": "typed_decisions_heldout",
+  "fitting_role": "calibration",
+  "fit_split_hashes": {},
+  "format": "veya-calibration-v1",
+  "global_temperature": 2.0205,
+  "min_observations": 32,
+  "method": "temperature-nll",
+  "notes": "Fitted on T4 Colab benchmark (seed=13) typed_decisions held-out split (n=1000). English checkpoint (ModernBERT-large). Shipped ECE for noul was not calibrated; this artifact provides the NLL-minimizing temperature on the held-out split. The prompt_injections suite (n=58) gave 7.2626 but typed_decisions n=1000 is more representative.",
+  "primitive_temperatures": {
+    "noul": 2.0205
+  },
+  "scorer_id": "base_decision_head",
+  "sample_counts": {
+    "noul:2": 1000
+  }
+}

@@ -1,0 +1,1 @@
+Stores the frozen production model binaries, tokenizer/config artifacts and calibration metadata alongside a chronological archive of experiment graphs, decisions, and commercialization results.

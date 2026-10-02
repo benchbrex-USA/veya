@@ -1,7 +1,7 @@
 {
   "format": "veya-runtime-audit-v1",
   "release": "0.3.5-audit-baseline.1",
-  "manifest_sha256": "c7febd238afa79144d907cdc4eb4bd229a0bca705c952352302772f8269d9648",
+  "manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
   "environment": {
     "platform": "macOS-27.0-arm64-arm-64bit",
     "machine": "arm64",
@@ -9,61 +9,61 @@
     "device": "cpu"
   },
   "cold_start": {
-    "module_enter_to_loaded_s": 33.849,
-    "manifest_load_s": 33.849,
+    "module_enter_to_loaded_s": 90.802,
+    "manifest_load_s": 90.802,
     "stages_s": {
-      "checkpoint_hash_s": 10.887,
-      "checkpoint_load_s": 22.751,
-      "shortlist_load_s": 0.098,
-      "route_calibration_load_s": 0.012
+      "checkpoint_hash_s": 11.329,
+      "checkpoint_load_s": 78.981,
+      "shortlist_load_s": 0.135,
+      "route_calibration_load_s": 0.014
     },
-    "rss_mb_after_benchmark": 2030.5
+    "rss_mb_after_benchmark": 1638.9
   },
   "latency": {
     "small_packed_choice": {
       "n": 20,
-      "p50_ms": 105.25454199523665,
-      "p90_ms": 106.38761729933321,
-      "p95_ms": 108.6329544428736,
-      "p99_ms": 109.73742369562387,
-      "mean_ms": 105.44239380105864,
-      "throughput_per_second": 9.483851456243778
+      "p50_ms": 108.6992079999618,
+      "p90_ms": 112.31826630137222,
+      "p95_ms": 127.11416810161614,
+      "p99_ms": 191.55460001980816,
+      "mean_ms": 114.32348319976882,
+      "throughput_per_second": 8.747109272839424
     },
     "high_n_choice_77": {
       "n": 20,
-      "p50_ms": 163.39977100142278,
-      "p90_ms": 164.88029969332274,
-      "p95_ms": 165.1583166909404,
-      "p99_ms": 166.08843052992597,
-      "mean_ms": 163.452706298267,
-      "throughput_per_second": 6.117977625743371
+      "p50_ms": 175.3020625001227,
+      "p90_ms": 258.73780439796974,
+      "p95_ms": 260.14328269739053,
+      "p99_ms": 266.78175653898506,
+      "mean_ms": 192.0368895498541,
+      "throughput_per_second": 5.207332832478486
     },
     "noul": {
       "n": 20,
-      "p50_ms": 76.01224997779354,
-      "p90_ms": 99.45081628975458,
-      "p95_ms": 105.83598066732525,
-      "p99_ms": 156.82536331965812,
-      "mean_ms": 85.63332710036775,
-      "throughput_per_second": 11.677696451382017
+      "p50_ms": 84.72633299970767,
+      "p90_ms": 91.07503779850958,
+      "p95_ms": 91.73637499916367,
+      "p99_ms": 92.40137499757111,
+      "mean_ms": 85.40548329983721,
+      "throughput_per_second": 11.708850080377756
     },
     "score_categorical": {
       "n": 20,
-      "p50_ms": 76.31535451218951,
-      "p90_ms": 80.11060061689932,
-      "p95_ms": 83.11641042091651,
-      "p99_ms": 89.74604846531291,
-      "mean_ms": 77.60833115316927,
-      "throughput_per_second": 12.885214578656266
+      "p50_ms": 81.17825000044832,
+      "p90_ms": 82.5873831021454,
+      "p95_ms": 84.12784439951793,
+      "p99_ms": 85.56250248238939,
+      "mean_ms": 81.45463124983507,
+      "throughput_per_second": 12.276772783278972
     },
     "systemone_three_questions": {
       "n": 20,
-      "p50_ms": 214.78562500851694,
-      "p90_ms": 231.76565439498518,
-      "p95_ms": 237.37253267900093,
-      "p99_ms": 293.6827065341639,
-      "mean_ms": 221.00500209635356,
-      "throughput_per_second": 4.524784464217786
+      "p50_ms": 221.5870205000101,
+      "p90_ms": 228.8398418986617,
+      "p95_ms": 236.45234099967638,
+      "p99_ms": 248.2388010001159,
+      "mean_ms": 224.5679478504826,
+      "throughput_per_second": 4.452995227376795
     }
   },
   "multi_question_redundancy": {

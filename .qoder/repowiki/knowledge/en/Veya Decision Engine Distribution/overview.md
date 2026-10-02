@@ -1,0 +1,1 @@
+Root distribution of Veya that packages the non-autoregressive decision engine, web gateway, held-out research harness, frozen artifacts, docs, and tests behind a single `veya` PyPI package.

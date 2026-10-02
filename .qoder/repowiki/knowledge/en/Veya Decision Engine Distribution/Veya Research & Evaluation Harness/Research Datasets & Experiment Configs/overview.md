@@ -1,0 +1,1 @@
+Holds static experiment configuration manifests and the curated dataset snapshots (parquet, CSV, JSONL) used by research scripts for intent classification, ordinal scoring, and dialogue benchmarks.

@@ -1,0 +1,5 @@
+- Heavy third-party imports (`transformers`, `sentence_transformers`, `typesafe_sdk`) are deferred inside `_ensure()` or `_options_probs` so rivals can be imported without those packages present.
+- Optional rivals declare availability via an `available()` boolean and a human-readable `unavailable_reason()` string instead of raising at import time.
+- Rival subclasses implement only `_options_probs(state, qdef, options)` returning a score vector aligned to `option_labels(qdef)`, while `Rival.score()` handles timing, exception swallowing, normalization, and None-dropping.
+- Evaluation harnesses enforce idempotency by checking for pre-existing output files and/or verifying SHA-256 digests of frozen manifests before running.
+- Dataset rows are keyed as `"dataset:row_id"` strings and registered through `SplitLedger.add`, which enforces that a key appears in exactly one split and that test-purpose rows cannot carry training exposure.

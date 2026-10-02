@@ -1,0 +1,49 @@
+{
+  "format": "veya-production-scope-v1",
+  "version": "0.3.5",
+  "release": "0.3.5-audit-baseline.1",
+  "architecture_version": "veya-shortlist-k8-packed-rerank-v1",
+  "supported": {
+    "languages": ["en"],
+    "decision_primitives": ["choice", "noul", "score-categorical", "systemone"],
+    "max_candidates": {
+      "packed": 19,
+      "shortlist_rerank": 100,
+      "gateway_cap_choice": 100,
+      "shortlist_k": 8,
+      "note": "web/contracts.py MAX_CHOICE=100; manifest packed_max_candidates=19, shortlist triggers at 20 candidates; score is limited to 2-10 ordered labels; systemone to 1-8 questions"
+    },
+    "selective_automation": {
+      "policy_loaded_and_enforced": true,
+      "automation_enabled": false,
+      "defer_behavior": "shortlist-route decisions report automation='defer' and defer_reason 'model_deferred'; the decision payload still carries probabilities and confidence",
+      "fail_closed": true,
+      "policy_required": true,
+      "policy_source": "artifacts/release/selective_policy.json (operating_epsilon='disabled'; the validation-selected 5% threshold observed 6.99% risk on development-exposed reporting data)"
+    },
+    "deployment_model": "single audited English release bundle loaded via load_release_manifest with full hash verification; target-domain with a validated selective policy required before any automation is enabled",
+    "calibration": "per-cardinality temperature buckets for packed choice plus a frozen hierarchical route temperature (1.971127355603397), pinned and hash-verified in the release manifest; noul and categorical score use checkpoint temperatures only; ordinal score is research-only"
+  },
+  "unsupported": {
+    "multilingual": "not validated; the multilingual encoder exists (mmBERT, models/production/multilingual) but has no production evaluation; manifest marks multilingual_choice/noul/score RESEARCH ONLY",
+    "high_candidate_retrieval": "candidate counts above the gateway cap of 100 are not accepted; the K=8 shortlist projection is Banking77-trained and cross-domain retrieval quality is not assumed",
+    "moderation": "no content moderation capability in this release",
+    "arbitrary_schemas": "unseen schemas require target-domain evaluation before production; state is capped at 12 KB and instructions at 500 characters",
+    "zero_shot_classification": "unrestricted zero-shot is not production-scoped; only the four audited primitives are served",
+    "autonomous_without_deferral": "all production decisions require the selective policy with abstention; manifest automation.status is DISABLED",
+    "phase9_hypothesis_scoring": "RESEARCH ONLY; development-exposed lineage and unresolved injection sensitivity, not loaded by the manifest",
+    "ordinal_score": "RESEARCH ONLY (veya/experimental/ordinal.py); served score is categorical only"
+  },
+  "unsupported_input_behavior": {
+    "unsupported_language": "returns a defer decision with defer_reason 'unsupported_language' (veya/lang.defer_reason rejects non-Latin script and non-English Latin text on the English checkpoint)",
+    "excess_candidates": "returns 400 invalid_input from the gateway ('Choice requires 2-100 candidates'); the model server rejects schema violations with defer_reason 'invalid_schema'",
+    "missing_policy": "fail-closed: load_release_manifest verifies the selective policy artifact by SHA-256 and refuses startup if missing or mismatched",
+    "hash_mismatch": "fail-closed: load_release_manifest recomputes every runtime/config/tokenizer/router/shortlist/calibration/policy hash and raises before serving; the server never becomes ready"
+  },
+  "references": {
+    "manifest": "artifacts/release/manifest.json",
+    "selective_policy": "artifacts/release/selective_policy.json",
+    "runtime_audit": "artifacts/release/runtime_audit.json",
+    "change_protocol": "docs/CHANGE_PROTOCOL.md"
+  }
+}

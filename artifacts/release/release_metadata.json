@@ -1,0 +1,101 @@
+{
+  "format": "veya-release-metadata-v1",
+  "generated": "2026-09-29T20:51:22Z",
+  "source": {
+    "git_commit": "2b5b8a172e694805faf09bcb3b1948be14a6378b",
+    "git_dirty": true,
+    "repository": "veya"
+  },
+  "dependencies": {
+    "lock_file": "requirements.lock",
+    "lock_hash": "cff02fb775a014ac828523f78ec397d1fd4a3d8c490fa5c729d292447c907242",
+    "sbom_file": "artifacts/release/sbom.json",
+    "sbom_hash": "ab7c42b9627314dbc7ebc85a18a88cf8609a329923cc8a784570eb8e7ae7d829",
+    "python_version": "3.11.0"
+  },
+  "model_artifacts": {
+    "manifest_file": "artifacts/release/manifest.json",
+    "manifest_hash": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+    "release": "0.3.5-audit-baseline.1",
+    "checkpoint_path": "models/production",
+    "checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "shortlist_hash": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+    "policy_hash": "80e7be582c9c890cf73da701cbd86a71c6d908331186ee68f1021763011cd620"
+  },
+  "drift": {
+    "runtime_files_checked": 15,
+    "runtime_files_mismatched": [],
+    "runtime_files_missing": [],
+    "runtime_file_hashes": {
+      "veya/__init__.py": "272bb6891d1d12475a0131a16146c8dbfc89efab2c4a241ef3d7c1d174810853",
+      "veya/agent.py": "a434f991f4edd27278cf49ce7d9af50bb1fc403074a63e0e9419d41f66f15551",
+      "veya/calibration.py": "de4a79d4345784fac2f16e3c256021ba162f03171a10416aec526e9f7698c0ca",
+      "veya/common.py": "4b9e77b7f78a0377e1cbd3656c01bfb4613e66a08c5f2892af364f3a3e2465a2",
+      "veya/email.py": "8f71e5edb7cc5105f80e4dccf46f2e9ba99ea2692b0587f004d334f92d563805",
+      "veya/lang.py": "ec1b58209f2386167d6a2504334a5abeed8152a3b37008a57ba8c1c28d41db32",
+      "veya/manifest.py": "4e57503a03de23204f3738a3830eb5d1f1404e2b18b4ca1192c3905695924c0f",
+      "veya/presets.py": "2a3370f587cae29696bfa487edcc51caf47a211518733fdb192cf6d4eddbf1ea",
+      "veya/release_bundle.py": "d62ac6442174ec6073cd51ad1974d03051cb75825bc164587bdbd11ac880497c",
+      "veya/reranker.py": "75b1356ddf7c6f755838c88d0918d107c835728125f1c37ce81b29e846b2991b",
+      "veya/router.py": "10be5b9b11c3014b99cf12d3caf68af253832f4fb314532fed2a6eb69b04b96e",
+      "veya/selective.py": "62e36607baea1585418169406423908bd988d4a5c6d1c8ef7bf1abbb975e91e3",
+      "veya/server.py": "6b9546a0c80acfbc51efc0b6155c37e46221eecbbb7f05940cc238eec535622d",
+      "veya/shortlist.py": "a5c100fc356db0a285176c709310776b9e98823d4a7330c0557d1d63b8c6151b",
+      "veya/shortlist_artifact.py": "b697ca2389997a286550fddb97f3dee53d780739b8157e8ad32547af71f9ba40"
+    },
+    "note": "manifest.json pins SHA-256 for every served runtime file. Entries in runtime_files_mismatched are working-tree edits made after the manifest was minted (post-audit drift); runtime_file_hashes records their accurate current hashes so the next manifest re-mint can absorb them."
+  },
+  "calibration": {
+    "packed_choice": "models/production/calibration.json",
+    "packed_choice_hash": "1d1c5834b362e86f60abac9d608a4a9506ba4fe5100c352538900a4958b5ad9b",
+    "packed_scorer_id": "base_decision_head",
+    "hierarchical_choice": "models/production/calibration_shortlist_k8.json",
+    "hierarchical_choice_hash": "b022512e10ef2141c76cdf380eafe8099f171cbbc2c536f7789a25a29b0a6f50",
+    "hierarchical_route": "shortlist_k8_packed_rerank",
+    "hierarchical_scorer_id": "base_decision_head",
+    "hierarchical_temperature": 1.971127355603397,
+    "noul": "checkpoint temperature only; no independent audit calibration artifact",
+    "score": "checkpoint categorical temperature only; ordinal is RESEARCH ONLY"
+  },
+  "config": {
+    "scorer_id": "base_decision_head",
+    "score_method": "max_probability",
+    "route": "shortlist_k8_packed_rerank",
+    "operating_epsilon": "disabled",
+    "architecture_version": "veya-shortlist-k8-packed-rerank-v1"
+  },
+  "ci": {
+    "pipeline_run_id": "local",
+    "pipeline_url": "local",
+    "triggered_by": "local",
+    "ref": "local"
+  },
+  "build": {
+    "timestamp": "2026-09-29T20:51:22Z",
+    "docker_image_digest": "not_built",
+    "python_version": "3.11.0",
+    "platform": "macOS-27.0-arm64-arm-64bit"
+  },
+  "evaluation_references": {
+    "artifacts/release/activation_procedure.json": "1e8e18a666ce0e818cad8c3180c7c6ff4879aa9a7d916b3ebdb642c7bcc9c821",
+    "artifacts/release/blind_clinc150_test_failed_run.json": "2e13a9c50a8085742452e63a786665a6fe5df6004334cf8416698726f04438de",
+    "artifacts/release/blind_clinc150_val_result.json": "406d728226f81f9586c091f60d9f003328453331ad740595eb639d1542137e8d",
+    "artifacts/release/gap_audit.json": "b56c869c7b5bbe64740c4f1e81c5643751e8246d30f25e41781de117d3319957",
+    "artifacts/release/legal_review_packet.json": "bc475bcd0e95aa66df933a18df666ee7cc1f6c9467b745429298718f548e51fc",
+    "artifacts/release/license_inventory.json": "ea8ab2d74d265ac34ad8f78233d313e67405b22002f5dc39e7cc9ea60da8c572",
+    "artifacts/release/manifest-phase5.json": "a95caba6d95216b05a2edab5e6e7e78b8ab222b2ded3991a93a834aa4aaad166",
+    "artifacts/release/manifest-phase9.json": "d6730a8476f93d1ed9b40e58784ce9c77f95f7beaf3670d85326de40acd4efeb",
+    "artifacts/release/phase_audit.json": "13a98ff4e90c7d132cf5d1d4a2172ef842a0ffefc9c831c388d9bffefbbfcc44",
+    "artifacts/release/production_readiness_matrix.json": "6e9089ba154ea92a13eb39c52ab963ab806b06f6811f96bb41fff675b7acd507",
+    "artifacts/release/prospective_blind_config.template.json": "420acee92369470310414fefff9639680e857594f0a466052f73c1edf06b33ae",
+    "artifacts/release/route_cutoff_audit.json": "2a304c1c5b9270225aec72304292fbdbefab25490132ff440136de87690b4ddc",
+    "artifacts/release/runtime_audit.json": "b718682a38b80760b13113f71b2d636e391955eb51240853adc58eee144e02a6",
+    "artifacts/release/shadow_schema.json": "2e9ac52da04889ca3b2dedf88b77010177e4d71f11958d042748c95883e7ff6f",
+    "artifacts/release/system_map.json": "c4cad2c736b870564501c75072c0b63be5ffeaff6175f351b583fcc93bb3bb72"
+  },
+  "production_scope": {
+    "scope_file": "artifacts/release/production_scope.json",
+    "version": "0.3.5",
+    "release": "0.3.5-audit-baseline.1"
+  }
+}

@@ -1,0 +1,4 @@
+- Each release phase folder follows a fixed triple of `architecture_decision.md`, `final_report.md`, `verification_report.md` plus a `blind_<dataset>_freeze.json` manifest.
+- Per-workflow commercialization documentation is grouped under `docs/commercialization/workflows/<name>/` with a consistent set of `contract.md`, `data_quality.md`, `phase12_report.md`, and `verification.md` files.
+- Audit and freeze state is persisted as JSON sidecar files (e.g. `data_lineage.json`, `*_freeze.json`) colocated with the Markdown reports that reference them.
+- Brand assets ship paired PNG and SVG variants generated from a single source of truth in `make_logo.py`, keeping raster and vector forms synchronized.

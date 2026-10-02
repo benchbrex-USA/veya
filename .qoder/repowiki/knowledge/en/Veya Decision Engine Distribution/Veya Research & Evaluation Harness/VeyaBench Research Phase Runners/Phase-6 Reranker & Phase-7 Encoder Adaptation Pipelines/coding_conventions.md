@@ -1,0 +1,6 @@
+- Split boundaries and hyperparameters live in `phase6_protocol.py` as module-level constants; runner scripts import them rather than redefining ranges like `(800, 8600)` inline.
+- Training data access is gated through `assert_training_id(example_id("train", index))`, which rejects any example whose shuffled index falls outside `RERANKER_TRAIN`.
+- Model comparisons use paired bootstrap over binary hit vectors with `paired_bootstrap(...)` and promote only when `ci95_low > 0` and high-confidence errors do not increase, as implemented in `promote`.
+- Artifacts are written via a local `dump(path, payload)` helper that creates parent directories and appends a trailing newline after `json.dump` with `indent=2`.
+- Randomness is seeded deterministically using `SEED` from `run_phase3_eval` combined with epoch/index offsets (e.g. `random.Random(SEED + 10007 * epoch + index)`) so shuffles are reproducible across runs.
+- Validation against the frozen release test is avoided: `RELEASE_TEST` is documented but never passed to loaders, and `assert_training_id` enforces that only the `train` file feeds gradient steps.

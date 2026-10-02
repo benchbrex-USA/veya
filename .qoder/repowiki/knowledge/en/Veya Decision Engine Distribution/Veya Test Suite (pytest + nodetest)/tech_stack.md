@@ -1,0 +1,1 @@
+pytest for Python tests; Node.js `node:test` + `node:assert/strict` for the JS client test; heavy use of `torch`, `numpy`, and `transformers` (with `TOKENIZERS_PARALLELISM=false`, `USE_TF=0`, `USE_TORCH=1` env vars set to avoid TF deadlock on macOS).

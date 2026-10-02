@@ -1,0 +1,1 @@
+Static JSON, JSONL, CSV, and Apache Parquet datasets sourced from HuggingFace (`fancyzhx/ag_news`), PolyAI (`task-specific-datasets`), CLINC150, HWU64, MASSIVE, Phase10, and SGD — no runtime dependencies inside this scope.

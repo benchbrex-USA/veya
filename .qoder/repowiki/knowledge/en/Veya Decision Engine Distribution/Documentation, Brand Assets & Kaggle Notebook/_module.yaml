@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: docs_assets
+title: Documentation, Brand Assets & Kaggle Notebook
+scope:
+    - docs/
+    - assets/
+    - notebooks/
+source_files: []
+depends_on: []
+related_to: []

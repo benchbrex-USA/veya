@@ -1,0 +1,41 @@
+# Veya serving stack. One container runs both processes: the audited model
+# service (127.0.0.1:8080 inside the container, never published) and the
+# same-origin gateway/website on port 8000. The `version` key is obsolete in
+# Compose v2 and is omitted.
+
+services:
+  veya-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - VEYA_SHADOW_MODE=${VEYA_SHADOW_MODE:-0}
+      - VEYA_LOG_LEVEL=${VEYA_LOG_LEVEL:-INFO}
+      - VEYA_MODEL_DIR=/app/models/production
+      # A published port needs a non-loopback bind, which the gateway only
+      # permits together with a canonical HTTPS origin (web/server.py). Point
+      # VEYA_PUBLIC_ORIGIN at the real origin before any public deployment.
+      - VEYA_WEB_HOST=0.0.0.0
+      - VEYA_WEB_PORT=8000
+      - VEYA_PUBLIC_ORIGIN=${VEYA_PUBLIC_ORIGIN:-https://localhost}
+    volumes:
+      # Optional: mount custom model directory
+      - ${VEYA_MODEL_DIR:-./models/production}:/app/models/production:ro
+      # Optional: swap in a re-minted release manifest and evidence without
+      # rebuilding the image
+      - ${VEYA_ARTIFACTS_DIR:-./artifacts/release}:/app/artifacts/release:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=8)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+        reservations:
+          memory: 4G
+    restart: unless-stopped

@@ -1,0 +1,1 @@
+Pure Python with numpy/torch for inference; a hand-rolled sparse linear model trained via online cross-entropy gradient descent in `run_phase12_sparse_scorer.py`; Veya release bundles loaded through `veya.release_bundle.load_release_manifest` for the LLM baseline.

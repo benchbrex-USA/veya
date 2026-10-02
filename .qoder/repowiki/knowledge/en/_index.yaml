@@ -1,0 +1,230 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: codex/phase-10-domain-retrieval
+nodes_managed: true
+exported_at: "2026-09-29T17:07:45Z"
+modules:
+    "":
+        dir_name: Veya Decision Engine Distribution
+        title: Veya Decision Engine Distribution
+        scope:
+            - README.md
+            - pyproject.toml
+            - setup.py
+            - BENCHMARKS.md
+            - .gitignore
+            - LICENSE
+        source_files: []
+        children:
+            - data_artifacts
+            - docs_assets
+            - research
+            - tests
+            - veya_core
+            - web_server
+        depends_on: []
+        related_to: []
+    data_artifacts:
+        dir_name: Served ML Artifacts & Experiment Archives
+        title: Served ML Artifacts & Experiment Archives
+        scope:
+            - models/production/
+            - artifacts/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    docs_assets:
+        dir_name: Documentation, Brand Assets & Kaggle Notebook
+        title: Documentation, Brand Assets & Kaggle Notebook
+        scope:
+            - docs/
+            - assets/
+            - notebooks/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research:
+        dir_name: Veya Research & Evaluation Harness
+        title: Veya Research & Evaluation Harness
+        scope:
+            - research/
+        source_files: []
+        children:
+            - research/benchmark_scripts
+            - research/data_and_configs
+            - research/phase_runners
+            - research/results
+        depends_on: []
+        related_to: []
+    research/benchmark_scripts:
+        dir_name: benchmark_scripts
+        title: benchmark_scripts
+        scope:
+            - research/scripts/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/data_and_configs:
+        dir_name: Research Datasets & Experiment Configs
+        title: Research Datasets & Experiment Configs
+        scope:
+            - research/configs/
+            - research/data/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/phase_runners:
+        dir_name: VeyaBench Research Phase Runners
+        title: VeyaBench Research Phase Runners
+        scope:
+            - research/veyabench/
+        source_files: []
+        children:
+            - research/phase_runners/context_sparse_sgd_phases_10_to_11
+            - research/phase_runners/exploratory_phases_3_to_5
+            - research/phase_runners/interaction_adaptation_phases_6_to_7
+            - research/phase_runners/phase_12_context_audit_sgd
+            - research/phase_runners/semantics_integration_phases_8_to_9
+            - research/phase_runners/shared_rivals_and_runners
+        depends_on: []
+        related_to: []
+    research/phase_runners/context_sparse_sgd_phases_10_to_11:
+        dir_name: Phase-10_11 Domain-Retriever Training & Noise-Robustness Harness
+        title: Phase-10/11 Domain-Retriever Training & Noise-Robustness Harness
+        scope:
+            - research/veyabench/phase10_data.py
+            - research/veyabench/phase11_noise.py
+            - research/veyabench/phase11_protocol.py
+            - research/veyabench/run_phase10_blind_massive.py
+            - research/veyabench/run_phase10_diagnostics.py
+            - research/veyabench/run_phase10_train.py
+            - research/veyabench/run_phase10_validate.py
+            - research/veyabench/run_phase11_train.py
+            - research/veyabench/run_phase11_validate.py
+            - research/veyabench/run_phase11b_backbone_capacity.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/phase_runners/exploratory_phases_3_to_5:
+        dir_name: Exploratory Phases 3–5 VeyaBench Runners
+        title: Exploratory Phases 3–5 VeyaBench Runners
+        scope:
+            - research/veyabench/run_phase3_eval.py
+            - research/veyabench/run_phase3_followup.py
+            - research/veyabench/run_phase4_banking.py
+            - research/veyabench/run_phase5_release.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/phase_runners/interaction_adaptation_phases_6_to_7:
+        dir_name: Phase-6 Reranker & Phase-7 Encoder Adaptation Pipelines
+        title: Phase-6 Reranker & Phase-7 Encoder Adaptation Pipelines
+        scope:
+            - research/veyabench/phase6_protocol.py
+            - research/veyabench/phase6_score.py
+            - research/veyabench/run_phase6_baseline.py
+            - research/veyabench/run_phase6_final.py
+            - research/veyabench/run_phase6_interaction.py
+            - research/veyabench/run_phase6_train.py
+            - research/veyabench/run_phase7_adapt.py
+            - research/veyabench/run_phase7_update_audit.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/phase_runners/phase_12_context_audit_sgd:
+        dir_name: Phase 12 Context Audit & SGD Intent Routing
+        title: Phase 12 Context Audit & SGD Intent Routing
+        scope:
+            - research/veyabench/freeze_phase12_context.py
+            - research/veyabench/phase12_context.py
+            - research/veyabench/phase12_sgd_inventory.py
+            - research/veyabench/prepare_phase12_label_review.py
+            - research/veyabench/run_phase12_candidate_access.py
+            - research/veyabench/run_phase12_context_audit.py
+            - research/veyabench/run_phase12_context_baselines.py
+            - research/veyabench/run_phase12_g11_scorer.py
+            - research/veyabench/run_phase12_sgd_baseline.py
+            - research/veyabench/run_phase12_sparse_compare.py
+            - research/veyabench/run_phase12_sparse_scorer.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/phase_runners/semantics_integration_phases_8_to_9:
+        dir_name: Phase 8 Semantics & Phase 9 Hypothesis Integration
+        title: Phase 8 Semantics & Phase 9 Hypothesis Integration
+        scope:
+            - research/veyabench/build_phase8_semantics.py
+            - research/veyabench/run_phase8_eval.py
+            - research/veyabench/run_phase9_hypothesis.py
+            - research/veyabench/run_phase9_integrate.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/phase_runners/shared_rivals_and_runners:
+        dir_name: Rival Adapters & Veyabench Evaluation Harness
+        title: Rival Adapters & Veyabench Evaluation Harness
+        scope:
+            - research/veyabench/rivals/
+            - research/veyabench/protocol.py
+            - research/veyabench/run_blind_clinc150.py
+            - research/veyabench/run_commercial_blind_hwu64.py
+            - research/veyabench/run_commercial_query_robustness.py
+            - research/veyabench/run_ordinal_eval.py
+            - research/veyabench/run_release_eval.py
+            - research/veyabench/run_route_gap_audit.py
+            - research/veyabench/run_runtime_audit.py
+            - research/veyabench/write_baseline.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    research/results:
+        dir_name: results
+        title: results
+        scope:
+            - research/results/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tests:
+        dir_name: Veya Test Suite (pytest + nodetest)
+        title: Veya Test Suite (pytest + node:test)
+        scope:
+            - tests/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: veya_core
+    veya_core:
+        dir_name: Veya System-1 Decision Engine
+        title: Veya System-1 Decision Engine
+        scope:
+            - veya/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: tests
+            - path: web_server
+    web_server:
+        dir_name: Veya Website & Model Gateway
+        title: Veya Website & Model Gateway
+        scope:
+            - web/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: veya_core

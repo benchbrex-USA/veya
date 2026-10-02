@@ -1,0 +1,141 @@
+# Veya serving stack (G19). One pod runs both processes from the same image,
+# exactly as the Dockerfile CMD and docker-compose.yml do: the audited model
+# service (web/model_server.py) is bound to 127.0.0.1:8080 inside the container
+# and is never published; the same-origin gateway/website (web/server.py)
+# listens on 8000 and is the only exposed surface.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: veya
+  labels:
+    app.kubernetes.io/name: veya
+    app.kubernetes.io/component: inference-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: veya
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0  # a new pod must pass /readyz before any old pod retires
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: veya
+        app.kubernetes.io/component: inference-server
+      annotations:
+        # Populated at deploy time by CI/CD
+        veya.io/manifest-sha256: "PLACEHOLDER"
+        veya.io/checkpoint-hash: "PLACEHOLDER"
+    spec:
+      # 5s preStop + up to 30s in-flight drain (SHUTDOWN_DRAIN_S, web/server.py)
+      # = 35s worst case; 45s leaves headroom for the exec/signal path.
+      terminationGracePeriodSeconds: 45
+      securityContext:
+        runAsNonRoot: true  # image ships the non-root `veya` user (Dockerfile)
+        seccompProfile:
+          type: RuntimeDefault
+      # The serving processes never call the Kubernetes API; no token is mounted.
+      automountServiceAccountToken: false
+      containers:
+        - name: veya
+          image: veya:latest  # Override in kustomization overlays
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            # The gateway refuses a public bind at import time unless a
+            # canonical HTTPS origin accompanies it ("Public binding requires
+            # VEYA_PUBLIC_ORIGIN", web/server.py). The ConfigMap value must be
+            # a bare HTTPS origin (no path/query/fragment); an invalid value
+            # fails the pod fast instead of serving with broken canonical URLs.
+            - name: VEYA_WEB_HOST
+              value: "0.0.0.0"
+            - name: VEYA_WEB_PORT
+              value: "8000"
+            - name: VEYA_PUBLIC_ORIGIN
+              valueFrom:
+                configMapKeyRef:
+                  name: veya-config
+                  key: public-origin
+            # "1"/"true" flag telemetry entries as shadow (web/server.py
+            # _shadow_enabled); "0" serves normal traffic.
+            - name: VEYA_SHADOW_MODE
+              valueFrom:
+                configMapKeyRef:
+                  name: veya-config
+                  key: shadow-mode
+                  optional: true
+            # Per-request inference ceiling (G12); matches the gateway default.
+            - name: VEYA_REQUEST_TIMEOUT
+              value: "30"
+          resources:
+            # docker-compose.yml reserves 4G and limits 6G; serving RSS is
+            # ~2030 MB plus checkpoint-load headroom. CPU requests feed the HPA.
+            requests:
+              cpu: "1"
+              memory: 4Gi
+            limits:
+              cpu: "2"
+              memory: 6Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true  # bytecode is pre-compiled in the image
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          # Liveness: the process is answering. Answers 200 even while draining
+          # and never consults the model service.
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 5
+          # Readiness: 200 only after every release-manifest hash is verified
+          # and latched against the audited model service. Stays 503 for the
+          # life of the process after a manifest mismatch (fail-closed).
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 5
+          # Cold start is ~34s (manifest verify + checkpoint load of the 2.2GB
+          # tree) and can exceed a minute under CPU load; 24 x 5s = 120s matches
+          # the Dockerfile HEALTHCHECK start-period.
+          startupProbe:
+            httpGet:
+              path: /startupz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 24  # 120s total, covers cold start
+            timeoutSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                # Give endpoint removal time to propagate before SIGTERM starts
+                # the 30s drain; new work is diverted to other replicas.
+                command: ["sleep", "5"]
+      volumes:
+        # readOnlyRootFilesystem stays safe because every runtime write target
+        # is /tmp: serving code writes nothing else (verified against
+        # veya/release_bundle.py and web/server.py).
+        - name: tmp
+          emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: veya
+                topologyKey: kubernetes.io/hostname

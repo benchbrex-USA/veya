@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: research/phase_runners/exploratory_phases_3_to_5
+title: Exploratory Phases 3–5 VeyaBench Runners
+scope:
+    - research/veyabench/run_phase3_eval.py
+    - research/veyabench/run_phase3_followup.py
+    - research/veyabench/run_phase4_banking.py
+    - research/veyabench/run_phase5_release.py
+source_files: []
+depends_on: []
+related_to: []

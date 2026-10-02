@@ -1,0 +1,6 @@
+- Deterministic sampling uses SHA-256 over `(seed_or_version + '\0' + namespace + '\0' + row_id)` bytes rather than a random seed, applied consistently in `deterministic_cap`, `_stable_index`, and `split_digest`.
+- All persisted artifacts carry a `format` string version tag (e.g. `veya-phase10-dataset-registry-v1`, `veya-phase11-augmentation-audit-v1`, `veya-phase11b-tokenization-audit-v1`) so consumers can reject unexpected formats.
+- Embedding caches are keyed by a JSON metadata file recording `format`, `checkpoint_hash`, `texts_sha256`, `max_length`, `count`, and `noise_version`; caches are only reused when every expected key matches exactly.
+- Training loops initialize `torch.manual_seed(SEED)` and derive per-run RNGs as `random.Random(SEED + offset)` where the offset encodes whether hard negatives or invariance weighting was active, ensuring identical iteration order across runs.
+- Hard-negative mining outputs a lineage dict with `records_sha256` computed over serialized `(row_id, negative_candidate_id, rank, similarity)` tuples, and `validate_hard_negative_lineage` rejects any lineage whose digest does not match.
+- Runner scripts begin by setting `USE_TF=0` and `TOKENIZERS_PARALLELISM=false` environment variables and load the release manifest with `device='cpu'` to force CPU-only embedding computation.

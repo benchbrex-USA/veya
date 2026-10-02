@@ -1,0 +1,1 @@
+`pip install veya` installs the `veya` package exposing `Router` and `Agent`; the same source tree also contains the `web` package (served separately) and the `research` harness. The README's quickstart and the Kaggle notebook in `docs_assets/notebooks/` are the canonical entry points.

@@ -499,23 +499,42 @@ def http_suite(bundle, labels, crit):
         for workers in (1, 2, 4, 8):
             errors = []
             latencies = []
+            queue_delays = []
+            http_503 = []
             lock = threading.Lock()
+            # Request tickets are created up front; the gap between creation and
+            # pick-up by a worker is the client-side queueing delay.
+            tickets = [time.perf_counter() for _ in range(workers * 4)]
+            cursor = 0
 
             def work(repeats=4):
+                nonlocal cursor
                 local = []
                 local_err = 0
+                local_503 = 0
+                local_queue = []
                 for _ in range(repeats):
+                    with lock:
+                        if cursor >= len(tickets):
+                            break
+                        queued = tickets[cursor]
+                        cursor += 1
                     started = time.perf_counter()
+                    local_queue.append((started - queued) * 1000.0)
                     try:
                         status_i, body_i = _call(port, "POST", "/v1/choice", payload)
                         if status_i != 200 or body_i.get("route") != "packed":
                             local_err += 1
+                        if status_i == 503:
+                            local_503 += 1
                     except Exception:
                         local_err += 1
                     local.append((time.perf_counter() - started) * 1000.0)
                 with lock:
                     latencies.extend(local)
+                    queue_delays.extend(local_queue)
                     errors.append(local_err)
+                    http_503.append(local_503)
 
             threads = [threading.Thread(target=work) for _ in range(workers)]
             wall0 = time.perf_counter()
@@ -529,15 +548,33 @@ def http_suite(bundle, labels, crit):
                 "requests": total,
                 "errors": int(sum(errors)),
                 "error_rate": sum(errors) / total,
+                "http_503_count": int(sum(http_503)),
                 "throughput_rps": total / wall,
                 "latency_ms": percentiles(latencies),
+                "queue_delay_ms": percentiles(queue_delays),
                 "rss_mb": rss_mb(),
             }
             print("  concurrency", workers, conc[str(workers)]["throughput_rps"], "err", conc[str(workers)]["errors"], flush=True)
+        # Post-process the tested levels into a stable operating region: the highest
+        # level that stays under the error threshold, and the first level that crosses it.
+        err_threshold = 0.01
+        levels = sorted(int(level) for level in conc)
+        stable_levels = [level for level in levels if conc[str(level)]["error_rate"] <= err_threshold]
+        degraded_levels = [level for level in levels if conc[str(level)]["error_rate"] > err_threshold]
+        stable_region_max = max(stable_levels) if stable_levels else None
+        inflection = min(degraded_levels) if degraded_levels else None
+        print("  concurrency stable_region_max", stable_region_max, "inflection", inflection, flush=True)
     finally:
         server.shutdown()
     failed = [case["name"] for case in cases if not case.get("ok")]
-    return {"cases": cases, "failed": failed, "concurrency": conc}
+    return {
+        "cases": cases,
+        "failed": failed,
+        "concurrency": conc,
+        "error_rate_threshold": err_threshold,
+        "stable_region_max_concurrency": stable_region_max,
+        "inflection_concurrency": inflection,
+    }
 
 
 def reproduction_ok(got, ref):

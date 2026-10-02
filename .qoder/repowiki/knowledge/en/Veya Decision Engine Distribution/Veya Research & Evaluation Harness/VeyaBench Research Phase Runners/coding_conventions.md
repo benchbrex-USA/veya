@@ -1,0 +1,3 @@
+- Each research phase is exposed as a top-level `run_phaseN_<variant>.py` script rather than a package, keeping experiments independently invocable.
+- Phase scripts register data rows through `SplitLedger.add` with explicit `training_exposure` and `checkpoint_exposure` fields to enforce test-set isolation.
+- Cross-phase artifact handoff uses frozen model checkpoints and deterministic splits declared in the same ledger, so downstream phases never re-split data.

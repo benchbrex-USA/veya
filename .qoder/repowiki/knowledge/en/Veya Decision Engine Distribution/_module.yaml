@@ -1,0 +1,13 @@
+schema_version: 1
+module_path: ""
+title: Veya Decision Engine Distribution
+scope:
+    - README.md
+    - pyproject.toml
+    - setup.py
+    - BENCHMARKS.md
+    - .gitignore
+    - LICENSE
+source_files: []
+depends_on: []
+related_to: []

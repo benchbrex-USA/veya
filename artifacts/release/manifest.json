@@ -36,7 +36,7 @@
     "veya/release_bundle.py": "d62ac6442174ec6073cd51ad1974d03051cb75825bc164587bdbd11ac880497c",
     "veya/reranker.py": "75b1356ddf7c6f755838c88d0918d107c835728125f1c37ce81b29e846b2991b",
     "veya/router.py": "10be5b9b11c3014b99cf12d3caf68af253832f4fb314532fed2a6eb69b04b96e",
-    "veya/selective.py": "b42302713f38ce9f55856572263c39d83d61585d596cdbf829ed1658a015266f",
+    "veya/selective.py": "62e36607baea1585418169406423908bd988d4a5c6d1c8ef7bf1abbb975e91e3",
     "veya/server.py": "6b9546a0c80acfbc51efc0b6155c37e46221eecbbb7f05940cc238eec535622d",
     "veya/shortlist.py": "a5c100fc356db0a285176c709310776b9e98823d4a7330c0557d1d63b8c6151b",
     "veya/shortlist_artifact.py": "b697ca2389997a286550fddb97f3dee53d780739b8157e8ad32547af71f9ba40"

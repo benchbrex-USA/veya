@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: research/benchmark_scripts
+title: benchmark_scripts
+scope:
+    - research/scripts/
+source_files: []
+depends_on: []
+related_to: []

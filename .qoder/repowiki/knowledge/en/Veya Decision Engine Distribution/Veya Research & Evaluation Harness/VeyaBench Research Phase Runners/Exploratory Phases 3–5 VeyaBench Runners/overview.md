@@ -1,0 +1,1 @@
+Standalone research scripts that fit cardinality-aware temperatures and shortlist rerankers for AG News and Banking77, then ship calibrated artifacts to the production model.

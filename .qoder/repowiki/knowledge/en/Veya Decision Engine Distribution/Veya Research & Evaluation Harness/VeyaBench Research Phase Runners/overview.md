@@ -1,0 +1,1 @@
+Top-level orchestration of Veya's research phases (3–12) plus shared evaluation harness and rival adapters, wiring each phase runner to a common split ledger, metrics, and dataset registry.

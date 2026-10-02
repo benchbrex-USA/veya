@@ -1,0 +1,1 @@
+PyTorch + transformers-based Veya agent; `veya.reranker.K8Reranker` for the K=8 head; numpy for bootstrap/confusion stats; outputs serialized as JSON artifacts consumed by later phases.

@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: tests
+title: Veya Test Suite (pytest + node:test)
+scope:
+    - tests/
+source_files: []
+depends_on: []
+related_to:
+    - path: veya_core

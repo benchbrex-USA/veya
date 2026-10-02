@@ -1,0 +1,1 @@
+Regenerate the SVG brand assets by running `python assets/make_logo.py` — it overwrites every `logo-mark*.svg` and `logo-lockup*.svg` in `assets/` from the hardcoded mark paths; PNGs are not redrawn and must be updated separately.

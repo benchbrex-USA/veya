@@ -1,0 +1,1 @@
+PyTorch + transformers-backed model loaded via `veya.release_bundle.load_from_manifest`; hypothesis scoring uses `veya.experimental.hypothesis.HypothesisScorer` with a `CompatibilityHead` trained with `torch.optim.AdamW` and listwise cross-entropy; temperature fitting via `veya.calibration.fit_temperature`; metrics include ECE, Brier score, paired bootstrap, and Wilson intervals.

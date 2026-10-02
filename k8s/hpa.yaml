@@ -1,0 +1,39 @@
+# Horizontal scaling per docs/CONCURRENCY.md: scale out replicas, never raise
+# in-process concurrency (MAX_INFLIGHT=2, one model per pod). Scale-up is
+# aggressive because a new replica needs ~34s+ (cold start) before it can
+# absorb traffic; scale-down is deliberately slow so a retiring replica is
+# never pulled while it is still the freshest capacity.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: veya
+  labels:
+    app.kubernetes.io/name: veya
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: veya
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:
+    scaleDown:
+      # Matches the 34s+ cold start: avoid flapping while load is settling.
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60

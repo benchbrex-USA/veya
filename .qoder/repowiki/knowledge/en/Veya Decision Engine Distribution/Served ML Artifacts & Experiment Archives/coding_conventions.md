@@ -1,0 +1,6 @@
+- Every machine-readable manifest carries a `format` field naming a versioned schema (e.g. `veya-calibration-v1`, `veya-choice-router-v1`, `veya-phase12-wf98-graph-v1`) so consumers can reject incompatible versions.
+- Experiment workflows are recorded as a `graph.json` DAG where each node has `id`, `name`, `depends_on`, `status`, `evidence`, and `note`, linking back to concrete data or docs rather than embedding results inline.
+- Human decisions are stored as separate `artifacts/decisions/<topic>.json` records containing `decision`, `status`, `evidence`, and optional `revisit_only_if` / `revisit` clauses describing when to re-examine the choice.
+- Calibration artifacts are split by route and dataset split (e.g. `calibration_shortlist_k8.json`, `calibration_multilingual.json`, `calibration_noul.json`) and include `checkpoint_hash`, `dataset_hash`, `fitting_split`, and `sample_counts` for provenance.
+- Model variants (multilingual, typed-decisions) duplicate the full `models/production/` layout under their own subdirectory rather than sharing a single encoder, keeping each served bundle self-contained.
+- Binary artifacts used in experiments are paired with a sibling `.json` sidecar (e.g. `shortlist_k8.pt.json`, `domain_general_k8.pt.json`) documenting provenance instead of relying on filenames alone.

@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: research/data_and_configs
+title: Research Datasets & Experiment Configs
+scope:
+    - research/configs/
+    - research/data/
+source_files: []
+depends_on: []
+related_to: []

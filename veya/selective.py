@@ -94,7 +94,7 @@ def risk_coverage_curve(scores, correct):
     return curve
 
 
-def apply_report(scores, correct, threshold):
+def apply_report(scores, correct, threshold, epsilon: float = 0.01):
     mask = apply_threshold(scores, threshold)
     accepted = int(mask.sum())
     incorrect = int(accepted - np.asarray(correct, dtype=np.float64)[mask].sum()) if accepted else 0
@@ -109,6 +109,8 @@ def apply_report(scores, correct, threshold):
         "coverage": (accepted / n) if n else None,
         "observed_risk": (incorrect / accepted) if accepted else None,
         "wilson95": interval,
+        "risk_ucb95": interval[1] if interval else None,
+        "supports_epsilon_claim": bool(interval is not None and interval[1] <= epsilon),
         "supports_1pct_claim": bool(interval is not None and interval[1] <= 0.01 and incorrect == 0),
     }
 

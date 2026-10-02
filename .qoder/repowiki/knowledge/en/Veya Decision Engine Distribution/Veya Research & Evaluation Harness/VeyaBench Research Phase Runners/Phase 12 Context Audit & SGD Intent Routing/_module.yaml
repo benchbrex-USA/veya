@@ -1,0 +1,18 @@
+schema_version: 1
+module_path: research/phase_runners/phase_12_context_audit_sgd
+title: Phase 12 Context Audit & SGD Intent Routing
+scope:
+    - research/veyabench/freeze_phase12_context.py
+    - research/veyabench/phase12_context.py
+    - research/veyabench/phase12_sgd_inventory.py
+    - research/veyabench/prepare_phase12_label_review.py
+    - research/veyabench/run_phase12_candidate_access.py
+    - research/veyabench/run_phase12_context_audit.py
+    - research/veyabench/run_phase12_context_baselines.py
+    - research/veyabench/run_phase12_g11_scorer.py
+    - research/veyabench/run_phase12_sgd_baseline.py
+    - research/veyabench/run_phase12_sparse_compare.py
+    - research/veyabench/run_phase12_sparse_scorer.py
+source_files: []
+depends_on: []
+related_to: []
