@@ -64,3 +64,6 @@ credentials.json
 # terminal transcripts dumped by the CLI (they quote whatever was pasted, including tokens)
 [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-*-local-command-*.txt
 *-local-command-*.txt
+
+# Node build artifacts - the wrangler/workerd binaries exceed GitHub's 100MB per-file limit
+node_modules/
