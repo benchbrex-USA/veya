@@ -40,6 +40,7 @@ jobs:
           # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -e .
+          pip install pytest
 
       - name: Import check
         run: python -c "import veya; print(veya.__version__); print(sorted(veya.__all__))"
