@@ -37,7 +37,7 @@ def save_ordinal(path, head, label_order):
 
 
 def load_ordinal(path):
-    blob = torch.load(path, map_location="cpu", weights_only=False)
+    blob = torch.load(path, map_location="cpu", weights_only=True)
     if blob.get("format") != FORMAT:
         raise ValueError("unsupported ordinal artifact %r" % blob.get("format"))
     if blob.get("production"):
