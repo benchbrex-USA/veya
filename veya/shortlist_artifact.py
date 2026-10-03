@@ -50,7 +50,7 @@ def save_shortlist(path, projection, labels, label_texts, checkpoint_hash, k=8, 
 
 
 def load_shortlist(path, checkpoint_hash, k=8):
-    blob = torch.load(path, map_location="cpu", weights_only=False)
+    blob = torch.load(path, map_location="cpu", weights_only=True)
     if blob.get("format") != FORMAT:
         raise ValueError("unsupported shortlist format %r" % blob.get("format"))
     if blob.get("route") != ROUTE:
