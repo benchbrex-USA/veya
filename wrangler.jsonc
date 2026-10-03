@@ -14,7 +14,7 @@
     // Live gateway origin (cloudflared quick tunnel in front of 127.0.0.1:3000).
     // Update this var when the quick tunnel URL changes; the model service
     // itself stays bound to loopback and is never exposed directly.
-    "VEYA_ORIGIN": "https://converted-volunteers-replication-technique.trycloudflare.com"
+    "VEYA_ORIGIN": "https://reliability-implemented-featuring-clearly.trycloudflare.com"
   },
   "observability": {
     "enabled": true
