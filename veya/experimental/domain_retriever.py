@@ -445,7 +445,7 @@ def load_domain_retriever(
     checkpoint_hash: str,
     embed_fn: Callable[[Sequence[str]], np.ndarray] | None = None,
 ) -> DomainRetriever:
-    blob = torch.load(path, map_location="cpu", weights_only=False)
+    blob = torch.load(path, map_location="cpu", weights_only=True)
     if blob.get("format") != FORMAT:
         raise ValueError("unsupported retriever format %r" % blob.get("format"))
     if blob.get("checkpoint_hash") != checkpoint_hash:
