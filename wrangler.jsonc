@@ -11,10 +11,9 @@
   "main": "worker/veya-edge.mjs",
   "compatibility_date": "2026-09-01",
   "vars": {
-    // Live gateway origin (cloudflared quick tunnel in front of 127.0.0.1:3000).
-    // Update this var when the quick tunnel URL changes; the model service
-    // itself stays bound to loopback and is never exposed directly.
-    "VEYA_ORIGIN": "https://digest-potato-milton-pen.trycloudflare.com"
+    // Stable origin via Tailscale Funnel (replaces ephemeral cloudflared tunnels).
+    // This URL is permanent as long as Tailscale is running on the Mac.
+    "VEYA_ORIGIN": "https://benchbrex.taila8b570.ts.net"
   },
   "observability": {
     "enabled": true
