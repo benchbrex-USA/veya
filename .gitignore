@@ -67,3 +67,6 @@ credentials.json
 
 # Node build artifacts - the wrangler/workerd binaries exceed GitHub's 100MB per-file limit
 node_modules/
+
+# Local isolated implementation worktrees
+.worktrees/
