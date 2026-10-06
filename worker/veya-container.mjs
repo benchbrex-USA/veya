@@ -6,7 +6,9 @@
  * not mounted on the public fetch path.
  */
 
-import { Container, getContainer } from "@cloudflare/containers";
+import { Container, ContainerProxy, getContainer } from "@cloudflare/containers";
+
+export { ContainerProxy };
 
 import { ARTIFACT_HOST, handleArtifact } from "./artifact_route.mjs";
 import {
