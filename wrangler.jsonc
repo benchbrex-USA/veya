@@ -6,6 +6,19 @@
   "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
   "main": "worker/veya-container.mjs",
   "compatibility_date": "2026-10-04",
+  "assets": {
+    "directory": "./site/dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": [
+      "/api/*",
+      "/__*",
+      "/healthz",
+      "/readyz",
+      "/startupz",
+      "/version"
+    ]
+  },
   "containers": [
     {
       "name": "veya-runtime",

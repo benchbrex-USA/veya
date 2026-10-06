@@ -157,7 +157,14 @@ function Playground() {
   const [rows, setRows] = useState([{ id: "billing", description: "Invoice and refund questions" }, { id: "access", description: "Login and permission questions" }]);
   const [labels, setLabels] = useState("low, high");
   const [raw, setRaw] = useState(false);
-  const [output, setOutput] = useState("No result yet. A run calls the console Worker. It does not invent a decision.");
+  const [token, setToken] = useState(() => {
+    try {
+      return sessionStorage.getItem("veya-demo-auth") || "";
+    } catch {
+      return "";
+    }
+  });
+  const [output, setOutput] = useState("No result yet. A run calls POST /api/infer. It does not invent a decision.");
   const [error, setError] = useState("");
   const criteria = primitive === "score"
     ? labels.split(",").map((label) => label.trim()).filter(Boolean)
@@ -172,21 +179,45 @@ function Playground() {
         <form onSubmit={async (event) => {
           event.preventDefault();
           if (!built.ok) { setError(built.error); setOutput(""); return; }
+          if (token.trim().length < 16) {
+            setError("Enter the staging token. It stays in this browser and is not saved in the repository.");
+            return;
+          }
           setError("");
           const started = performance.now();
           try {
-            const response = await fetch("/api/playground", {
+            const response = await fetch("/api/infer", {
               method: "POST",
-              headers: { "content-type": "application/json" },
+              headers: {
+                "content-type": "application/json",
+                authorization: `Bearer ${token.trim()}`,
+              },
               body: JSON.stringify(built.body),
             });
-            const text = await response.text();
+            const text = (await response.text()).split(token.trim()).join("[redacted]");
             setOutput(`${response.status} in ${Math.round(performance.now() - started)} ms\n${text}`);
           } catch {
             setOutput("");
-            setError("The console Worker did not respond. No decision was invented.");
+            setError("The Veya Worker did not respond. No decision was invented.");
           }
         }}>
+          <label className="field"><span>Staging token</span>
+            <input
+              type="password"
+              autoComplete="off"
+              value={token}
+              onChange={(event) => {
+                const next = event.target.value;
+                setToken(next);
+                try {
+                  if (next) sessionStorage.setItem("veya-demo-auth", next);
+                  else sessionStorage.removeItem("veya-demo-auth");
+                } catch {
+                  /* the token remains in memory for this page */
+                }
+              }}
+            />
+          </label>
           <label className="field"><span>Primitive</span>
             <select value={primitive} onChange={(event) => setPrimitive(event.target.value as ServedPrimitive)}>
               <option value="choice">choice</option>

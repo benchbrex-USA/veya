@@ -4,8 +4,26 @@
 FROM python:3.11-slim AS builder
 
 WORKDIR /build
-COPY requirements.lock pyproject.toml setup.py ./
-RUN pip install --no-cache-dir -r requirements.lock
+COPY requirements.lock ./requirements.lock
+# The lock was resolved on macOS, where torch has no CUDA wheels. Install the
+# same pinned version from the CPU index first so Linux does not pull NVIDIA.
+RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu \
+      torch==2.14.0 \
+ && pip install --no-cache-dir -r requirements.lock \
+ && python - <<'PY'
+import torch
+import transformers
+import huggingface_hub
+import safetensors
+import numpy
+print("torch", torch.__version__)
+print("cuda", torch.cuda.is_available())
+print("transformers", transformers.__version__)
+print("huggingface_hub", huggingface_hub.__version__)
+print("safetensors", safetensors.__version__)
+print("numpy", numpy.__version__)
+assert not torch.cuda.is_available()
+PY
 
 FROM python:3.11-slim AS production
 
@@ -17,6 +35,8 @@ COPY veya/ ./veya/
 COPY experts/ ./experts/
 COPY quantum/ ./quantum/
 COPY web/__init__.py web/server.py web/contracts.py web/model_server.py ./web/
+COPY web/static/ ./web/static/
+RUN test -f /app/web/static/site-config.json
 COPY artifacts/release/ ./artifacts/release/
 COPY deploy/cloudflare/fetch_release.py ./boot/fetch_release.py
 COPY models/production/ /tmp/model-src/

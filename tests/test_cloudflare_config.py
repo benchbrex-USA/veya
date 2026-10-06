@@ -71,6 +71,10 @@ def test_wrangler_binds_one_container_and_has_no_origin():
         {"binding": "VEYA_ARTIFACTS", "bucket_name": "veya-model-artifacts"}
     ]
     assert config["secrets"]["required"] == ["VEYA_EDGE_TOKEN"]
+    assert config["assets"]["directory"] == "./site/dist"
+    assert config["assets"]["not_found_handling"] == "single-page-application"
+    assert "/api/*" in config["assets"]["run_worker_first"]
+    assert len(config["containers"]) == 1
     assert config["exports"]["VeyaContainer"]["container"] == "veya-runtime"
     assert config["exports"]["VeyaContainer"]["storage"] == "sqlite"
     assert not (ROOT / "worker" / "veya-edge.mjs").exists()
@@ -79,6 +83,15 @@ def test_wrangler_binds_one_container_and_has_no_origin():
     assert "AWS_SECRET_ACCESS_KEY" not in dockerfile
     assert "COPY models/production/model.safetensors" not in dockerfile
     assert "! -name '*.safetensors'" in dockerfile
+    assert "https://download.pytorch.org/whl/cpu" in dockerfile
+    assert "torch==2.14.0" in dockerfile
+    assert dockerfile.index("torch==2.14.0") < dockerfile.index("pip install --no-cache-dir -r requirements.lock")
+    assert "COPY web/static/ ./web/static/" in dockerfile
+    assert "test -f /app/web/static/site-config.json" in dockerfile
+    playground = (ROOT / "site" / "src" / "console.tsx").read_text(encoding="utf-8")
+    assert 'fetch("/api/infer"' in playground
+    assert "/api/playground" not in playground
+    assert "VEYA_EDGE_TOKEN" not in playground
     worker = (ROOT / "worker" / "veya-container.mjs").read_text(encoding="utf-8")
     assert "enableInternet = false" in worker
     assert "outboundByHost" in worker
