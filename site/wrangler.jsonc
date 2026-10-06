@@ -1,0 +1,41 @@
+{
+  "name": "veya-web-staging",
+  "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-10-04",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "veya-console",
+      "database_id": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "services": [
+    { "binding": "VEYA_API", "service": "veya-staging" }
+  ],
+  "analytics_engine_datasets": [
+    { "binding": "USAGE", "dataset": "veya_usage" }
+  ],
+  "ratelimits": [
+    {
+      "name": "VEYA_CONSOLE_RATE",
+      "namespace_id": "1101",
+      "simple": { "limit": 30, "period": 60 }
+    }
+  ],
+  "secrets": {
+    "required": ["SESSION_SECRET", "TURNSTILE_SECRET"]
+  },
+  "vars": {
+    "VEYA_ENVIRONMENT": "staging",
+    "VEYA_HSTS": "false",
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+  }
+}

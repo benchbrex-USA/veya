@@ -1,8 +1,15 @@
-# Build-context guards. The image only ever copies veya/, web/,
-# models/production/, and artifacts/release/; everything listed here stays out
-# of the context transfer.
+# Build-context guards. The checkpoint safetensors files stay out of the
+# context. The container fetches the verified release at boot.
 .git
 .github
+node_modules
+.wrangler
+site
+.env
+.env.*
+**/.env
+models/production/**/*.safetensors
+models/production/.cache
 .mypy_cache
 .pytest_cache
 .ruff_cache
