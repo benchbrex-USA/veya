@@ -1,0 +1,16 @@
+{
+  "name": "veya-r2-uploader",
+  "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-04",
+  "workers_dev": true,
+  "r2_buckets": [
+    {
+      "binding": "VEYA_ARTIFACTS",
+      "bucket_name": "veya-model-artifacts"
+    }
+  ],
+  "secrets": {
+    "required": ["UPLOAD_TOKEN"]
+  }
+}

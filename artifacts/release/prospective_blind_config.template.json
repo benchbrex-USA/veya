@@ -16,7 +16,7 @@
   ],
   "manifest": {
     "path": "artifacts/release/manifest.json",
-    "sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de"
+    "sha256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4"
   },
   "selective_policy_artifact": {
     "path": "artifacts/release/selective_policy.json",

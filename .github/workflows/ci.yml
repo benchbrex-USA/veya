@@ -39,7 +39,7 @@ jobs:
           python -m pip install --upgrade pip
           # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install -e .
+          pip install -e . pytest
 
       - name: Import check
         run: python -c "import veya; print(veya.__version__); print(sorted(veya.__all__))"
@@ -169,6 +169,32 @@ jobs:
       - name: Server security tests
         run: pytest tests/test_server_security.py -v
 
+      - name: Cloudflare config separation, release pins and production hardening
+        # wrangler.jsonc (customer `veya`, built from main) must stay edge-only (no containers/D1/R2/pins);
+        # staging/production pins must agree with the manifest bytes.
+        run: |
+          pytest -v tests/test_wrangler_configs.py tests/test_cloudflare_config.py \
+            tests/test_deploy_meta.py tests/test_production_hardening.py tests/test_product_platform.py
+
+      - name: Full offline test suite
+        run: pytest -q tests/
+
+  # ----- Worker (edge) tests ----------------------------------------------------
+  # The Cloudflare Worker modules under worker/ are tested with node:test. Node 22
+  # is required for module.registerHooks (used to stub cloudflare:workers).
+  worker-tests:
+    name: worker tests (node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: node --test tests/*.mjs
+        run: node --test tests/*.mjs
+
   # ----- G21 tier 2: main-branch gate -----------------------------------------
   # Runs only for pushes to main, after every PR-tier check above has passed.
   # Adds the integration (server startup, health/readiness probes) and
@@ -176,7 +202,7 @@ jobs:
   main-gate:
     name: main-gate (integration + reliability)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [test, lint, build, pr-gate]
+    needs: [test, lint, build, pr-gate, worker-tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

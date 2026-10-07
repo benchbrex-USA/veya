@@ -1,0 +1,18 @@
+{
+  "format": "veya-runtime-manifest-v1",
+  "orchestration_version": "0.1.0",
+  "veya_release": "0.3.5-audit-baseline.1",
+  "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "replicas": 2,
+  "instance_type": "standard-2",
+  "checkpoint_object": "releases/0.3.5-audit-baseline.1/model.safetensors",
+  "routing_policy": "experts-profile-v1",
+  "enabled_specialists": [],
+  "image_digest": null,
+  "release_claims": {
+    "english_choice": "RESEARCH RELEASE",
+    "english_noul": "RESEARCH ONLY",
+    "english_score_categorical": "RESEARCH ONLY",
+    "automation": "DISABLED"
+  }
+}
