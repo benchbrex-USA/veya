@@ -1,0 +1,70 @@
+{
+  // Production Worker `veya-production`. Deploy only with
+  // `--config wrangler.production.jsonc` (Workers Builds on production/veya-dynamics
+  // or .github/workflows/deploy-production.yml). Root wrangler.jsonc is the plain
+  // `veya` proxy and wrangler.staging.jsonc is `veya-staging`. See RUNBOOK.md.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "veya-production",
+  "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
+  "main": "worker/veya-production.mjs",
+  "compatibility_date": "2026-10-04",
+  // workers.dev stays on (the only hostname today). Version-preview URLs are
+  // off account-side since 7 Oct 11:06 IST; a deploy without this key turns
+  // them back on, which would expose every uploaded version publicly.
+  "workers_dev": true,
+  "preview_urls": false,
+  "containers": [
+    {
+      "name": "veya-production-runtime",
+      "class_name": "VeyaContainer",
+      "scheduling_policy": "default",
+      "image": "./deploy/cloudflare/Dockerfile",
+      "image_build_context": ".",
+      "instance_type": "standard-2",
+      "max_instances": 2,
+      "observability": { "enabled": true }
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "VEYA_CONTAINER", "class_name": "VeyaContainer" }
+    ]
+  },
+  "exports": {
+    "VeyaContainer": {
+      "type": "durable-object",
+      "storage": "sqlite",
+      "container": "veya-production-runtime"
+    }
+  },
+  "r2_buckets": [
+    { "binding": "VEYA_ARTIFACTS", "bucket_name": "veya-model-artifacts" }
+  ],
+  "d1_databases": [
+    {
+      "binding": "VEYA_DB",
+      "database_name": "veya-production",
+      "database_id": "3fadb994-4107-4821-8cf3-c494073a41e0"
+    }
+  ],
+  "analytics_engine_datasets": [
+    { "binding": "VEYA_USAGE", "dataset": "veya_production_usage" }
+  ],
+  "ratelimits": [
+    { "name": "VEYA_RATE_INFERENCE", "namespace_id": "2001", "simple": { "limit": 20, "period": 60 } },
+    { "name": "VEYA_RATE_HEAVY", "namespace_id": "2002", "simple": { "limit": 6, "period": 60 } },
+    // Tier "site" (projects.rate_tier = 'site'), counted per project and sized to
+    // the 2-replica pool (~2.6 rps); see worker/rate_tiers.mjs.
+    { "name": "VEYA_RATE_SITE", "namespace_id": "2003", "simple": { "limit": 150, "period": 60 } },
+    { "name": "VEYA_RATE_SITE_HEAVY", "namespace_id": "2004", "simple": { "limit": 45, "period": 60 } }
+  ],
+  "secrets": { "required": ["VEYA_EDGE_TOKEN"] },
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
+  "vars": {
+    "VEYA_RELEASE_ID": "0.3.5-audit-baseline.1",
+    "VEYA_CHECKPOINT_SHA256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "VEYA_MANIFEST_SHA256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4",
+    "VEYA_SLEEP_AFTER": "1h"
+  },
+  "observability": { "enabled": true }
+}

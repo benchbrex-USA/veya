@@ -1,0 +1,15 @@
+{
+  "_comment": "Reviewed CodeQL false positives. Each entry suppresses exactly one rule in one file. Add a reason; never allowlist a real issue.",
+  "entries": [
+    {
+      "rule": "py/weak-sensitive-data-hashing",
+      "path": "product/keys.py",
+      "reason": "API keys are 256-bit random tokens (secrets.token_urlsafe(32)), not passwords. A fast SHA-256 digest is the lookup key shared with the Worker (worker/api_keys.mjs) and D1 api_keys.key_hash; a slow KDF adds nothing against brute force of 256-bit secrets."
+    },
+    {
+      "rule": "py/clear-text-logging-sensitive-data",
+      "path": "tests/test_local_e2e.py",
+      "reason": "Offline test script printing synthetic model predictions for sample messages; not shipped and contains no credentials."
+    }
+  ]
+}

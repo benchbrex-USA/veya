@@ -34,7 +34,9 @@ jobs:
           curl -sSL -o gitleaks.tar.gz \
             "https://github.com/gitleaks/gitleaks/releases/download/v${VER}/gitleaks_${VER}_linux_x64.tar.gz"
           tar -xzf gitleaks.tar.gz gitleaks
-          ./gitleaks dir . --no-banner --redact --exit-code 1
+          # -v prints file:line and rule for every finding (values stay redacted).
+          # Reviewed false positives are allowlisted, with reasons, in .gitleaks.toml.
+          ./gitleaks dir . --no-banner --redact -v --config .gitleaks.toml --exit-code 1
 
   deps:
     name: dependency CVEs
@@ -73,23 +75,42 @@ jobs:
         with:
           languages: python
           queries: security-extended
+      # Code scanning cannot be enabled on this private user-owned repository, so
+      # SARIF upload fails. Keep the analysis, skip the upload, and gate on the
+      # results here instead.
       - uses: github/codeql-action/analyze@v3
+        with:
+          upload: never
+          output: codeql-results
+      - name: Fail on error- or warning-level CodeQL findings
+        run: python3 .github/scripts/codeql_gate.py codeql-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codeql-sarif
+          path: codeql-results/
+          if-no-files-found: ignore
 
   supply_chain:
     name: no unsafe deserialization
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Weights must load through safetensors, never pickle
+      - name: Restricted artifact deserialization only
         run: |
-          # torch.load / pickle execute arbitrary code during deserialization. Veya loads
-          # checkpoints from the Hub, so a pickle path would be remote code execution on
-          # `veya.load("someone/their-model")`.
-          if grep -rnE "\bpickle\b|torch\.load\(|joblib\.load\(|yaml\.load\(" veya/; then
-            echo "::error::unsafe deserialization in the shipped package - use safetensors"
+          # pickle / joblib / yaml.load execute arbitrary code during deserialization.
+          # torch.load is allowed only in weights_only=True mode (tensors, dicts,
+          # lists, strings, numbers) for Veya-owned artifacts, and the call must be
+          # on one line so this check can see the flag.
+          if grep -rnE "\bpickle\b|joblib\.load\(|yaml\.load\(" veya/; then
+            echo "::error::unsafe deserialization in the shipped package"
             exit 1
           fi
-          echo "OK: no pickle/torch.load/yaml.load in veya/"
+          if grep -rn "torch\.load(" veya/ | grep -v "weights_only=True"; then
+            echo "::error::torch.load must pass weights_only=True"
+            exit 1
+          fi
+          echo "OK: only weights_only=True torch loads in veya/"
       - name: No shell-out or dynamic exec in the shipped package
         run: |
           if grep -rnE "os\.system\(|subprocess\.|shell=True|\beval\(|\bexec\(" veya/ \

@@ -323,7 +323,7 @@ def load_compatible_scorer(agent, head_path, delta_path, calibration_path, check
     head_sha = file_sha256(head_path)
     delta_sha = file_sha256(delta_path)
     calibration_sha = file_sha256(calibration_path)
-    head_blob = torch.load(head_path, map_location="cpu", weights_only=False)
+    head_blob = torch.load(head_path, map_location="cpu", weights_only=True)
     if head_blob.get("format") != FORMAT:
         raise ValueError("hypothesis head format is not %s" % FORMAT)
     meta_path = head_path + ".json"
@@ -335,7 +335,7 @@ def load_compatible_scorer(agent, head_path, delta_path, calibration_path, check
         raise ValueError("hypothesis head is not hypothesis_hce2_h0 / %s" % TEMPLATE_VERSION)
     if int(meta.get("start_layer")) != 26:
         raise ValueError("hypothesis head expects encoder layers starting at 26")
-    delta = torch.load(delta_path, map_location="cpu", weights_only=False)
+    delta = torch.load(delta_path, map_location="cpu", weights_only=True)
     if int(delta.get("start_layer", -1)) != 26 or len(delta.get("layers", [])) != 2:
         raise ValueError("encoder delta is not layers 26-27")
     with open(calibration_path, encoding="utf-8") as handle:

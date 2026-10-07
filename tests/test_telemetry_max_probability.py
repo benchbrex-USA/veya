@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -139,7 +140,12 @@ def call(port, payload):
         return exc.code, json.load(exc), exc.headers
 
 
-def last_entry(records):
+def last_entry(records, timeout=2.0):
+    # The gateway logs telemetry in a `finally` after the response has been
+    # written, so the client can observe the response first. Wait briefly.
+    deadline = time.monotonic() + timeout
+    while not records and time.monotonic() < deadline:
+        time.sleep(0.01)
     assert records, "no telemetry entry was logged"
     return json.loads(records[-1])
 
@@ -271,18 +277,9 @@ def test_invalid_upstream_max_probability_falls_back_to_distribution(
     assert "max_probability" not in out
 
 
-def test_systemone_has_no_single_top_level_peak(http_pair, telemetry):
-    """Multi-question requests mix distributions; telemetry stays null."""
-    state, port = http_pair
-    state["response"] = {
-        "model": "veya-rl-agent",
-        "decision": "answer",
-        "answers": {
-            "z": {"type": "noul", "noul": 0.6},
-            "a": {"type": "noul", "noul": 0.6},
-        },
-        "routes": {"z": "noul", "a": "noul"},
-    }
+def test_systemone_is_rejected_before_the_model(http_pair, telemetry):
+    """This release does not serve SystemOne, so there is no peak to log."""
+    _state, port = http_pair
     status, out, _ = call(
         port,
         {
@@ -294,9 +291,11 @@ def test_systemone_has_no_single_top_level_peak(http_pair, telemetry):
             },
         },
     )
-    assert status == 200
+    assert status == 400
+    assert "SystemOne is not served" in out["detail"]
     entry = last_entry(telemetry)
     assert entry["primitive"] == "systemone"
+    assert entry["status"] == 400
     assert entry["max_probability"] is None
     assert "max_probability" not in out
 
