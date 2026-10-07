@@ -28,6 +28,8 @@ import {
   guardRequest,
   notReady,
   requestId,
+  sleepAfterFor,
+  containerEnvOverrides,
   stamp,
 } from "./edge_policy.mjs";
 
@@ -36,11 +38,18 @@ const buckets = new Map();
 export class VeyaContainer extends Container {
   defaultPort = 8000;
   requiredPorts = [8000];
-  sleepAfter = "8h";
   // The library requests http://${pingEndpoint} and treats any HTTP response
   // as "port open". /readyz is still the route. Inference below waits for 200.
   pingEndpoint = "127.0.0.1/readyz";
   enableInternet = false;
+
+  constructor(ctx, env) {
+    super(ctx, env);
+    // Per-environment idle timeout (VEYA_SLEEP_AFTER). The base class reads
+    // this.sleepAfter after a microtask, so assigning it here takes effect.
+    this.sleepAfter = sleepAfterFor(env);
+    this.envVars = { ...this.envVars, ...containerEnvOverrides(env) };
+  }
   envVars = {
     VEYA_CHECKPOINT_URL: `http://${ARTIFACT_HOST}/releases/${RELEASE_ID}/model.safetensors`,
     VEYA_CHECKPOINT_SHA256: CHECKPOINT_SHA256,

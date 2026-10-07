@@ -111,7 +111,26 @@ def limit_key(client_ip: str, tenant: str | None) -> tuple[str, int]:
     if managed and tenant and len(tenant) <= 96 and set(tenant) <= _TENANT_CHARS:
         return "tenant:" + tenant, _edge_tenant_capacity()
     return client_ip, CAPACITY
-MAX_INFLIGHT = 2
+DEFAULT_MAX_INFLIGHT = 2
+
+
+def _max_inflight(environ: Any = os.environ) -> int:
+    """Concurrent model calls admitted per replica (VEYA_MAX_INFLIGHT, 1..8).
+
+    Default 2. On standard-2 (1 vCPU, torch at one thread) a choice call is
+    CPU-bound at about 1.1-1.3 s, so more admitted calls only queue inside the
+    model server: latency grows linearly and throughput does not. Measured on
+    7 Oct 2026 (RUNBOOK.md "Capacity"): 2 replicas sustain about 1.5 rps with
+    p95 2.1 s; the edge retries a load-shed call once on the other replica.
+    """
+    try:
+        value = int(str(environ.get("VEYA_MAX_INFLIGHT", DEFAULT_MAX_INFLIGHT)).strip())
+    except ValueError:
+        return DEFAULT_MAX_INFLIGHT
+    return max(1, min(8, value))
+
+
+MAX_INFLIGHT = _max_inflight()
 # Graceful shutdown (G12): SIGTERM stops accepting new work, in-flight
 # requests get SHUTDOWN_DRAIN_S to finish, then the process exits hard.
 SHUTDOWN_DRAIN_S = 30

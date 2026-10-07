@@ -180,3 +180,22 @@ def test_codeql_gate_allowlist_is_narrow_and_justified(tmp_path):
     assert len(found) == 2
     (tmp_path / "a.sarif").write_text(_json.dumps(sarif))
     assert gate.main(["codeql_gate.py", str(tmp_path)]) == 1
+
+
+def test_gateway_inflight_limit_is_bounded_and_defaults_to_two():
+    from web import server
+
+    assert server.DEFAULT_MAX_INFLIGHT == 2
+    assert server._max_inflight({}) == 2
+    assert server._max_inflight({"VEYA_MAX_INFLIGHT": "3"}) == 3
+    assert server._max_inflight({"VEYA_MAX_INFLIGHT": "0"}) == 1
+    assert server._max_inflight({"VEYA_MAX_INFLIGHT": "99"}) == 8
+    assert server._max_inflight({"VEYA_MAX_INFLIGHT": "lots"}) == 2
+
+
+def test_gateway_load_shed_is_structured_with_retry_after():
+    source = (ROOT / "web" / "server.py").read_text(encoding="utf-8")
+    block = source[source.index("if not inflight.acquire(blocking=False):"):][:900]
+    assert 'status, error_code = 503, "model_busy"' in block
+    assert '"retry_after": 5' in block and "request_id" in block
+    assert block.rstrip().count("5,") >= 1  # Retry-After header argument to self.send

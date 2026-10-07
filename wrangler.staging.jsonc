@@ -76,7 +76,8 @@
   "vars": {
     "VEYA_RELEASE_ID": "0.3.5-audit-baseline.1",
     "VEYA_CHECKPOINT_SHA256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
-    "VEYA_MANIFEST_SHA256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4"
+    "VEYA_MANIFEST_SHA256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4",
+    "VEYA_SLEEP_AFTER": "15m"
   },
   "observability": {
     "enabled": true
