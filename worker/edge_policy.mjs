@@ -61,6 +61,34 @@ export function edgeHealth() {
   return json({ edge: "ok", backend: "cloudflare-container" }, 200);
 }
 
+/**
+ * Container idle timeout. Configured per environment through the
+ * VEYA_SLEEP_AFTER var (staging 15m, production 1h); "<n>s|m|h" between one
+ * minute and 24 hours. Anything else falls back to the historical 8h.
+ */
+export const DEFAULT_SLEEP_AFTER = "8h";
+
+export function sleepAfterFor(env) {
+  const raw = env && typeof env.VEYA_SLEEP_AFTER === "string" ? env.VEYA_SLEEP_AFTER.trim() : "";
+  const match = /^([1-9][0-9]{0,4})([smh])$/.exec(raw);
+  if (!match) return DEFAULT_SLEEP_AFTER;
+  const seconds = Number(match[1]) * { s: 1, m: 60, h: 3600 }[match[2]];
+  if (seconds < 60 || seconds > 86_400) return DEFAULT_SLEEP_AFTER;
+  return raw;
+}
+
+/**
+ * Optional container env passed through from Worker vars. Only VEYA_MAX_INFLIGHT
+ * (gateway admission limit per replica, 1..8) today; release pins are never
+ * taken from here.
+ */
+export function containerEnvOverrides(env) {
+  const out = {};
+  const raw = env && typeof env.VEYA_MAX_INFLIGHT === "string" ? env.VEYA_MAX_INFLIGHT.trim() : "";
+  if (/^[1-8]$/.test(raw)) out.VEYA_MAX_INFLIGHT = raw;
+  return out;
+}
+
 export function guardRequest(request, env, buckets, now = Date.now()) {
   const url = new URL(request.url);
   if (!METHODS.has(request.method)) {

@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -139,7 +140,12 @@ def call(port, payload):
         return exc.code, json.load(exc), exc.headers
 
 
-def last_entry(records):
+def last_entry(records, timeout=2.0):
+    # The gateway logs telemetry in a `finally` after the response has been
+    # written, so the client can observe the response first. Wait briefly.
+    deadline = time.monotonic() + timeout
+    while not records and time.monotonic() < deadline:
+        time.sleep(0.01)
     assert records, "no telemetry entry was logged"
     return json.loads(records[-1])
 

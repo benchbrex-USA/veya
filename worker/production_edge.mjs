@@ -14,6 +14,13 @@
  *  - A D1 failure during key lookup is a structured 503, not a raw 500.
  *  - Container calls have a deadline (VEYA_INFER_TIMEOUT_MS, default 15 s);
  *    expiry is a structured 504.
+ *  - Decision calls are idempotent model inference, so each replica attempt has
+ *    its own timeout (VEYA_ATTEMPT_TIMEOUT_MS, default 6 s) and a failed attempt
+ *    (5xx, timeout, throw) is retried once on the other replica, always inside
+ *    the overall deadline. A replica that timed out or errored is "suspect" for
+ *    VEYA_SUSPECT_MS (default 10 s) and is tried second.
+ *  - When every replica sheds load (gateway 503 model_busy), the caller gets a
+ *    structured 503 `model_busy` with Retry-After instead of a generic error.
  *  - Usage is written through ctx.waitUntil after the response is ready.
  *  - Every response carries HSTS and the standard security headers.
  */
@@ -32,6 +39,11 @@ import { REPLICA_COUNT, fetchFromPool, replicaName, stubFor } from "./pool.mjs";
 export const DEFAULT_INFER_TIMEOUT_MS = 15_000;
 export const DEFAULT_PROBE_TIMEOUT_MS = 5_000;
 export const DEFAULT_READY_CACHE_MS = 15_000;
+export const DEFAULT_ATTEMPT_TIMEOUT_MS = 6_000;
+export const DEFAULT_SUSPECT_MS = 10_000;
+export const BUSY_RETRY_AFTER_S = 2;
+/** Paths whose upstream call is side-effect free and may be retried on another replica. */
+export const IDEMPOTENT_INFERENCE = new Set(["/v1/decisions"]);
 export const TENANT_HEADER = "x-veya-tenant";
 
 const EDGE_ONLY = new Set(["/healthz", "/__edge_health"]);
@@ -66,6 +78,19 @@ export function probeTimeoutMs(env) {
 
 export function readyCacheMs(env) {
   return bounded(env && env.VEYA_READY_CACHE_MS, DEFAULT_READY_CACHE_MS, 0, 60_000);
+}
+
+/**
+ * Per-attempt budget. Always leaves at least 1 s of the overall deadline for the
+ * retry on the other replica, so attempt + retry never exceed the deadline.
+ */
+export function attemptTimeoutMs(env, deadlineMs = inferTimeoutMs(env)) {
+  const ceiling = Math.max(500, deadlineMs - 1_000);
+  return Math.min(ceiling, bounded(env && env.VEYA_ATTEMPT_TIMEOUT_MS, DEFAULT_ATTEMPT_TIMEOUT_MS, 500, 120_000));
+}
+
+export function suspectMs(env) {
+  return bounded(env && env.VEYA_SUSPECT_MS, DEFAULT_SUSPECT_MS, 0, 120_000);
 }
 
 /** Constant-time check of the admin bearer secret. */
@@ -151,12 +176,46 @@ function unavailable(id) {
   return upstreamFailure(id, 503, "container_unavailable", "The Veya container did not respond.");
 }
 
+function overloaded(id) {
+  return json(
+    {
+      code: "model_busy",
+      detail: "Every Veya Core replica is at capacity. Retry after the indicated delay.",
+      retry_after: BUSY_RETRY_AFTER_S,
+      request_id: id,
+    },
+    503,
+    { "retry-after": String(BUSY_RETRY_AFTER_S) },
+  );
+}
+
+/** Gateway load shedding: 503 with body code "model_busy" (web/server.py). */
+export async function isLoadShed(response) {
+  if (!response || response.status !== 503) return false;
+  try {
+    const body = await response.clone().json();
+    return Boolean(body) && body.code === "model_busy";
+  } catch {
+    return false;
+  }
+}
+
+/** Replica order: random, but replicas marked suspect go last. */
+export function orderReplicas(count, cache, random = Math.random) {
+  const first = Math.floor(random() * count);
+  const order = Array.from({ length: count }, (_, offset) => (first + offset) % count);
+  const healthy = order.filter((index) => !cache.suspect(index));
+  const suspect = order.filter((index) => cache.suspect(index));
+  return healthy.concat(suspect);
+}
+
 /**
  * Per-isolate readiness cache: replica index -> epoch ms until which a 200 from
  * /readyz is trusted. A failed or 5xx inference clears the entry.
  */
 export function createReadyCache(now = () => Date.now()) {
   const entries = new Map();
+  const suspects = new Map();
   return {
     fresh(index) {
       const until = entries.get(index);
@@ -164,9 +223,19 @@ export function createReadyCache(now = () => Date.now()) {
     },
     mark(index, ttl) {
       if (ttl > 0) entries.set(index, now() + ttl);
+      suspects.delete(index);
     },
     clear(index) {
       entries.delete(index);
+    },
+    /** With `ms`, mark the replica suspect for that long; without, report whether it is suspect. */
+    suspect(index, ms) {
+      if (ms === undefined) {
+        const until = suspects.get(index);
+        return typeof until === "number" && until > now();
+      }
+      if (ms > 0) suspects.set(index, now() + ms);
+      return true;
     },
   };
 }
@@ -220,37 +289,76 @@ export function createHandler(build, options = {}) {
     }
   }
 
-  async function proxyInference(infer, env, id, identity) {
+  /**
+   * One replica attempt: readiness probe (unless cached) then the inference call,
+   * both inside `budgetMs`. Returns { kind, response } where kind is
+   * ok | busy | failed | timeout | error.
+   */
+  async function attemptReplica(stub, index, infer, headers, body, budgetMs, ttl) {
+    try {
+      return await withDeadline(budgetMs, async (signal) => {
+        if (!readyCache.fresh(index)) {
+          const probe = await stub.fetch(new Request(new URL("/readyz", infer.url), { method: "GET" }));
+          if (probe.status !== 200) {
+            readyCache.clear(index);
+            return { kind: "failed", response: probe };
+          }
+          readyCache.mark(index, ttl);
+        }
+        if (signal.aborted) throw new DeadlineExceeded();
+        const response = await stub.fetch(new Request(infer.url, { method: "POST", headers, body }));
+        if (response.status < 500) return { kind: "ok", response };
+        if (await isLoadShed(response)) return { kind: "busy", response };
+        readyCache.clear(index);
+        return { kind: "failed", response };
+      });
+    } catch (error) {
+      readyCache.clear(index);
+      return { kind: error instanceof DeadlineExceeded ? "timeout" : "error", response: null };
+    }
+  }
+
+  async function proxyInference(infer, env, id, identity, options = {}) {
     if (!env || !env.VEYA_CONTAINER) return unavailable(id);
     const headers = forwardHeaders(infer, id);
     headers.set("content-type", "application/json");
     headers.set(TENANT_HEADER, identity.keyId);
     const body = await infer.text();
     const ttl = readyCacheMs(env);
+    const deadlineMs = inferTimeoutMs(env);
+    const perAttempt = attemptTimeoutMs(env, deadlineMs);
+    const cooldown = suspectMs(env);
+    const retry = options.retry !== false;
+    const started = Date.now();
+    const order = orderReplicas(REPLICA_COUNT, readyCache, random).slice(0, retry ? 2 : 1);
+    const attempts = [];
     try {
-      const result = await withDeadline(inferTimeoutMs(env), (signal) => fetchFromPool(
-        env.VEYA_CONTAINER,
-        async (stub, index) => {
+      const result = await withDeadline(deadlineMs, async (signal) => {
+        for (let n = 0; n < order.length; n += 1) {
           if (signal.aborted) throw new DeadlineExceeded();
-          if (!readyCache.fresh(index)) {
-            const probe = await stub.fetch(new Request(new URL("/readyz", infer.url), { method: "GET" }));
-            if (probe.status !== 200) {
-              readyCache.clear(index);
-              return probe;
-            }
-            readyCache.mark(index, ttl);
-          }
-          if (signal.aborted) throw new DeadlineExceeded();
-          const response = await stub.fetch(new Request(infer.url, { method: "POST", headers, body }));
-          if (response.status >= 500) readyCache.clear(index);
-          return response;
-        },
-        { accept: (response) => response && response.status < 500, random },
-      ));
-      const out = new Headers(result.response.headers);
-      out.set("x-veya-replica", String(result.index));
-      out.set("x-veya-project", identity.projectId);
-      return stamp(new Response(result.response.body, { status: result.response.status, headers: out }));
+          const index = order[n];
+          const remaining = deadlineMs - (Date.now() - started);
+          if (remaining <= 0) throw new DeadlineExceeded();
+          // The last attempt may use whatever is left of the overall deadline.
+          const budget = n === order.length - 1 ? remaining : Math.min(perAttempt, remaining);
+          const stub = stubFor(env.VEYA_CONTAINER, index);
+          const outcome = await attemptReplica(stub, index, infer, headers, body, budget, ttl);
+          attempts.push({ index, kind: outcome.kind });
+          if (outcome.kind === "ok") return { index, response: outcome.response };
+          if (outcome.kind !== "busy") readyCache.suspect(index, cooldown);
+        }
+        return null;
+      });
+      if (result) {
+        const out = new Headers(result.response.headers);
+        out.set("x-veya-replica", String(result.index));
+        out.set("x-veya-project", identity.projectId);
+        out.set("x-veya-attempts", String(attempts.length));
+        return stamp(new Response(result.response.body, { status: result.response.status, headers: out }));
+      }
+      if (attempts.length > 0 && attempts.every((attempt) => attempt.kind === "busy")) return overloaded(id);
+      if (attempts.length > 0 && attempts.every((attempt) => attempt.kind === "timeout")) return timeoutFailure(id);
+      return unavailable(id);
     } catch (error) {
       if (error instanceof DeadlineExceeded) return timeoutFailure(id);
       return unavailable(id);
@@ -443,7 +551,7 @@ export function createHandler(build, options = {}) {
       headers: { "content-type": "application/json", "x-request-id": id },
       body: JSON.stringify(payload),
     });
-    const response = await proxyInference(infer, env, id, identity);
+    const response = await proxyInference(infer, env, id, identity, { retry: IDEMPOTENT_INFERENCE.has(url.pathname) });
     const latencyMs = Date.now() - started;
     const replica = response.headers.get("x-veya-replica");
     const copy = response.ok ? response.clone() : null;

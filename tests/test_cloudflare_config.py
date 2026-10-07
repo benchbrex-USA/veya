@@ -112,7 +112,10 @@ def test_wrangler_binds_one_container_and_has_no_origin():
     assert "<project key>" not in (ROOT / "site" / "src" / "marketing.tsx").read_text(encoding="utf-8")
     worker = (ROOT / "worker" / "veya-container.mjs").read_text(encoding="utf-8")
     assert "export { ContainerProxy }" in worker
-    assert 'sleepAfter = "8h"' in worker
+    # The idle timeout is per environment (VEYA_SLEEP_AFTER), not hard-coded.
+    assert "this.sleepAfter = sleepAfterFor(env)" in worker
+    assert 'sleepAfter = "8h"' not in worker
+    assert config["vars"]["VEYA_SLEEP_AFTER"] == "15m"
     assert 'pingEndpoint = "127.0.0.1/readyz"' in worker
     assert "enableInternet = false" in worker
     assert "outboundByHost" in worker

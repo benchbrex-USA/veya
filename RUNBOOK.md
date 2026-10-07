@@ -76,15 +76,56 @@ npx wrangler rollback <full-version-id> --config wrangler.production.jsonc \
 npx wrangler versions deploy <old-id>@100% --config wrangler.production.jsonc -y
 ```
 
-Caveats:
+### 3a. `wrangler rollback` is only for code-only releases
 
-- `wrangler rollback` restores **Worker code and bindings only**. It does not roll back the container image, D1 data, or secrets. If a bad image ships, re-deploy the previous git revision in full mode.
-- A version older than the current release pins can fail the container boot check. `supervise.py` compares the Worker's `VEYA_*` vars with `/app/boot/release-pins.json` in the image. If the pins differ, the container refuses to start and `/readyz` returns 503. When the manifest changed between releases, roll back code **and** image together with a full deploy of the matching commit.
-- If you need to override a gradual split, use `npx wrangler versions deploy <old>@100%`.
+`wrangler rollback` and `wrangler versions deploy <old>@100%` swap **Worker code, vars and secrets only**. The container image, the container application config, and D1 data are **not** rolled back. This was verified on 7 Oct 2026 on both staging and production: after rolling the Worker back, both containers kept running image `24a5bdca…` (manifest `80720058…`).
+
+That leaves an old Worker in front of a new image. The old Worker injects its own `VEYA_MANIFEST_SHA256`, and the image's `release-pins.json` pins the new one. Instances that are already running keep serving. **Any instance that starts afterwards fails `supervise.py` `pins_match` and never becomes ready.** Instances start on deploys, sleep/wake, crashes and failover drills.
+
+**Rule:** if the release being rolled back changed the image, the manifest, the container config or bindings, do **not** use `wrangler rollback`. Run a **full deploy of the previous commit** instead. That rebuilds and rolls out the matching image.
+
+```bash
+# Example for release 42e0c9e (PR #14): the previous production commit is a76bc65.
+git fetch origin && git checkout --detach a76bc65
+python3 scripts/write_deploy_meta.py && npm ci && npm --prefix site ci && npm --prefix site run build
+npx wrangler deploy --config wrangler.production.jsonc --message "rollback: full deploy of a76bc65"
+# or: GitHub Actions -> Deploy veya-production, mode=full, on a prod-v* tag pointing at a76bc65
+```
+
+Expect a container rollout: about 2–3 minutes per instance, during which that instance is not ready. Verify with §2c, then check `/__admin/version` for `source_commit`.
+
+Measured on 7 Oct 2026, for reference:
+
+| Step | Command time | Serving the target |
+|---|---|---|
+| Staging rollback / roll-forward | 3.0 s / 2.4 s | 116/116 probes 200 |
+| Production rollback / roll-forward | 3.0 s / 2.3 s | old code within 20 s, new code within 4 s |
+
+These were code-only swaps over an unchanged image.
+
+Other caveats:
+
+- A rollback restores the secret values of the target version. A secret rotated after that version (for example `VEYA_EDGE_TOKEN`, rotated 7 Oct 09:42 IST in `2bcbff1f`) reverts to its old value. Re-run `wrangler secret put` after rolling back.
+- To override a gradual split, use `npx wrangler versions deploy <old>@100%`. This is code-only, with the same rule as above.
 
 ## 4. Failover drill (run monthly and before every launch)
 
-The Worker picks one of the two replicas at random. If that replica's `/readyz` probe fails, or the replica returns 5xx, the Worker tries the other one. Readiness is cached per isolate for `VEYA_READY_CACHE_MS` (default 15 s). A failure clears the cache.
+The Worker picks one of the two replicas at random and works within one overall deadline (`VEYA_INFER_TIMEOUT_MS`, 15 s).
+
+- **Attempt budget.** Each replica attempt (readiness probe plus inference) gets its own budget, `VEYA_ATTEMPT_TIMEOUT_MS`, default 6 s.
+- **One retry.** If the attempt fails, the Worker retries once on the other replica. A failure is a 5xx, a timeout or a throw. The retry uses whatever remains of the deadline.
+- **Suspect replicas.** A replica that timed out or errored is "suspect" for `VEYA_SUSPECT_MS` (10 s) and is tried second.
+- **Readiness cache.** Readiness is cached per isolate for `VEYA_READY_CACHE_MS` (15 s). A failure clears the cache.
+
+**Stopping a replica doesn't keep it down.** The next request routed to it, including the admin report's own `/readyz` probe, starts it again (cold start ≈ 60–70 s). Until it's ready, requests hitting it block inside the attempt budget.
+
+Results of the 7 Oct 2026 drill, before the per-attempt timeout: 36 req/min, stop of replica 1 at 09:46:02 IST, restart at 09:50:30.
+
+- **Errors:** 7/361 failed (1.9%): 4 × 504 at 15.3 s and 3 × 503. All of them were in the first ~20 s after the stop and after the restart: requests that landed on the cold instance used the whole deadline.
+- **Latency:** p50 1.51 s, 2xx p95 2.24 s.
+- **Recovery:** replica 1 served again about 60 s after the stop and about 70 s after the restart.
+
+The per-attempt timeout and retry exist to remove those failures. Re-run the drill after deploying them.
 
 ```bash
 BASE=https://veya-production.veya-8d0.workers.dev
@@ -233,6 +274,10 @@ Then:
 | `VEYA_EDGE_TENANT_CAPACITY` | container env | 30 (12–600) | Gateway token bucket per API key, when the edge sets `X-Veya-Tenant` |
 | `VEYA_TORCH_THREADS` | container env | CPU affinity count (≤64) | `torch.set_num_threads` in the model server |
 | `VEYA_EMBED_CACHE_MAX` | container env | 50000 | LRU bound for the embedding cache |
+| `VEYA_ATTEMPT_TIMEOUT_MS` | Worker var | 6000 (500 to deadline−1000) | Per-replica attempt budget before retrying on the other replica (`/v1/decisions` only) |
+| `VEYA_SUSPECT_MS` | Worker var | 10000 (0–120000) | How long a replica that timed out or errored is tried second |
+| `VEYA_SLEEP_AFTER` | Worker var → container class | staging `15m`, production `1h` (fallback `8h`; 1m–24h) | Container idle timeout. Each wake costs a cold start of about 60–70 s with the checkpoint fetched from R2 |
+| `VEYA_MAX_INFLIGHT` | Worker var → container env | 2 (1–8) | Gateway admission limit per replica; above it the gateway sheds load with `503 model_busy` |
 
 Edge errors are JSON with `code`, `detail` and `request_id`:
 
@@ -240,6 +285,14 @@ Edge errors are JSON with `code`, `detail` and `request_id`:
 - `503 auth_unavailable`: D1 key lookup failed. Comes with `retry-after: 5`.
 - `503 rate_limit_unavailable`
 - `503 container_unavailable`: no ready replica. Comes with `retry-after: 5`.
+- `503 model_busy`: both replicas shed load (gateway admission limit reached). Comes with `retry-after: 2` and `retry_after` in the body. Clients should back off and retry; this is capacity, not an outage.
+
+### Capacity (standard-2: 1 vCPU, 6 GiB, torch on one thread)
+
+- A `choice` call is CPU-bound at about 1.1–1.3 s inside the container (edge p50 1.5 s).
+- Two replicas sustained **1.5 rps** with p50 1.53 s / p95 2.13 s / p99 3.07 s (7 Oct 2026 baseline). Short bursts at that rate produced 3/450 `model_busy` responses.
+- At 0.6 rps, the healthy windows of the drill had p50 ~1.5 s / p95 ~2.3 s and no errors.
+- `VEYA_MAX_INFLIGHT` stays at **2**. With one vCPU, admitting more calls only queues them inside the model server: latency grows linearly while throughput stays the same, and RSS is already about 2 GiB per replica. For more than ~1.2 rps sustained, add replicas or move to `standard-3` (2 vCPU) rather than raising the limit.
 - `504 upstream_timeout`
 
 ## 9. Release identity and re-minting
