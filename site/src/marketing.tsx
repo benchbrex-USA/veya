@@ -12,8 +12,8 @@ const FAQ = [
   ["When does Veya defer?", "The model can return decision=defer. Confidently detected non-English text is deferred as an unsupported language. English is the only served language."],
   ["Which languages are supported?", "English only in this release."],
   ["How is API data handled?", "The console does not store raw state or candidate text for its history. Usage telemetry records primitive, status, route, release, and a latency bucket."],
-  ["How do API keys work?", "A project key is shown once. The console stores a SHA-256 hash and a prefix, not the raw key. Keys do not contain the model credential."],
-  ["Can I try Veya without writing code?", "The console Playground builds the real request. It returns a decision only when the API service binding is configured. It does not invent a result."],
+  ["How do API keys work?", "This deployment uses a temporary demo token on POST /api/infer. It is not a project key. The edge does not accept console-issued project keys."],
+  ["Can I try Veya without writing code?", "The console Playground sends POST /api/infer. It returns a decision only when Veya Core is ready. It does not invent a result. The demo token stays in memory for that page."],
 ] as const;
 
 export function Marketing({ onNavigate }: { onNavigate: (path: string) => void }) {
@@ -118,7 +118,7 @@ export function Marketing({ onNavigate }: { onNavigate: (path: string) => void }
             ))}
           </div>
           <pre><code>{example(tab)}</code></pre>
-          <p className="caveat">The current edge Worker expects Authorization: Bearer with the infrastructure secret. Customer keys are created in the console and are not yet exchanged by that Worker. Do not put the infrastructure secret in browser code.</p>
+          <p className="caveat">POST /api/infer expects Authorization: Bearer with a temporary demo token. That token is not the infrastructure credential and is not a project key. Do not put either secret in browser code.</p>
         </section>
         <section className="section explore">
           <a href="#docs" onClick={(event) => { event.preventDefault(); onNavigate("/docs"); }}><p className="kicker">01</p><h3>API documentation</h3><p>Schemas, errors, and the release boundary.</p></a>
@@ -157,10 +157,10 @@ function example(tab: "curl" | "python" | "ts"): string {
   "criteria": {"billing": "Invoice and refund questions", "access": "Login and permission questions"}
 }`;
   if (tab === "python") {
-    return `import json, urllib.request\nreq = urllib.request.Request(\n    "${API_ORIGIN}/api/infer",\n    data=json.dumps(${body}).encode(),\n    headers={"content-type": "application/json", "authorization": "Bearer <project key>"},\n)\nurllib.request.urlopen(req)`;
+    return `import json, urllib.request\nreq = urllib.request.Request(\n    "${API_ORIGIN}/api/infer",\n    data=json.dumps(${body}).encode(),\n    headers={"content-type": "application/json", "authorization": "Bearer <demo token>"},\n)\nurllib.request.urlopen(req)`;
   }
   if (tab === "ts") {
-    return `await fetch("${API_ORIGIN}/api/infer", {\n  method: "POST",\n  headers: {\n    "content-type": "application/json",\n    authorization: "Bearer <project key>",\n  },\n  body: JSON.stringify(${body}),\n});`;
+    return `await fetch("${API_ORIGIN}/api/infer", {\n  method: "POST",\n  headers: {\n    "content-type": "application/json",\n    authorization: "Bearer <demo token>",\n  },\n  body: JSON.stringify(${body}),\n});`;
   }
-  return `curl ${API_ORIGIN}/api/infer \\\n  -H "content-type: application/json" \\\n  -H "authorization: Bearer <project key>" \\\n  -d '${body.replaceAll("\n", "")}'`;
+  return `curl ${API_ORIGIN}/api/infer \\\n  -H "content-type: application/json" \\\n  -H "authorization: Bearer <demo token>" \\\n  -d '${body.replaceAll("\n", "")}'`;
 }

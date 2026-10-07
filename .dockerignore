@@ -26,6 +26,8 @@ artifacts/experiments/
 artifacts/decisions/
 artifacts/commercialization/
 research/
+experts/
+quantum/
 notebooks/
 tests/
 docs/

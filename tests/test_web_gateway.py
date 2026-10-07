@@ -408,7 +408,8 @@ def test_high_n_and_four_primitives(http_pair):
             },
         },
     )
-    assert status == 200 and list(out["answers"]) == ["z", "a"]
+    assert status == 400 and out["code"] == "invalid_input"
+    assert "SystemOne is not served" in out["detail"]
 
 
 def test_defer_and_unsupported(http_pair):

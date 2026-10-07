@@ -48,7 +48,8 @@ export const MAX_FUSION = {
   recommendation: "RESEARCH",
 } as const;
 
-export const API_ORIGIN = "https://api.veyadynamics.com";
+/** Same origin as this Worker. A separate api hostname is not deployed. */
+export const API_ORIGIN = "";
 
 export function statusIsGenerallyAvailable(status: string): boolean {
   return status === "GENERALLY AVAILABLE";

@@ -23,15 +23,6 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 from urllib.parse import urlsplit
 
-from experts.router import RouteError, route as route_expert
-
-from quantum.config import load_config, redact
-from quantum.decision import HttpVeyaTransport
-from quantum.provider import NimProvider
-from quantum.service import RequestError as QuantumRequestError
-from quantum.service import handle_request as handle_quantum_request
-from quantum.service import shared_cache
-
 from .contracts import (
     Primitive,
     RequestError,
@@ -85,9 +76,6 @@ def _page_html(path: str) -> bytes:
     page = page.replace("<!--VEYA_SEO-->", seo)
     return page.encode("utf-8")
 MAX_REQUEST_BYTES = 32_768
-QUANTUM_MAX_REQUEST_BYTES = 4 * 1024 * 1024
-QUANTUM_PATHS = {"/api/quantum/analyze", "/api/quantum/decide"}
-EXPERT_ROUTE = "/api/experts/route"
 MAX_RESPONSE_BYTES = 524_288
 # Per-request inference ceiling (G12). Configurable so operators can trade
 # latency headroom against client-visible timeout behavior without a redeploy.
@@ -794,162 +782,8 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(raw)
 
-    def _post_quantum(self, path: str, raw_body: bytes | None, length: int) -> None:
-        """Optional Ising perception and Veya decision. The body is not logged."""
-        started = time.monotonic()
-        request_id = secrets.token_hex(8)
-        status = 500
-        error_code: str | None = None
-        safe: dict[str, Any] = {"event": "quantum", "route": path, "request_id": request_id}
-        try:
-            if self._shutdown_reject():
-                return
-            if length < 0:
-                raise QuantumRequestError("invalid_input", "Invalid Content-Length.")
-            if length <= 0:
-                raise QuantumRequestError("invalid_input", "Request body is required.")
-            if raw_body is None:
-                status, error_code = 413, "request_too_large"
-                self.send(
-                    status,
-                    {
-                        "code": error_code,
-                        "detail": "Request exceeds the quantum size limit.",
-                        "request_id": request_id,
-                    },
-                )
-                return
-            if (
-                self.headers.get("Content-Type", "").split(";")[0].strip().lower()
-                != "application/json"
-            ):
-                raise QuantumRequestError("invalid_input", "Content-Type must be application/json.")
-            origin = self.headers.get("Origin")
-            host = self.headers.get("Host", "")
-            allowed_origins = {f"http://{host}", f"https://{host}"} | {
-                item.strip()
-                for item in os.environ.get("VEYA_ALLOWED_ORIGINS", "").split(",")
-                if item.strip()
-            }
-            if origin and origin not in allowed_origins:
-                raise QuantumRequestError("invalid_input", "Cross-origin model requests are not allowed.")
-            retry_after = _charge(self.client_address[0], 4)
-            if retry_after:
-                status, error_code = 429, "rate_limited"
-                self.send(
-                    status,
-                    {
-                        "code": error_code,
-                        "detail": "Too many model requests. Try again shortly.",
-                        "retry_after": retry_after,
-                        "request_id": request_id,
-                    },
-                    retry_after,
-                )
-                return
-            data = parse_json(raw_body)
-            config = load_config(os.environ)
-            held = False
-            if config.enabled:
-                if not inflight.acquire(blocking=False):
-                    status, error_code = 503, "model_busy"
-                    self.send(
-                        status,
-                        {
-                            "code": error_code,
-                            "detail": "Model is busy. Try again shortly.",
-                            "retry_after": 5,
-                            "request_id": request_id,
-                        },
-                        5,
-                    )
-                    return
-                held = True
-            try:
-                result = handle_quantum_request(
-                    "analyze" if path.endswith("/analyze") else "decide",
-                    data,
-                    config=config,
-                    provider=NimProvider(config),
-                    veya=HttpVeyaTransport(UPSTREAM, timeout=float(INFER_TIMEOUT_S)),
-                    cache=shared_cache(config),
-                    request_id=request_id,
-                )
-            finally:
-                if held:
-                    inflight.release()
-            body = result["body"]
-            body["gateway_latency_ms"] = round((time.monotonic() - started) * 1000)
-            safe.update(result.get("telemetry") or {})
-            status = int(result["http_status"])
-            self.send(status, body)
-        except QuantumRequestError as exc:
-            status, error_code = 400, exc.code
-            self.send(
-                status,
-                {"code": exc.code, "detail": exc.detail, "request_id": request_id},
-            )
-        except RequestError as exc:
-            status, error_code = 400, "invalid_input"
-            self.send(
-                status,
-                {"code": error_code, "detail": str(exc), "request_id": request_id},
-            )
-        except Exception:
-            status, error_code = 500, "model_error"
-            self.send(
-                status,
-                {
-                    "code": error_code,
-                    "detail": "The quantum service failed.",
-                    "request_id": request_id,
-                },
-            )
-        finally:
-            safe["status"] = status
-            safe["error_code"] = error_code
-            secret = os.environ.get("VEYA_NIM_API_KEY", "")
-            logger.info(redact(json.dumps(safe, sort_keys=True, default=str), secret))
-
-    def _post_expert(self, raw_body: bytes | None, length: int) -> None:
-        """Capability route only. This handler does not call an external model."""
-        request_id = secrets.token_hex(8)
-        try:
-            if length < 0 or raw_body is None and length > 0:
-                self.send(
-                    413,
-                    {
-                        "code": "request_too_large",
-                        "detail": "Request exceeds 32 KB.",
-                        "request_id": request_id,
-                    },
-                )
-                return
-            if not raw_body:
-                raise RouteError("request body is required")
-            if self.headers.get("Content-Type", "").split(";")[0].strip().lower() != "application/json":
-                raise RouteError("Content-Type must be application/json")
-            data = parse_json(raw_body)
-            if not isinstance(data, dict):
-                raise RouteError("request body must be an object")
-            decision = route_expert(data)
-            decision["request_id"] = request_id
-            self.send(200, decision)
-        except RouteError as exc:
-            self.send(400, {"code": "invalid_input", "detail": str(exc), "request_id": request_id})
-        except RequestError as exc:
-            self.send(400, {"code": "invalid_input", "detail": str(exc), "request_id": request_id})
-
     def do_POST(self) -> None:
-        path = self.path.split("?")[0]
-        limit = QUANTUM_MAX_REQUEST_BYTES if path in QUANTUM_PATHS else MAX_REQUEST_BYTES
-        raw_body, length = self._take_body(limit)
-        if path in QUANTUM_PATHS and self.path == path:
-            self._post_quantum(path, raw_body, length)
-            return
-        if path == EXPERT_ROUTE and self.path == path:
-            self._post_expert(raw_body, length)
-            return
+        raw_body, length = self._take_body()
         if self.path != "/api/infer":
             self.send(404, {"code": "not_found"})
             return
@@ -1013,18 +847,13 @@ class Handler(BaseHTTPRequestHandler):
                 )
                 return
             data = parse_json(raw_body)
+            if isinstance(data, dict) and isinstance(data.get("primitive"), str):
+                primitive = data["primitive"]
+            if primitive == "systemone":
+                raise RequestError("SystemOne is not served by this release.")
             body = validate(data)
-            primitive = data["primitive"]
             candidate_count = (
-                len(body.get("criteria", {}))
-                if primitive == "choice"
-                else sum(
-                    len(q.get("criteria", {}))
-                    for q in body["questions"].values()
-                    if q["type"] == "choice"
-                )
-                if primitive == "systemone"
-                else 0
+                len(body.get("criteria", {})) if primitive == "choice" else 0
             )
             cost = _weight(primitive, body)
             retry_after = _charge(self.client_address[0], cost - 1) if cost > 1 else 0

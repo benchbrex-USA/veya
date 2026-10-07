@@ -32,13 +32,11 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY veya/ ./veya/
-COPY experts/ ./experts/
-COPY quantum/ ./quantum/
 COPY web/__init__.py web/server.py web/contracts.py web/model_server.py ./web/
 COPY web/static/ ./web/static/
 RUN test -f /app/web/static/site-config.json
 COPY artifacts/release/ ./artifacts/release/
-COPY deploy/cloudflare/fetch_release.py ./boot/fetch_release.py
+COPY deploy/cloudflare/fetch_release.py deploy/cloudflare/supervise.py deploy/cloudflare/release-pins.json ./boot/
 COPY models/production/ /tmp/model-src/
 RUN mkdir -p /app/models/production \
     && cd /tmp/model-src \
@@ -49,7 +47,7 @@ RUN mkdir -p /app/models/production \
       done \
     && rm -rf /tmp/model-src \
     && find /app -name '*.safetensors' -delete \
-    && python -m compileall -q veya experts quantum web boot \
+    && python -m compileall -q veya web boot \
     && chown -R veya:veya /app
 USER veya
 EXPOSE 8000
@@ -66,7 +64,8 @@ ENV VEYA_SHADOW_MODE=0 \
     VEYA_CHECKPOINT_URL=http://veya-r2.internal/releases/0.3.5-audit-baseline.1/model.safetensors \
     VEYA_CHECKPOINT_SHA256=891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c \
     VEYA_CHECKPOINT_BYTES=842609210 \
+    VEYA_MANIFEST_SHA256=cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de \
     PYTHONUNBUFFERED=1
 HEALTHCHECK --interval=30s --timeout=10s --start-period=300s --retries=3 \
   CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=8)"]
-CMD ["sh", "-c", "python /app/boot/fetch_release.py && python -m web.model_server & exec python -m web.server"]
+CMD ["python", "/app/boot/supervise.py"]

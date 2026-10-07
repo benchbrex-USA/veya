@@ -1,10 +1,11 @@
 {
+  // Not deployed. The investor path is the repository-root wrangler.jsonc.
   "name": "veya-web-staging",
   "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
-  "main": "src/worker.ts",
+  "main": "worker.ts",
   "compatibility_date": "2026-10-04",
   "assets": {
-    "directory": "./dist",
+    "directory": "../dist",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "single-page-application"

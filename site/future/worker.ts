@@ -3,7 +3,7 @@
  * Customer API keys are hashed before storage. Model weights are not served.
  */
 
-import { buildInferenceRequest } from "./contract.ts";
+import { buildInferenceRequest } from "../src/contract.ts";
 import {
   cacheControl,
   generateApiKey,
@@ -13,7 +13,7 @@ import {
   sha256Hex,
   surfaceForHost,
   verifyTurnstile,
-} from "./security.ts";
+} from "../src/security.ts";
 
 interface Sql {
   prepare(query: string): {

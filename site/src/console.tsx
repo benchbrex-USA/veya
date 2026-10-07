@@ -34,7 +34,7 @@ export function Console({ onNavigate, theme, setTheme }: { onNavigate: (path: st
         {view === "evaluations" ? <Evaluations /> : null}
         {view === "usage" ? <Empty title="Usage" body="No usage has been recorded. This page is not a billing invoice." /> : null}
         {view === "keys" ? <Keys /> : null}
-        {view === "organization" ? <Empty title="Organization" body="No identity provider is connected. The console does not keep a password database. Create a project when D1 and a session are available." /> : null}
+        {view === "organization" ? <Empty title="Organization" body="No identity provider is connected. This deployment does not keep a password database or issue project keys." /> : null}
       </main>
     </div>
   );
@@ -55,10 +55,10 @@ function Overview({ onPlay, onDocs }: { onPlay: () => void; onDocs: () => void }
             <button className="btn" onClick={onDocs}>View docs</button>
           </div>
         </div>
-        <p className="caveat">API base {`https://api.veyadynamics.com`}. Served primitives: choice, noul, score-categorical. SystemOne is not listed as served.</p>
+        <p className="caveat">API base is this site's /api/infer. Served primitives: choice, noul, categorical score. SystemOne is not served.</p>
       </div>
       <div className="panel"><h2>Recent requests</h2><p className="empty">No requests yet.</p></div>
-      <div className="panel"><h2>API keys</h2><p className="empty">No API keys yet.</p></div>
+      <div className="panel"><h2>API keys</h2><p className="empty">Project keys are not issued on this deployment.</p></div>
     </>
   );
 }
@@ -72,63 +72,17 @@ function Projects() {
     <section>
       <p className="kicker">Projects</p>
       <h1>Projects</h1>
-      <p className="empty">No projects yet. A project groups keys and usage. Creating one requires the console Worker and D1.</p>
-      <ProjectForm />
+      <p className="empty">No projects. This deployment does not run a console database.</p>
     </section>
   );
 }
 
-function ProjectForm() {
-  const [message, setMessage] = useState("Nothing saved.");
-  return (
-    <form onSubmit={async (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      const response = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ organization: data.get("organization"), name: data.get("name") }),
-      });
-      const payload = await response.json().catch(() => ({}));
-      setMessage(response.ok ? "Project stored." : payload.detail || "The console API did not store a project.");
-    }}>
-      <label className="field"><span>Organization</span><input name="organization" required maxLength={80} /></label>
-      <label className="field"><span>Project</span><input name="name" required maxLength={80} /></label>
-      <button className="btn solid" type="submit">Create project</button>
-      <p>{message}</p>
-    </form>
-  );
-}
-
 function Keys() {
-  const [revealed, setRevealed] = useState<string | null>(null);
-  const [message, setMessage] = useState("Keys are shown once. The stored value is a hash.");
   return (
     <section>
       <p className="kicker">API keys</p>
       <h1>API keys</h1>
-      <p className="empty">{message}</p>
-      {revealed ? <p className="ok">Copy this now. It will not be shown again. {revealed}</p> : null}
-      <form onSubmit={async (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const response = await fetch("/api/keys", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ project_id: data.get("project_id") }),
-        });
-        const payload = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          setRevealed(null);
-          setMessage(payload.detail || "No key was created.");
-          return;
-        }
-        setRevealed(payload.token);
-        setMessage("The full key was returned once by the Worker.");
-      }}>
-        <label className="field"><span>Project id</span><input name="project_id" required /></label>
-        <button className="btn solid" type="submit">Create key</button>
-      </form>
+      <p className="empty">This deployment does not issue project keys. The Playground uses a temporary demo token kept in memory for that page. It is not the infrastructure credential.</p>
     </section>
   );
 }
@@ -157,13 +111,8 @@ function Playground() {
   const [rows, setRows] = useState([{ id: "billing", description: "Invoice and refund questions" }, { id: "access", description: "Login and permission questions" }]);
   const [labels, setLabels] = useState("low, high");
   const [raw, setRaw] = useState(false);
-  const [token, setToken] = useState(() => {
-    try {
-      return sessionStorage.getItem("veya-demo-auth") || "";
-    } catch {
-      return "";
-    }
-  });
+  const [token, setToken] = useState("");
+  const [busy, setBusy] = useState(false);
   const [output, setOutput] = useState("No result yet. A run calls POST /api/infer. It does not invent a decision.");
   const [error, setError] = useState("");
   const criteria = primitive === "score"
@@ -178,12 +127,15 @@ function Playground() {
       <div className="split">
         <form onSubmit={async (event) => {
           event.preventDefault();
+          if (busy) return;
           if (!built.ok) { setError(built.error); setOutput(""); return; }
           if (token.trim().length < 16) {
-            setError("Enter the staging token. It stays in this browser and is not saved in the repository.");
+            setError("Enter the temporary demo token. It stays in memory for this page only.");
             return;
           }
           setError("");
+          setBusy(true);
+          setOutput("Running /api/infer. No decision has been returned yet.");
           const started = performance.now();
           try {
             const response = await fetch("/api/infer", {
@@ -199,23 +151,16 @@ function Playground() {
           } catch {
             setOutput("");
             setError("The Veya Worker did not respond. No decision was invented.");
+          } finally {
+            setBusy(false);
           }
         }}>
-          <label className="field"><span>Staging token</span>
+          <label className="field"><span>Demo token</span>
             <input
               type="password"
               autoComplete="off"
               value={token}
-              onChange={(event) => {
-                const next = event.target.value;
-                setToken(next);
-                try {
-                  if (next) sessionStorage.setItem("veya-demo-auth", next);
-                  else sessionStorage.removeItem("veya-demo-auth");
-                } catch {
-                  /* the token remains in memory for this page */
-                }
-              }}
+              onChange={(event) => setToken(event.target.value)}
             />
           </label>
           <label className="field"><span>Primitive</span>
@@ -241,7 +186,7 @@ function Playground() {
           ) : null}
           {primitive === "score" ? <label className="field"><span>Labels</span><input value={labels} onChange={(event) => setLabels(event.target.value)} /></label> : null}
           {primitive === "choice" && built.ok ? <p>Route preview: {choiceRoute(Object.keys(built.body.criteria as object).length)}.</p> : null}
-          <button className="btn solid" type="submit">Run</button>
+          <button className="btn solid" type="submit" disabled={busy}>{busy ? "Running" : "Run"}</button>
           {error ? <p className="error">{error}</p> : null}
         </form>
         <div>

@@ -70,7 +70,11 @@ def test_wrangler_binds_one_container_and_has_no_origin():
     assert config["r2_buckets"] == [
         {"binding": "VEYA_ARTIFACTS", "bucket_name": "veya-model-artifacts"}
     ]
-    assert config["secrets"]["required"] == ["VEYA_EDGE_TOKEN"]
+    assert config["secrets"]["required"] == ["VEYA_EDGE_TOKEN", "VEYA_DEMO_TOKEN"]
+    assert config["ratelimits"][0]["simple"] == {"limit": 20, "period": 60}
+    assert config["ratelimits"][1]["simple"] == {"limit": 6, "period": 60}
+    assert "VEYA_SOURCE_COMMIT" not in config.get("vars", {})
+    assert "VEYA_SOURCE_DIRTY" not in config.get("vars", {})
     assert config["assets"]["directory"] == "./site/dist"
     assert config["assets"]["not_found_handling"] == "single-page-application"
     assert "/api/*" in config["assets"]["run_worker_first"]
@@ -88,14 +92,35 @@ def test_wrangler_binds_one_container_and_has_no_origin():
     assert dockerfile.index("torch==2.14.0") < dockerfile.index("pip install --no-cache-dir -r requirements.lock")
     assert "COPY web/static/ ./web/static/" in dockerfile
     assert "test -f /app/web/static/site-config.json" in dockerfile
+    assert "COPY experts/" not in dockerfile
+    assert "COPY quantum/" not in dockerfile
+    assert 'CMD ["python", "/app/boot/supervise.py"]' in dockerfile
+    assert "sh" not in dockerfile.split("CMD", 1)[1]
     playground = (ROOT / "site" / "src" / "console.tsx").read_text(encoding="utf-8")
     assert 'fetch("/api/infer"' in playground
     assert "/api/playground" not in playground
     assert "VEYA_EDGE_TOKEN" not in playground
+    assert "sessionStorage" not in playground
+    assert "<project key>" not in (ROOT / "site" / "src" / "marketing.tsx").read_text(encoding="utf-8")
     worker = (ROOT / "worker" / "veya-container.mjs").read_text(encoding="utf-8")
+    assert "export { ContainerProxy }" in worker
+    assert 'sleepAfter = "8h"' in worker
+    assert 'pingEndpoint = "127.0.0.1/readyz"' in worker
     assert "enableInternet = false" in worker
     assert "outboundByHost" in worker
     assert "handleArtifact" not in worker.split("export default", 1)[1]
+    headers = (ROOT / "site" / "public" / "_headers").read_text(encoding="utf-8")
+    assert "Content-Security-Policy:" in headers
+    assert "unsafe-inline" not in headers
+    assert "X-Robots-Tag: noindex" in headers
+    assert "X-Frame-Options: DENY" in headers
+    assert not (ROOT / "site" / "src" / "worker.ts").exists()
+    assert not (ROOT / "site" / "wrangler.jsonc").exists()
+    assert "not part of the investor deployment" in (ROOT / "site" / "future" / "README.md").read_text(encoding="utf-8")
+    gateway = (ROOT / "web" / "server.py").read_text(encoding="utf-8")
+    assert "from experts" not in gateway
+    assert "from quantum" not in gateway
+    assert "SystemOne is not served by this release." in gateway
 
 
 def test_active_deploy_files_do_not_name_a_tunnel():

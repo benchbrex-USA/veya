@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { buildInferenceRequest, choiceRoute } from "../src/contract.ts";
+import { nextHistory, surfaceFromLocation } from "../src/navigate.ts";
 import { BENCHMARK, MAX_FUSION, RELEASE, statusIsGenerallyAvailable } from "../src/release.ts";
 import {
   cacheControl,
@@ -102,6 +103,31 @@ test("security headers do not allow inline scripts and HSTS stays off", () => {
   assert.equal("strict-transport-security" in headers, false);
   assert.equal(cacheControl("/assets/app.js"), "public, max-age=31536000, immutable");
   assert.equal(cacheControl("/api/playground"), "no-store");
+});
+
+test("deployed navigation keeps path, reload, back, and direct links", () => {
+  const host = "veya-staging.veya-8d0.workers.dev";
+  assert.equal(surfaceFromLocation("/", host), "marketing");
+  assert.equal(surfaceFromLocation("/console", host), "console");
+  assert.equal(surfaceFromLocation("/docs", host), "docs");
+  assert.equal(surfaceFromLocation("/docs", host), surfaceFromLocation("/docs", host));
+  const stack = ["/"];
+  function go(target: string) {
+    const step = nextHistory(stack[stack.length - 1], target);
+    if (step.push) stack.push(step.path);
+    return step;
+  }
+  assert.deepEqual(go("/console"), { surface: "console", path: "/console", push: true });
+  assert.deepEqual(go("/docs"), { surface: "docs", path: "/docs", push: true });
+  stack.pop();
+  assert.equal(surfaceFromLocation(stack[stack.length - 1], host), "console");
+  stack.pop();
+  assert.equal(surfaceFromLocation(stack[stack.length - 1], host), "marketing");
+  assert.equal(surfaceFromLocation("/docs", host), "docs");
+  assert.equal(nextHistory("/console", "/console").push, false);
+  const source = readFileSync(new URL("../src/app.tsx", import.meta.url), "utf8");
+  assert.equal(source.includes("localhost"), false);
+  assert.equal(source.includes("popstate"), true);
 });
 
 test("hosts select the product surface", () => {

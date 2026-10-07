@@ -12,28 +12,41 @@ export { ContainerProxy };
 
 import { ARTIFACT_HOST, handleArtifact } from "./artifact_route.mjs";
 import {
+  CHECKPOINT_BYTES,
+  CHECKPOINT_SHA256,
+  MANIFEST_SHA256,
+  RELEASE_ID,
+  SOURCE_COMMIT,
+  SOURCE_DIRTY,
+} from "./build-meta.mjs";
+import {
   INSTANCE_NAME,
   adminVersion,
   edgeRateLimit,
   failure,
   forwardHeaders,
   guardRequest,
+  notReady,
   requestId,
+  stamp,
 } from "./edge_policy.mjs";
 
 const buckets = new Map();
-const RELEASE = "0.3.5-audit-baseline.1";
 
 export class VeyaContainer extends Container {
   defaultPort = 8000;
   requiredPorts = [8000];
-  sleepAfter = "30m";
+  sleepAfter = "8h";
+  // The library requests http://${pingEndpoint} and treats any HTTP response
+  // as "port open". /readyz is still the route. Inference below waits for 200.
+  pingEndpoint = "127.0.0.1/readyz";
   enableInternet = false;
   envVars = {
-    VEYA_CHECKPOINT_URL: `http://${ARTIFACT_HOST}/releases/${RELEASE}/model.safetensors`,
-    VEYA_CHECKPOINT_SHA256: "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
-    VEYA_CHECKPOINT_BYTES: "842609210",
-    VEYA_RELEASE_ID: RELEASE,
+    VEYA_CHECKPOINT_URL: `http://${ARTIFACT_HOST}/releases/${RELEASE_ID}/model.safetensors`,
+    VEYA_CHECKPOINT_SHA256: CHECKPOINT_SHA256,
+    VEYA_CHECKPOINT_BYTES: CHECKPOINT_BYTES,
+    VEYA_RELEASE_ID: RELEASE_ID,
+    VEYA_MANIFEST_SHA256: MANIFEST_SHA256,
   };
 }
 
@@ -41,21 +54,35 @@ VeyaContainer.outboundByHost = {
   [ARTIFACT_HOST]: (request, env) => handleArtifact(request, env),
 };
 
+const BUILD = {
+  sourceCommit: SOURCE_COMMIT,
+  sourceDirty: SOURCE_DIRTY,
+  release: RELEASE_ID,
+  manifestSha256: MANIFEST_SHA256,
+  checkpointSha256: CHECKPOINT_SHA256,
+};
+
 export default {
   async fetch(request, env) {
     const id = requestId(request);
+    const url = new URL(request.url);
     const blocked = guardRequest(request, env, buckets);
     if (blocked) return blocked;
     const limited = await edgeRateLimit(request, env);
     if (limited) return limited;
-    if (new URL(request.url).pathname === "/__admin/version") return adminVersion(env);
+    if (url.pathname === "/__admin/version") return adminVersion(env, BUILD);
     if (!env || !env.VEYA_CONTAINER) {
       return failure(id, 503, "container_unavailable");
     }
     try {
       const container = getContainer(env.VEYA_CONTAINER, INSTANCE_NAME);
+      if (url.pathname === "/api/infer") {
+        const probe = await container.fetch(new Request(new URL("/readyz", url.origin), { method: "GET" }));
+        const waiting = notReady(probe.status);
+        if (waiting) return waiting;
+      }
       const outbound = new Request(request, { headers: forwardHeaders(request, id) });
-      return await container.fetch(outbound);
+      return stamp(await container.fetch(outbound));
     } catch {
       return failure(id, 502, "container_unavailable");
     }

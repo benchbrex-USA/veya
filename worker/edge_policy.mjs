@@ -1,11 +1,20 @@
 /**
  * Edge checks for the Cloudflare Worker. This module does not call a container.
+ *
+ * POST /api/infer accepts only the demo credential. /__admin/version accepts
+ * only the infrastructure credential. The isolate-local Map is a fallback for
+ * local tests where the Cloudflare rate-limit binding is absent. It uses the
+ * same demo identity, not the client IP. When the binding is present, only
+ * that binding applies.
  */
 
 export const INSTANCE_NAME = "veya-core";
-export const MAX_BODY_BYTES = 4 * 1024 * 1024;
-export const RATE_LIMIT = 60;
+export const INFER_MAX_BODY_BYTES = 32_768;
+export const INFER_RATE_LIMIT = 20;
+export const HEAVY_RATE_LIMIT = 6;
+export const RATE_LIMIT = INFER_RATE_LIMIT;
 export const RATE_WINDOW_MS = 60_000;
+export const DEMO_IDENTITY = "veya-demo";
 
 const PUBLIC_GET = new Set([
   "/__edge_health",
@@ -30,6 +39,16 @@ const HOP = [
   "host",
 ];
 
+export const SECURITY_HEADERS = {
+  "content-security-policy":
+    "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+  "x-content-type-options": "nosniff",
+  "referrer-policy": "strict-origin-when-cross-origin",
+  "permissions-policy": "camera=(), microphone=(), geolocation=()",
+  "x-frame-options": "DENY",
+  "x-robots-tag": "noindex",
+};
+
 export function edgeHealth() {
   return json({ edge: "ok", backend: "cloudflare-container" }, 200);
 }
@@ -40,17 +59,17 @@ export function guardRequest(request, env, buckets, now = Date.now()) {
     return json({ code: "method_not_allowed", detail: "Method not allowed." }, 405);
   }
   if (request.method === "OPTIONS") {
-    return new Response(null, { status: 204 });
+    return new Response(null, { status: 204, headers: SECURITY_HEADERS });
   }
   const length = contentLength(request);
-  if (length !== null && length > MAX_BODY_BYTES) {
+  if (length !== null && length > INFER_MAX_BODY_BYTES) {
     return json({ code: "request_too_large", detail: "Request exceeds the size limit." }, 413);
   }
   if (isPublic(request.method, url.pathname)) {
     if (url.pathname === "/__edge_health") return edgeHealth();
     return null;
   }
-  const token = env && env.VEYA_EDGE_TOKEN;
+  const token = expectedToken(env, url.pathname);
   if (typeof token !== "string" || token.length < 16) {
     return json(
       { code: "auth_not_configured", detail: "Inference authentication is not configured." },
@@ -60,9 +79,24 @@ export function guardRequest(request, env, buckets, now = Date.now()) {
   if (!bearerMatches(request.headers.get("authorization"), token)) {
     return json({ code: "unauthorized", detail: "Authentication is required." }, 401);
   }
-  const limited = rateLimit(clientKey(request), buckets, now);
-  if (limited) return limited;
+  if (!cloudflareLimiter(env)) {
+    const limited = rateLimit(limitIdentity(url.pathname), buckets, now, INFER_RATE_LIMIT);
+    if (limited) return limited;
+  }
   return null;
+}
+
+export function limitIdentity(pathname) {
+  return pathname === "/api/infer" ? DEMO_IDENTITY : "veya-admin";
+}
+
+export function notReady(status) {
+  if (status === 200) return null;
+  return json(
+    { code: "not_ready", detail: "Veya Core is not ready." },
+    503,
+    { "retry-after": "5" },
+  );
 }
 
 export function forwardHeaders(request, requestId) {
@@ -87,14 +121,25 @@ export function failure(requestIdValue, status, code) {
   );
 }
 
+export function stamp(response) {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) headers.set(name, value);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 function isPublic(method, pathname) {
   return (method === "GET" || method === "HEAD") && PUBLIC_GET.has(pathname);
+}
+
+function expectedToken(env, pathname) {
+  if (!env) return undefined;
+  return pathname === "/api/infer" ? env.VEYA_DEMO_TOKEN : env.VEYA_EDGE_TOKEN;
 }
 
 function contentLength(request) {
   const raw = request.headers.get("content-length");
   if (raw === null || raw === "") return null;
-  if (!/^\d+$/.test(raw)) return MAX_BODY_BYTES + 1;
+  if (!/^\d+$/.test(raw)) return INFER_MAX_BODY_BYTES + 1;
   return Number(raw);
 }
 
@@ -109,11 +154,12 @@ function bearerMatches(header, expected) {
   return diff === 0;
 }
 
-function clientKey(request) {
-  return request.headers.get("cf-connecting-ip") || "local";
+function cloudflareLimiter(env) {
+  const binding = env && env.VEYA_RATE_INFERENCE;
+  return Boolean(binding && typeof binding.limit === "function");
 }
 
-function rateLimit(key, buckets, now) {
+function rateLimit(key, buckets, now, limit) {
   const bucket = buckets.get(key) || { start: now, count: 0 };
   if (now - bucket.start >= RATE_WINDOW_MS) {
     bucket.start = now;
@@ -121,7 +167,7 @@ function rateLimit(key, buckets, now) {
   }
   bucket.count += 1;
   buckets.set(key, bucket);
-  if (bucket.count > RATE_LIMIT) {
+  if (bucket.count > limit) {
     return json({ code: "rate_limited", detail: "Too many requests." }, 429, {
       "retry-after": "60",
     });
@@ -132,12 +178,7 @@ function rateLimit(key, buckets, now) {
 export async function requestWeight(request) {
   const url = new URL(request.url);
   if (isPublic(request.method, url.pathname)) return "public";
-  if (url.pathname.startsWith("/api/quantum") || url.pathname === "/api/experts/route") {
-    return "heavy";
-  }
-  if (request.method !== "POST") return "inference";
-  const length = contentLength(request);
-  if (length !== null && length > 65536) return "heavy";
+  if (request.method !== "POST" || url.pathname !== "/api/infer") return "inference";
   try {
     const body = JSON.parse(await request.clone().text());
     if (body && body.primitive && body.primitive !== "choice") return "heavy";
@@ -159,7 +200,7 @@ export async function requestWeight(request) {
 export async function edgeRateLimit(request, env) {
   const weight = await requestWeight(request);
   if (weight === "public") return null;
-  const key = clientKey(request);
+  const key = limitIdentity(new URL(request.url).pathname);
   if (weight === "heavy") {
     const heavy = await consumeLimit(env && env.VEYA_RATE_HEAVY, key);
     if (heavy) return heavy;
@@ -167,17 +208,18 @@ export async function edgeRateLimit(request, env) {
   return consumeLimit(env && env.VEYA_RATE_INFERENCE, key);
 }
 
-export function adminVersion(env) {
+export function adminVersion(env, build = {}) {
   const metadata = (env && env.CF_VERSION_METADATA) || {};
+  const dirty = build.sourceDirty ?? (env && env.VEYA_SOURCE_DIRTY);
   return json(
     {
       worker_version_id: metadata.id || null,
-      source_commit: env && env.VEYA_SOURCE_COMMIT ? env.VEYA_SOURCE_COMMIT : null,
-      source_dirty: env && env.VEYA_SOURCE_DIRTY === "true",
+      source_commit: build.sourceCommit || (env && env.VEYA_SOURCE_COMMIT) || null,
+      source_dirty: dirty === true || dirty === "true",
       container_image_digest: env && env.VEYA_IMAGE_DIGEST ? env.VEYA_IMAGE_DIGEST : null,
-      release: env && env.VEYA_RELEASE_ID ? env.VEYA_RELEASE_ID : null,
-      manifest_sha256: env && env.VEYA_MANIFEST_SHA256 ? env.VEYA_MANIFEST_SHA256 : null,
-      checkpoint_sha256: env && env.VEYA_CHECKPOINT_SHA256 ? env.VEYA_CHECKPOINT_SHA256 : null,
+      release: build.release || (env && env.VEYA_RELEASE_ID) || null,
+      manifest_sha256: build.manifestSha256 || (env && env.VEYA_MANIFEST_SHA256) || null,
+      checkpoint_sha256: build.checkpointSha256 || (env && env.VEYA_CHECKPOINT_SHA256) || null,
     },
     200,
   );
@@ -197,5 +239,6 @@ async function consumeLimit(binding, key) {
 function json(body, status, extra) {
   const headers = new Headers(extra);
   headers.set("content-type", "application/json");
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) headers.set(name, value);
   return new Response(JSON.stringify(body), { status, headers });
 }
