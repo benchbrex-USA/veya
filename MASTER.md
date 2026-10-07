@@ -6,7 +6,7 @@
 |---|---|
 | **Name** | `veya` |
 | **Version** | `0.3.5` (`__version__`) |
-| **License** | Apache-2.0 |
+| **License** | Proprietary (all rights reserved) |
 | **Author** | Veya Dynamics |
 | **Python** | `>=3.10` (classifiers: 3.10 / 3.11 / 3.12 / 3.13) |
 | **Build** | `setuptools>=61.0` (backend `setuptools.build_meta`) |
@@ -931,7 +931,6 @@ Failure precedence P1 > P2 > P3 > P4 > P5 > P6. Template ε=0.10, `c_min`=0.80 a
 | `README.md` | Project overview and quickstart |
 | `BENCHMARKS.md` | Benchmark tables, audit note, stated limits |
 | `MASTER.md` | This document — master reference |
-| `LICENSE` | Apache-2.0 |
 | `pyproject.toml` / `setup.py` / `requirements.lock` | Packaging and pinned dependencies |
 
 ### `docs/`
