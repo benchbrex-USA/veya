@@ -288,6 +288,29 @@ Edge errors are JSON with `code`, `detail` and `request_id`:
 - `503 container_unavailable`: no ready replica. Comes with `retry-after: 5`.
 - `503 model_busy`: both replicas shed load (gateway admission limit reached). Comes with `retry-after: 2` and `retry_after` in the body. Clients should back off and retry; this is capacity, not an outage.
 
+### Per-project rate limits (tiers)
+
+`veya-production` reads each project's tier from D1 `projects.rate_tier` (migration `product/migrations/0002_project_rate_tier.sql`, additive). NULL means `default`. The mapping lives in `worker/rate_tiers.mjs`:
+
+| Tier | Choice | Noul / Score | Counted per | Bindings (namespace) |
+|---|---|---|---|---|
+| `default` (NULL) | 20/min | 6/min | API key | `VEYA_RATE_INFERENCE` (2001), `VEYA_RATE_HEAVY` (2002) |
+| `site` | 150/min | 45/min | project | `VEYA_RATE_SITE` (2003), `VEYA_RATE_SITE_HEAVY` (2004) |
+
+- **Sizing.** `site` is sized to the pool: 2 replicas serve about 2.6 rps (~156/min). Beyond that the gateway sheds load with `503 model_busy`, which is still the hard cap. Workers rate limits are counted per Cloudflare location and are approximate.
+- **Per-visitor limits stay at the front end.** The `veya` edge keeps its 12 units/min per IP.
+- **Fallbacks.** Unknown tiers, or missing tier bindings, fall back to `default`, counted per key. A missing `rate_tier` column (migration not applied) falls back to the key-only auth query.
+- A rate-limited response carries `x-veya-rate-tier`.
+
+Set or clear a tier (production D1):
+
+```bash
+npx wrangler d1 execute veya-production --remote -c wrangler.production.jsonc \
+  --command "UPDATE projects SET rate_tier='site' WHERE id='veya-public-site'"   # or rate_tier=NULL
+```
+
+Changes apply on the next request; there is no cache.
+
 ### Idle sleep (`sleepAfter`)
 
 `@cloudflare/containers` 0.3.7 counts a request as in flight until its response body has been **piped to the end**. `containerFetch` decrements only in `res.body.pipeTo(...).finally(...)`, and the pipe has no buffer. While anything is in flight, `isActivityExpired()` renews the timer, so the container never sleeps. On 7 Oct 2026 the staging container (`VEYA_SLEEP_AFTER=15m`) was still running after 24 idle minutes.

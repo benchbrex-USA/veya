@@ -35,6 +35,7 @@ import {
   stamp,
 } from "./edge_policy.mjs";
 import { discard, fetchTracker } from "./body_hygiene.mjs";
+import { ratePlan } from "./rate_tiers.mjs";
 import { REPLICA_COUNT, fetchFromPool, replicaName, stubFor } from "./pool.mjs";
 
 export const DEFAULT_INFER_TIMEOUT_MS = 15_000;
@@ -518,12 +519,13 @@ export function createHandler(build, options = {}) {
     return guarded;
   }
 
-  async function limited(env, keyId, heavy) {
-    const binding = heavy ? env.VEYA_RATE_HEAVY : env.VEYA_RATE_INFERENCE;
-    if (!binding || typeof binding.limit !== "function") return null;
-    const result = await binding.limit({ key: keyId });
+  /** Per-project tier (rate_tiers.mjs): default = per key 20/6 per min; "site" = per project, sized to the pool. */
+  async function limited(env, identity, heavy) {
+    const plan = ratePlan(env, identity, heavy);
+    if (!plan.binding) return null;
+    const result = await plan.binding.limit({ key: plan.key });
     if (result && result.success === false) {
-      return json({ code: "rate_limited", detail: "Too many requests." }, 429, { "retry-after": "60" });
+      return json({ code: "rate_limited", detail: "Too many requests." }, 429, { "retry-after": "60", "x-veya-rate-tier": plan.tier });
     }
     return null;
   }
@@ -578,7 +580,7 @@ export function createHandler(build, options = {}) {
     const heavy = Boolean(payload.primitive && payload.primitive !== "choice");
     let block;
     try {
-      block = await limited(env, identity.keyId, heavy);
+      block = await limited(env, identity, heavy);
     } catch {
       return json({ code: "rate_limit_unavailable", detail: "Rate limiting is temporarily unavailable.", request_id: id }, 503, { "retry-after": "5" });
     }
