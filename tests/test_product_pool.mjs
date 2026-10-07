@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { selectReplica } from "../worker/pool.mjs";
+import { fetchFromPool, selectReplica } from "../worker/pool.mjs";
 
 test("the production pool asks for two identical replicas", async () => {
   const seen = [];
@@ -17,4 +17,17 @@ test("the production pool asks for two identical replicas", async () => {
   assert.deepEqual(seen, [[binding, 2]]);
   await assert.rejects(selectReplica(binding, { count: 1, pick() {} }), /two replicas/);
   await assert.rejects(selectReplica(null, { count: 2, pick() {} }), /binding is missing/);
+});
+
+test("a failed replica falls through to the other replica", async () => {
+  const binding = {
+    idFromName(name) { return name; },
+    get(name) { return { name }; },
+  };
+  const result = await fetchFromPool(binding, async (stub) => {
+    if (stub.name === "instance-0") throw new Error("down");
+    return new Response("ok", { status: 200 });
+  }, { random: () => 0 });
+  assert.equal(result.index, 1);
+  assert.deepEqual(result.attempts, [{ index: 0, status: 0 }]);
 });

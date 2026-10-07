@@ -135,4 +135,5 @@ def test_schema_and_runtime_manifest_do_not_upgrade_the_model():
     config = (ROOT / "wrangler.production.jsonc").read_text(encoding="utf-8")
     assert '"name": "veya-production"' in config
     assert '"max_instances": 2' in config
-    assert "Not deployed" in config
+    assert "veya-production-runtime" in config
+    assert "3fadb994-4107-4821-8cf3-c494073a41e0" in config
