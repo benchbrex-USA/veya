@@ -1,95 +1,21 @@
 /**
- * Veya edge proxy (Cloudflare Workers).
+ * Customer Worker `veya` entrypoint (wrangler.jsonc).
  *
- * The audited decision model is a PyTorch checkpoint served by
- * web/model_server.py on 127.0.0.1:8080, fronted by the stdlib gateway in
- * web/server.py. Workers cannot execute PyTorch, so this Worker's only job is
- * to give the stack a stable public hostname and forward every request to the
- * live gateway origin (VEYA_ORIGIN, set in wrangler.jsonc / dashboard vars).
- *
- * Security notes:
- *  - The browser's Origin header is forwarded untouched, so the gateway's
- *    same-origin policy (VEYA_ALLOWED_ORIGINS) still governs model requests.
- *  - The model service itself remains loopback-only; only the gateway is
- *    ever reachable from the edge.
+ * Serves the Veya website and same-origin API from Cloudflare. Inference goes to
+ * the production Worker `veya-production` over the VEYA_API service binding with
+ * the server-side project key VEYA_SITE_KEY. There is no dependency on the former
+ * Mac / Tailscale Funnel origin. All logic lives in ./veya_site_edge.mjs.
  */
 
-const EDGE_HEALTH_PATH = "/__edge_health";
+import benchmark from "../artifacts/release/blind_clinc150_val_result.json";
+import siteConfig from "../web/static/site-config.json";
+import indexHtml from "../web/static/index.html";
+import { createHandler } from "./veya_site_edge.mjs";
 
-function originOf(env) {
-  const raw = (env && env.VEYA_ORIGIN) || "";
-  return raw.replace(/\/+$/, "");
-}
+const handle = createHandler({ indexHtml, siteConfig, benchmark });
 
 export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    const origin = originOf(env);
-
-    if (url.pathname === EDGE_HEALTH_PATH) {
-      return new Response(
-        JSON.stringify({ edge: "ok", origin_configured: Boolean(origin) }),
-        {
-          status: 200,
-          headers: { "content-type": "application/json" },
-        },
-      );
-    }
-
-    if (!origin) {
-      return new Response(
-        JSON.stringify({
-          code: "origin_not_configured",
-          detail: "VEYA_ORIGIN is not set for this Worker.",
-        }),
-        { status: 503, headers: { "content-type": "application/json" } },
-      );
-    }
-
-    const target = new URL(url.pathname + url.search, origin);
-    const headers = new Headers(request.headers);
-    headers.set("Host", target.host);
-    // The gateway speaks plain identity; avoid double-encoding through the edge.
-    headers.set("Accept-Encoding", "identity");
-    // Hop-by-hop headers must not be forwarded.
-    headers.delete("Connection");
-    headers.delete("Proxy-Authenticate");
-    headers.delete("Proxy-Authorization");
-    headers.delete("TE");
-    headers.delete("Trailer");
-    headers.delete("Transfer-Encoding");
-    headers.delete("Upgrade");
-
-    const hasBody = request.method !== "GET" && request.method !== "HEAD";
-
-    try {
-      const upstream = await fetch(target.toString(), {
-        method: request.method,
-        headers,
-        body: hasBody ? request.body : undefined,
-        redirect: "manual",
-      });
-
-      const responseHeaders = new Headers(upstream.headers);
-      // The edge re-chunks the body; a stale Content-Length would corrupt it.
-      responseHeaders.delete("Content-Length");
-      responseHeaders.delete("Transfer-Encoding");
-      responseHeaders.delete("Connection");
-
-      return new Response(upstream.body, {
-        status: upstream.status,
-        statusText: upstream.statusText,
-        headers: responseHeaders,
-      });
-    } catch (err) {
-      return new Response(
-        JSON.stringify({
-          code: "origin_unreachable",
-          detail: "The Veya gateway origin did not respond.",
-          request_id: request.headers.get("x-request-id") || null,
-        }),
-        { status: 502, headers: { "content-type": "application/json" } },
-      );
-    }
+  async fetch(request, env, ctx) {
+    return handle(request, env, ctx);
   },
 };

@@ -1,20 +1,44 @@
 {
-  // Cloudflare Workers config for the GitHub-connected build on account
-  // 8d0a6a64de03f4c9b14184398e75aa6e (deploy command: `npx wrangler deploy`).
+  // Customer Worker `veya` (veya.veya-8d0.workers.dev), account 8d0a6a64de03f4c9b14184398e75aa6e.
   //
-  // The PyTorch decision model cannot run inside a Worker, so this Worker is a
-  // thin edge reverse proxy: it forwards every request to the audited serving
-  // stack (web/server.py gateway + web/model_server.py) reachable at
-  // VEYA_ORIGIN, and gives the project a stable public hostname
-  // (veya.<account-subdomain>.workers.dev) instead of an ephemeral tunnel URL.
+  // Serves the Veya website (web/static) and the same-origin gateway API from
+  // Cloudflare. Inference is answered by the production Worker `veya-production`
+  // over a service binding, authenticated with the server-side project key
+  // VEYA_SITE_KEY (project "veya-public-site"). No Mac / Tailscale origin.
+  //
+  // Deploys are gated: the Workers Builds trigger on `main` runs
+  // `npx wrangler deploy --dry-run` (validate only). Ship with
+  // `wrangler versions upload` + `wrangler versions deploy` (see docs/VEYA_EDGE.md).
   "name": "veya",
   "main": "worker/veya-edge.mjs",
   "compatibility_date": "2026-09-01",
+  "assets": {
+    // Only reachable through the Worker (/static/<file>), which applies the
+    // gateway's suffix allow-list and headers.
+    "directory": "./web/static",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "services": [
+    { "binding": "VEYA_API", "service": "veya-production" }
+  ],
+  "ratelimits": [
+    // Per client IP, same budget as web/server.py (12 units / 60 s; big Choice sets cost more units).
+    { "name": "VEYA_IP_RATE", "namespace_id": "3001", "simple": { "limit": 12, "period": 60 } }
+  ],
+  "rules": [
+    { "type": "Text", "globs": ["**/*.html"], "fallthrough": true }
+  ],
+  "secrets": { "required": ["VEYA_SITE_KEY"] },
   "vars": {
-    // Stable origin via Tailscale Funnel (replaces ephemeral cloudflared tunnels).
-    // This URL is permanent as long as Tailscale is running on the Mac.
+    "VEYA_RELEASE_ID": "0.3.5-audit-baseline.1",
+    "VEYA_MODEL_VERSION": "0.3.5",
+    "VEYA_ARCHITECTURE_VERSION": "veya-shortlist-v1",
+    // Legacy Tailscale Funnel origin. Unused by the code since the cutover; kept
+    // for the first Cloudflare-backed version only and removed in the next one.
     "VEYA_ORIGIN": "https://benchbrex.taila8b570.ts.net"
   },
+  "preview_urls": false,
   "observability": {
     "enabled": true
   }
