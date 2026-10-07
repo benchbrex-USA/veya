@@ -69,7 +69,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - run: npm ci --no-audit --no-fund
@@ -110,7 +110,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - run: npm ci --no-audit --no-fund
