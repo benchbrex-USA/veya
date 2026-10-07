@@ -8,6 +8,8 @@ The reader-facing description of the deployed service is
 repository root README, and Hugging Face parses its YAML frontmatter for
 `sdk: docker` and `app_port: 7860`.
 
+> **Superseded (2026-10-07):** the `veya` Worker no longer proxies to an origin; `VEYA_ORIGIN` was removed. See `docs/VEYA_EDGE.md`.
+
 ## What this deploys
 
 Two artifacts, deliberately separated:

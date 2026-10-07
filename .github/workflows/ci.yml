@@ -115,6 +115,19 @@ jobs:
           name: dist
           path: dist/
 
+  edge:
+    name: edge worker (veya)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Edge + site unit tests
+        run: node --test tests/test_veya_site_edge.mjs tests/test_model_client.mjs tests/test_site_content.mjs
+      - name: Bundle check (wrangler dry run, no deploy, no credentials)
+        run: npx -y wrangler@4.147.0 deploy --dry-run --outdir dist-edge
+
   # ----- G21 tier 1 additions: PR gate ----------------------------------------
   # New PR-tier checks (artifact integrity + security regressions). Runs on
   # every pull request and every push, alongside the existing test/lint/build
