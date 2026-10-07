@@ -110,12 +110,12 @@ flowchart LR
     r2[("R2 veya-model-artifacts<br/>releases/RELEASE_ID/model.safetensors")] -->|"streamed at boot,<br/>SHA-256 verified"| pool
 ```
 
-**Customer edge: `veya`** (built from `main`: entrypoint `worker/veya-edge.mjs`, logic in `worker/veya_site_edge.mjs`, config `wrangler.jsonc`; this branch keeps the earlier proxy version of those files)
+**Customer edge: `veya`** (`worker/veya-edge.mjs`, logic in `worker/veya_site_edge.mjs`, config `wrangler.jsonc`)
 - Serves the website from Workers static assets (`web/static`) and the same-origin gateway API (`/api/*`).
 - `POST /api/infer` is forwarded to `veya-production` `POST /v1/decisions` over a **service binding**, authenticated with a server-side project key. Browsers never see a key.
 - Keeps the gateway contract: 32 KB streamed cap, JSON only, same-origin check, and a weighted per-IP limit of 12 units per minute.
 - Every upstream failure is returned as structured JSON (`model_busy`, `timeout`, `rate_limited`, `model_unavailable`, `invalid_upstream_response`), with no upstream detail leaked.
-- Runs entirely on Cloudflare. It previously proxied to a laptop over Tailscale Funnel and went down whenever the laptop slept; that dependency was removed on 7 Oct 2026 (see `docs/VEYA_EDGE.md` on `main`).
+- Runs entirely on Cloudflare. It previously proxied to a laptop over Tailscale Funnel and went down whenever the laptop slept; that dependency was removed on 7 Oct 2026 (see [docs/VEYA_EDGE.md](docs/VEYA_EDGE.md)).
 
 **Production API: `veya-production`** (`worker/veya-production.mjs`, logic in `worker/production_edge.mjs`, config `wrangler.production.jsonc`)
 - Authenticates per-project API keys against D1, applies per-project rate tiers, enforces the body limit, and proxies decisions to the container pool.
@@ -195,7 +195,7 @@ Errors are JSON with `code`, `detail` and `request_id`.
 
 Production responses carry security headers: `Strict-Transport-Security: max-age=63072000; includeSubDomains`, a restrictive `Content-Security-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy` and `X-Robots-Tag: noindex`.
 
-### Customer edge endpoints (`veya`, built from `main`)
+### Customer edge endpoints (`veya`)
 
 | Path | Served by |
 |---|---|
@@ -275,7 +275,7 @@ The account-level hardening backlog (R2 bucket lock on `releases/`, retiring the
 
 | Worker | Config | Runtime | How it ships |
 |---|---|---|---|
-| `veya` (customer edge) | `wrangler.jsonc` on `main` | Worker + static assets, service binding to `veya-production` | Workers Builds on `main` runs `npx wrangler deploy --dry-run` (validation only). Releases use `wrangler versions upload`, then `wrangler versions deploy` at 10% and then 100% |
+| `veya` (customer edge) | `wrangler.jsonc` | Worker + static assets, service binding to `veya-production` | Workers Builds on `main` runs `npx wrangler deploy --dry-run` (validation only). Releases use `wrangler versions upload`, then `wrangler versions deploy` at 10% and then 100% |
 | `veya-staging` | `wrangler.staging.jsonc` | 1 container instance, `sleepAfter` 15m | Workers Builds on `deploy/cloudflare-staging` |
 | `veya-production` | `wrangler.production.jsonc` | 2 container instances (`standard-2`), `sleepAfter` 1h | `Deploy veya-production` workflow, or `wrangler deploy --config wrangler.production.jsonc`. Workers Builds on `production/veya-dynamics` currently runs as a dry run |
 
@@ -293,7 +293,7 @@ Always pass the matching `--config` file. `tests/test_wrangler_configs.py` locks
 - **Releases that changed the image, manifest, container config or bindings:** run a full deploy of the previous commit instead. `wrangler rollback` swaps Worker code only, and a new container started under an older Worker fails the pin check.
 - Rolling back restores the target version's secrets; re-apply any secret rotated since then.
 
-Full procedures: [RUNBOOK.md §3](RUNBOOK.md#3-rollback). Failover drill: [RUNBOOK.md §4](RUNBOOK.md#4-failover-drill-run-monthly-and-before-every-launch). Analytics queries: [RUNBOOK.md §5](RUNBOOK.md#5-analytics-engine-readback). Customer edge operations: `docs/VEYA_EDGE.md` on `main`.
+Full procedures: [RUNBOOK.md §3](RUNBOOK.md#3-rollback). Failover drill: [RUNBOOK.md §4](RUNBOOK.md#4-failover-drill-run-monthly-and-before-every-launch). Analytics queries: [RUNBOOK.md §5](RUNBOOK.md#5-analytics-engine-readback). Customer edge operations: [docs/VEYA_EDGE.md](docs/VEYA_EDGE.md).
 
 ### Custom domain
 
@@ -380,7 +380,7 @@ Phase 13 (a counterfactual routing bank with a sealed 3,646-row evaluation split
 |---|---|
 | `veya/` | Python package: agent, calibration, release-bundle loader, language gate, shortlist and reranker, router, selective policy, trainer |
 | `web/` | Container gateway (`server.py`), model server (`model_server.py`), request and response contracts, website assets (`web/static`) |
-| `worker/` | Cloudflare Workers: production API (`veya-production.mjs`, `production_edge.mjs`), container class (`veya-container.mjs`), replica pool, API keys, rate tiers, body hygiene, edge policy. The customer edge (`veya-edge.mjs`) is maintained on `main` |
+| `worker/` | Cloudflare Workers: customer edge (`veya-edge.mjs`, `veya_site_edge.mjs`), production API (`veya-production.mjs`, `production_edge.mjs`), container class (`veya-container.mjs`), replica pool, API keys, rate tiers, body hygiene, edge policy |
 | `deploy/cloudflare/` | Container image, boot supervisor, checkpoint fetcher, release pins |
 | `deploy/hf-space/` | Hugging Face Space packaging |
 | `product/` | API key tooling, usage ledger, product contracts, D1 migrations |
@@ -395,7 +395,7 @@ Phase 13 (a counterfactual routing bank with a sealed 3,646-row evaluation split
 | `tools/cloudflare-r2-uploader/` | One-time checkpoint upload Worker |
 | `notebooks/` | Fine-tuning notebook |
 | `docs/` | Operations, scope, readiness, audit and research reports |
-| `wrangler.staging.jsonc`, `wrangler.production.jsonc` | Worker configs for `veya-staging` and `veya-production`. The customer edge config (`wrangler.jsonc`) is deployed from `main` |
+| `wrangler.jsonc`, `wrangler.staging.jsonc`, `wrangler.production.jsonc` | Worker configs for `veya`, `veya-staging` and `veya-production` |
 
 ---
 
@@ -419,6 +419,7 @@ Phase 13 (a counterfactual routing bank with a sealed 3,646-row evaluation split
 | Document | Covers |
 |---|---|
 | [RUNBOOK.md](RUNBOOK.md) | Production stack, deploys, rollback, failover drill, analytics, custom domains, operational settings, re-minting |
+| [docs/VEYA_EDGE.md](docs/VEYA_EDGE.md) | Customer edge Worker: design, rate limits, contract differences, operations |
 | [deploy/cloudflare/README.md](deploy/cloudflare/README.md) | Container image, boot sequence and release identity |
 | [docs/PRODUCTION_SCOPE.md](docs/PRODUCTION_SCOPE.md) | What the audited release supports and doesn't |
 | [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) | Production readiness review and certification gates |
