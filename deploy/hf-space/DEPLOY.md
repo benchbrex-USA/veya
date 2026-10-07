@@ -1,5 +1,11 @@
 # Deploying the Veya serving stack
 
+> Historical record. Instructions below that mention an external Worker origin
+> or a quick tunnel are not the active deployment. The active path is
+> `deploy/cloudflare/Dockerfile` and `worker/veya-container.mjs`.
+
+# Deploying the Veya serving stack
+
 This is the operator runbook. It lives in `deploy/`, which `assemble.py` never
 copies into the upload tree, so nothing written here is published.
 

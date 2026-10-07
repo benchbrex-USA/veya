@@ -53,6 +53,8 @@ data/external/sgd/
 # credentials - never commit
 .env
 .env.*
+.dev.vars
+.dev.vars.*
 *.pypirc
 .pypirc
 *.token
@@ -67,6 +69,8 @@ credentials.json
 
 # Node build artifacts - the wrangler/workerd binaries exceed GitHub's 100MB per-file limit
 node_modules/
+.dev.vars
+.dev.vars.*
 
 # Local isolated implementation worktrees
 .worktrees/

@@ -45,6 +45,26 @@ The benchmark sections below are historical capability measurements, often on tr
 
 Veya's base API evaluates typed questions (`choice`, `score`, `noul`) without text generation. Historical T4 measurements were 33 ms for one question and 7.2 ms/question batched. The audited high-cardinality route is multi-stage: learned retrieval followed by a packed rerank.
 
+## Optional quantum calibration (experimental)
+
+An optional path can send a calibration plot to a separately deployed NVIDIA NIM endpoint, validate the reply into a `QuantumObservation`, and ask Veya for a bounded decision. It is off unless the process is configured. It does not change the audited checkpoint, the release manifest, or the Choice route, and it does not control quantum hardware.
+
+Ising (`nvidia/ising-calibration-1.5-31b`) is the external specialist. Veya remains the decision layer. Ising prose is not a calibrated Veya probability. The policy gate defers execution. See [docs/quantum/ARCHITECTURE.md](docs/quantum/ARCHITECTURE.md).
+
+Hosted NIM, including `https://integrate.api.nvidia.com/v1`, sends plots off the machine. Use `VEYA_EXTERNAL_MODEL_POLICY=self_hosted` for a private endpoint. The default policy is `disabled`. No API key belongs in the repository.
+
+| Variable | Role |
+|---|---|
+| `VEYA_QUANTUM_ENABLED` | Must be `1` before any outbound call |
+| `VEYA_EXTERNAL_MODEL_POLICY` | `disabled` (default), `self_hosted`, or `hosted` |
+| `VEYA_NIM_BASE_URL` | Operator-configured OpenAI-compatible origin. Callers cannot choose it |
+| `VEYA_NIM_API_KEY` | Hosted credential. Never logged |
+| `VEYA_ISING_MODEL` | Allowlisted specialist. Default `nvidia/ising-calibration-1.5-31b` |
+
+`POST /api/quantum/analyze` is perception. `POST /api/quantum/decide` asks Veya. If `models/production/model.safetensors` is absent, checkpoint-dependent tests stay blocked. This feature does not synthesize weights. NVIDIA Ising is third-party; BenchBrex does not own it. Provenance notes are in [docs/quantum/PROVENANCE.md](docs/quantum/PROVENANCE.md).
+
+`POST /api/experts/route` picks an allowlisted expert for tasks that are not a bounded Veya decision. It does not call that expert. Profiles are provider starting points, not tuned optima. The policy is in [docs/experts/ROUTING.md](docs/experts/ROUTING.md).
+
 Three checkpoints, and a `Router` that picks between them per request:
 
 | | encoder | params | context | audited status |

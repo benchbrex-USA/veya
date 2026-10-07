@@ -1,0 +1,1323 @@
+From a46966b747c40ed152497e78f5bafa6989bb2191 Mon Sep 17 00:00:00 2001
+From: Parth Patel <benchbrex@gmail.com>
+Date: Mon, 5 Oct 2026 02:32:23 +0530
+Subject: [PATCH] copilot: preserved uncommitted work
+
+Session: AI Model
+Project: Veya
+Branch: benchbrex-usa-typesafe-inspired-website
+Workspace: a3445ee5-697f-4ed8-9745-45f5ba5d2ed6
+Files: 15 changed
+
+Auto-saved before the worktree was removed so no work is lost.
+Restore it as a branch with `git branch <name> <this-commit>`.
+---
+ artifacts/experiments/phase10/splits.json |   7 +
+ docs/phase10/architecture_decision.md     |   3 +
+ research/veyabench/phase10_data.py        |  71 ++++
+ research/veyabench/run_phase10_train.py   |  50 ++-
+ tests/test_phase10_data_freeze.py         | 105 ++++++
+ tests/test_phase10_metrics.py             |  61 ++++
+ tests/test_site_content.mjs               |  58 +++
+ web/static/design.css                     | 414 ++++++++++++++++++++++
+ web/static/home-content.mjs               |  30 +-
+ web/static/home.css                       | 136 ++++++-
+ web/static/home.mjs                       |  55 ++-
+ web/static/index.html                     |   2 +-
+ web/static/site-config.json               |   8 +-
+ web/static/site.css                       |   3 +
+ web/static/site.js                        |   2 +-
+ 15 files changed, 937 insertions(+), 68 deletions(-)
+ create mode 100644 tests/test_phase10_data_freeze.py
+ create mode 100644 tests/test_phase10_metrics.py
+ create mode 100644 web/static/design.css
+
+diff --git a/artifacts/experiments/phase10/splits.json b/artifacts/experiments/phase10/splits.json
+index b13c91d..ce1deaa 100644
+--- a/artifacts/experiments/phase10/splits.json
++++ b/artifacts/experiments/phase10/splits.json
+@@ -12,6 +12,13 @@
+     "sha256": "5a825d937655f6dfbd1368a59f8aa56dbd0f82a59a00b181b86d5d60bfd5ba00"
+   },
+   "format": "veya-phase10-split-freeze-v1",
++  "inputs_sha256": {
++    "candidates.json": "942f98235f45e2eac4123082227bd92522b38c713a494ff3054c494ffc247273",
++    "development.jsonl": "b198e96b18c34f0d20d05623270a52c186013906877bd8bb86aa84b4732ff8d7",
++    "registry.json": "b4aad1a23be66f831b5eb1e4d90bf6af3f633a363c064da26445313c28e84dda",
++    "schema_held_out_validation.jsonl": "ea010138cb8dff7f2f0feb7fa6c0e313b38657db6c2038361e1be1afd109abc7",
++    "train.jsonl": "9ceb5eae45d2a9088186a1fc91d43250373ba5ff741fa11d16fff7bc98c31273"
++  },
+   "future_blind": "unfrozen and absent until finalist selection",
+   "prohibited": [
+     "research/data/banking77/test.csv",
+diff --git a/docs/phase10/architecture_decision.md b/docs/phase10/architecture_decision.md
+index 4ac2952..4afb88e 100644
+--- a/docs/phase10/architecture_decision.md
++++ b/docs/phase10/architecture_decision.md
+@@ -30,6 +30,8 @@ The experimental retriever is loaded explicitly by `retriever: phase10_domain_ge
+ - Reversibility: production artifacts and manifest remain byte-for-byte preserved.
+ - Operability: candidate vectors can be reused; exact scoring is deterministic and cheap at low hundreds of candidates.
+ - Data integrity: whole candidate schemas, not random rows, are absent from training.
++- Training reads the committed Phase-10 partitions and validates their file
++  hashes and split digests; it never regenerates or rewrites evaluation inputs.
+ 
+ ## Change boundary
+ 
+@@ -56,6 +58,7 @@ Phase 10 first produces a research-only artifact. Enabling it requires an explic
+ 
+ 1. The current retriever reproduces Recall@K on allowed development rows under the same harness.
+ 2. No Phase-10 selection code reads Banking77 test or CLINC150 validation/test examples.
++   The frozen-input loader rejects missing, modified, or schema-leaking inputs before training.
+ 3. The selected retriever materially improves CLINC150-train Recall@8 and matched end-to-end accuracy with bootstrap uncertainty reported.
+ 4. `K=8`, the base scorer, checkpoint, calibration, automation policy, and production manifest remain unchanged.
+ 5. Fresh-process reload reproduces candidate embeddings, ranks, and Recall@K within tolerance.
+diff --git a/research/veyabench/phase10_data.py b/research/veyabench/phase10_data.py
+index 18b1dc8..4547f20 100644
+--- a/research/veyabench/phase10_data.py
++++ b/research/veyabench/phase10_data.py
+@@ -180,6 +180,67 @@ def split_digest(rows: list[dict]) -> str:
+     )
+ 
+ 
++def load_frozen_inputs() -> tuple[list[dict], list[dict], list[dict], list[dict]]:
++    """Load the committed research inputs without regenerating frozen splits."""
++    with open(os.path.join(PHASE10, "splits.json"), encoding="utf-8") as handle:
++        freeze = json.load(handle)
++    if freeze.get("format") != "veya-phase10-split-freeze-v1":
++        raise ValueError("unsupported Phase-10 split freeze")
++    expected_hashes = freeze.get("inputs_sha256")
++    input_names = (
++        "train.jsonl",
++        "development.jsonl",
++        "schema_held_out_validation.jsonl",
++        "candidates.json",
++        "registry.json",
++    )
++    if not isinstance(expected_hashes, dict) or set(expected_hashes) != set(input_names):
++        raise ValueError("Phase-10 split freeze does not pin all frozen inputs")
++    for name in input_names:
++        path = os.path.join(DATA_OUT, name)
++        if sha256_file(path) != expected_hashes[name]:
++            raise ValueError(f"frozen Phase-10 input {name} does not match splits.json")
++
++    partitions = {}
++    for name, key in (
++        ("train", "train"),
++        ("development", "development"),
++        ("schema_held_out_validation", "schema_held_out_validation"),
++    ):
++        path = os.path.join(DATA_OUT, name + ".jsonl")
++        with open(path, encoding="utf-8") as handle:
++            rows = [json.loads(line) for line in handle]
++        expected = freeze[key]
++        if len(rows) != expected["examples"] or split_digest(rows) != expected["sha256"]:
++            raise ValueError(f"frozen Phase-10 {name} partition does not match splits.json")
++        partitions[name] = rows
++
++    with open(os.path.join(DATA_OUT, "candidates.json"), encoding="utf-8") as handle:
++        candidates = json.load(handle)
++    candidate_schemas = {row["candidate_id"]: row["schema"] for row in candidates}
++    if len(candidate_schemas) != len(candidates):
++        raise ValueError("frozen Phase-10 candidates contain duplicate IDs")
++    for name, rows in partitions.items():
++        for row in rows:
++            if candidate_schemas.get(row["candidate_id"]) != row["schema"]:
++                raise ValueError(f"frozen Phase-10 {name} row has no matching candidate")
++
++    train_schemas = {row["schema"] for row in partitions["train"]}
++    development_schemas = {row["schema"] for row in partitions["development"]}
++    validation_schemas = {row["schema"] for row in partitions["schema_held_out_validation"]}
++    if train_schemas & (development_schemas | validation_schemas):
++        raise ValueError("frozen Phase-10 training schemas overlap held-out schemas")
++    if development_schemas & validation_schemas:
++        raise ValueError("frozen Phase-10 development and validation schemas overlap")
++
++    return (
++        partitions["train"],
++        partitions["development"],
++        partitions["schema_held_out_validation"],
++        candidates,
++    )
++
++
+ def build() -> dict:
+     banking_rows, banking_candidates = load_banking_train()
+     sgd_rows, sgd_candidates, dev_rows, dev_candidates = load_sgd_train()
+@@ -319,6 +380,16 @@ def build() -> dict:
+             "matched_end_to_end_subset_examples": len(e2e_rows),
+             "matched_end_to_end_subset_ids_sha256": text_sha256(row["id"] for row in e2e_rows),
+         },
++        "inputs_sha256": {
++            name: sha256_file(os.path.join(DATA_OUT, name))
++            for name in (
++                "train.jsonl",
++                "development.jsonl",
++                "schema_held_out_validation.jsonl",
++                "candidates.json",
++                "registry.json",
++            )
++        },
+         "prohibited": [
+             "research/data/banking77/test.csv",
+             "CLINC150 val partition",
+diff --git a/research/veyabench/run_phase10_train.py b/research/veyabench/run_phase10_train.py
+index 84da13d..69342e8 100644
+--- a/research/veyabench/run_phase10_train.py
++++ b/research/veyabench/run_phase10_train.py
+@@ -20,7 +20,13 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+ import numpy as np
+ import torch
+ 
+-from research.veyabench.phase10_data import DATA_OUT, PHASE10, ROOT, SEED, build
++from research.veyabench.phase10_data import (
++    DATA_OUT,
++    PHASE10,
++    ROOT,
++    SEED,
++    load_frozen_inputs,
++)
+ from veya.experimental.domain_retriever import (
+     ProjectionPair,
+     naturalize_label,
+@@ -45,22 +51,8 @@ LEARNING_RATE = 1e-3
+ EPISODE_CARDINALITIES = (8, 16, 32, 50, 77, 100)
+ 
+ 
+-def load_jsonl(name: str) -> list[dict]:
+-    path = os.path.join(DATA_OUT, name + ".jsonl")
+-    with open(path, encoding="utf-8") as handle:
+-        return [json.loads(line) for line in handle]
+-
+-
+ def load_inputs() -> tuple[list[dict], list[dict], list[dict], list[dict]]:
+-    build()
+-    with open(os.path.join(DATA_OUT, "candidates.json"), encoding="utf-8") as handle:
+-        candidates = json.load(handle)
+-    return (
+-        load_jsonl("train"),
+-        load_jsonl("development"),
+-        load_jsonl("schema_held_out_validation"),
+-        candidates,
+-    )
++    return load_frozen_inputs()
+ 
+ 
+ def _embedding_texts(
+@@ -136,6 +128,21 @@ def model_scores(model: ProjectionPair, query: np.ndarray, candidates: np.ndarra
+ 
+ 
+ def retrieval_metrics(scores: np.ndarray, gold: np.ndarray) -> tuple[dict, np.ndarray, np.ndarray]:
++    scores = np.asarray(scores)
++    gold = np.asarray(gold)
++    if scores.ndim != 2:
++        raise ValueError("retrieval scores must be a two-dimensional matrix")
++    if scores.shape[0] == 0 or scores.shape[1] == 0:
++        raise ValueError("retrieval scores must contain queries and candidates")
++    if not np.isfinite(scores).all():
++        raise ValueError("retrieval scores must be finite")
++    if gold.ndim != 1 or len(gold) != scores.shape[0]:
++        raise ValueError("gold candidate indices must match the query count")
++    if not np.issubdtype(gold.dtype, np.integer):
++        raise ValueError("gold candidate indices must be integers")
++    if np.any(gold < 0) or np.any(gold >= scores.shape[1]):
++        raise ValueError("gold candidate indices must be within the candidate matrix")
++
+     order = np.argsort(-scores, axis=1, kind="stable")
+     positions = np.argmax(order == gold[:, None], axis=1) + 1
+     result = {
+@@ -154,6 +161,17 @@ def retrieval_metrics(scores: np.ndarray, gold: np.ndarray) -> tuple[dict, np.nd
+ 
+ 
+ def paired_bootstrap(base_hits: np.ndarray, candidate_hits: np.ndarray, draws: int = 2000) -> dict:
++    base_hits = np.asarray(base_hits)
++    candidate_hits = np.asarray(candidate_hits)
++    if base_hits.ndim != 1 or candidate_hits.ndim != 1:
++        raise ValueError("paired bootstrap inputs must be one-dimensional")
++    if len(base_hits) == 0 or len(base_hits) != len(candidate_hits):
++        raise ValueError("paired bootstrap inputs must have the same non-zero length")
++    if not np.isin(base_hits, (0, 1)).all() or not np.isin(candidate_hits, (0, 1)).all():
++        raise ValueError("paired bootstrap inputs must contain only binary outcomes")
++    if not isinstance(draws, int) or draws <= 0:
++        raise ValueError("bootstrap draws must be a positive integer")
++
+     delta = candidate_hits.astype(np.float64) - base_hits.astype(np.float64)
+     rng = np.random.default_rng(SEED)
+     indices = rng.integers(0, len(delta), size=(draws, len(delta)))
+diff --git a/tests/test_phase10_data_freeze.py b/tests/test_phase10_data_freeze.py
+new file mode 100644
+index 0000000..115bb0d
+--- /dev/null
++++ b/tests/test_phase10_data_freeze.py
+@@ -0,0 +1,105 @@
++import hashlib
++import json
++from pathlib import Path
++
++import pytest
++
++from research.veyabench import phase10_data
++from research.veyabench.run_phase10_train import load_inputs
++
++
++def _write_frozen_inputs(data_dir: Path, phase_dir: Path) -> None:
++    data_dir.mkdir()
++    phase_dir.mkdir()
++    partitions = {
++        "train": [{"id": "train:1", "candidate_id": "train:yes", "schema": "train", "text": "yes"}],
++        "development": [
++            {"id": "dev:1", "candidate_id": "dev:yes", "schema": "dev", "text": "yes"}
++        ],
++        "schema_held_out_validation": [
++            {
++                "id": "validation:1",
++                "candidate_id": "clinc150:yes",
++                "schema": "clinc150",
++                "text": "yes",
++            }
++        ],
++    }
++    for name, rows in partitions.items():
++        (data_dir / f"{name}.jsonl").write_text(
++            "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
++            encoding="utf-8",
++        )
++    candidates = [
++        {"candidate_id": "train:yes", "schema": "train", "raw": "yes"},
++        {"candidate_id": "dev:yes", "schema": "dev", "raw": "yes"},
++        {"candidate_id": "clinc150:yes", "schema": "clinc150", "raw": "yes"},
++    ]
++    (data_dir / "candidates.json").write_text(json.dumps(candidates), encoding="utf-8")
++    (data_dir / "registry.json").write_text("{}", encoding="utf-8")
++
++    freeze = {
++        "format": "veya-phase10-split-freeze-v1",
++        "inputs_sha256": {
++            name: hashlib.sha256((data_dir / name).read_bytes()).hexdigest()
++            for name in (
++                "train.jsonl",
++                "development.jsonl",
++                "schema_held_out_validation.jsonl",
++                "candidates.json",
++                "registry.json",
++            )
++        },
++    }
++    for name, rows in partitions.items():
++        freeze[name] = {"examples": len(rows), "sha256": phase10_data.split_digest(rows)}
++    (phase_dir / "splits.json").write_text(json.dumps(freeze), encoding="utf-8")
++
++
++def test_training_loader_uses_unchanged_committed_frozen_inputs():
++    train, development, validation, candidates = load_inputs()
++
++    assert (len(train), len(development), len(validation), len(candidates)) == (
++        4635,
++        260,
++        3000,
++        280,
++    )
++    freeze = json.loads(Path(phase10_data.PHASE10, "splits.json").read_text())
++    assert phase10_data.split_digest(validation) == freeze["schema_held_out_validation"]["sha256"]
++
++
++def test_frozen_loader_rejects_modified_partition_without_rebuilding(tmp_path, monkeypatch):
++    data_dir = tmp_path / "data"
++    phase_dir = tmp_path / "phase10"
++    _write_frozen_inputs(data_dir, phase_dir)
++    monkeypatch.setattr(phase10_data, "DATA_OUT", str(data_dir))
++    monkeypatch.setattr(phase10_data, "PHASE10", str(phase_dir))
++    train_path = data_dir / "train.jsonl"
++    original = train_path.read_text(encoding="utf-8")
++
++    train_path.write_text(original.replace('"text": "yes"', '"text": "changed"'), encoding="utf-8")
++    with pytest.raises(ValueError, match="train.jsonl does not match splits.json"):
++        phase10_data.load_frozen_inputs()
++    assert "changed" in train_path.read_text(encoding="utf-8")
++
++
++def test_frozen_loader_rejects_schema_leakage(tmp_path, monkeypatch):
++    data_dir = tmp_path / "data"
++    phase_dir = tmp_path / "phase10"
++    _write_frozen_inputs(data_dir, phase_dir)
++    monkeypatch.setattr(phase10_data, "DATA_OUT", str(data_dir))
++    monkeypatch.setattr(phase10_data, "PHASE10", str(phase_dir))
++
++    train_path = data_dir / "train.jsonl"
++    train = json.loads(train_path.read_text(encoding="utf-8"))
++    train.update(candidate_id="clinc150:yes", schema="clinc150")
++    train_path.write_text(json.dumps(train), encoding="utf-8")
++    freeze_path = phase_dir / "splits.json"
++    freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
++    freeze["inputs_sha256"]["train.jsonl"] = hashlib.sha256(train_path.read_bytes()).hexdigest()
++    freeze["train"]["sha256"] = phase10_data.split_digest([train])
++    freeze_path.write_text(json.dumps(freeze), encoding="utf-8")
++
++    with pytest.raises(ValueError, match="training schemas overlap held-out schemas"):
++        phase10_data.load_frozen_inputs()
+diff --git a/tests/test_phase10_metrics.py b/tests/test_phase10_metrics.py
+new file mode 100644
+index 0000000..b4ab34b
+--- /dev/null
++++ b/tests/test_phase10_metrics.py
+@@ -0,0 +1,61 @@
++import numpy as np
++import pytest
++
++from research.veyabench.run_phase10_train import paired_bootstrap, retrieval_metrics
++
++
++def test_retrieval_metrics_reports_correct_ranks_and_recall():
++    metrics, positions, order = retrieval_metrics(
++        np.asarray([[0.9, 0.1, 0.2], [0.1, 0.8, 0.05]]),
++        np.asarray([0, 0]),
++    )
++
++    assert positions.tolist() == [1, 2]
++    assert order.tolist() == [[0, 2, 1], [1, 0, 2]]
++    assert metrics["recall_at_1"] == 0.5
++    assert metrics["recall_at_4"] == 1.0
++    assert metrics["mrr"] == 0.75
++
++
++@pytest.mark.parametrize(
++    ("scores", "gold", "message"),
++    [
++        (np.asarray([0.1, 0.2]), np.asarray([0]), "two-dimensional"),
++        (np.empty((0, 2)), np.asarray([], dtype=int), "queries and candidates"),
++        (np.empty((1, 0)), np.asarray([0]), "queries and candidates"),
++        (np.asarray([[np.nan, 0.2]]), np.asarray([0]), "must be finite"),
++        (np.asarray([[0.1, 0.2]]), np.asarray([], dtype=int), "match the query count"),
++        (np.asarray([[0.1, 0.2]]), np.asarray([0.0]), "must be integers"),
++        (np.asarray([[0.1, 0.2]]), np.asarray([2]), "within the candidate matrix"),
++    ],
++)
++def test_retrieval_metrics_rejects_invalid_inputs(scores, gold, message):
++    with pytest.raises(ValueError, match=message):
++        retrieval_metrics(scores, gold)
++
++
++def test_paired_bootstrap_is_deterministic_for_binary_outcomes():
++    base = np.asarray([True, False, True, True])
++    candidate = np.asarray([True, True, True, False])
++
++    first = paired_bootstrap(base, candidate, draws=100)
++    second = paired_bootstrap(base, candidate, draws=100)
++
++    assert first == second
++    assert first["delta"] == 0.0
++    assert len(first["ci95"]) == 2
++
++
++@pytest.mark.parametrize(
++    ("base", "candidate", "draws", "message"),
++    [
++        (np.asarray([]), np.asarray([]), 10, "same non-zero length"),
++        (np.asarray([True]), np.asarray([True, False]), 10, "same non-zero length"),
++        (np.asarray([[True]]), np.asarray([[True]]), 10, "one-dimensional"),
++        (np.asarray([0.5]), np.asarray([True]), 10, "binary outcomes"),
++        (np.asarray([True]), np.asarray([True]), 0, "positive integer"),
++    ],
++)
++def test_paired_bootstrap_rejects_invalid_inputs(base, candidate, draws, message):
++    with pytest.raises(ValueError, match=message):
++        paired_bootstrap(base, candidate, draws=draws)
+diff --git a/tests/test_site_content.mjs b/tests/test_site_content.mjs
+index 021e050..ef373cf 100644
+--- a/tests/test_site_content.mjs
++++ b/tests/test_site_content.mjs
+@@ -7,6 +7,10 @@ import { choiceRequest, noulRequest, scoreRequest, systemOneRequest } from '../w
+ 
+ const config = JSON.parse(readFileSync(new URL('../web/static/site-config.json', import.meta.url), 'utf8'));
+ const release = JSON.parse(readFileSync(new URL('../artifacts/release/manifest.json', import.meta.url), 'utf8'));
++const homeSource = readFileSync(new URL('../web/static/home.mjs', import.meta.url), 'utf8');
++const homeStyles = readFileSync(new URL('../web/static/home.css', import.meta.url), 'utf8');
++const designStyles = readFileSync(new URL('../web/static/design.css', import.meta.url), 'utf8');
++const indexHtml = readFileSync(new URL('../web/static/index.html', import.meta.url), 'utf8');
+ const pages = new Map(config.pages.map(page => [page.href, page]));
+ 
+ test('every public route has unique metadata and an appropriate content owner', () => {
+@@ -40,6 +44,60 @@ test('research homepage links and benchmark labels retain their evidence boundar
+   assert.match(benchmark.sections.map(section => section.blocks.filter(block => block.type === 'p').map(block => block.text).join(' ')).join(' '), /conditional accuracy on shortlist hits as full-system accuracy/i);
+ });
+ 
++test('homepage wayfinding links point to real sections', () => {
++  assert.deepEqual(homeContent.explore.map(item => item.href), [
++    '#live',
++    '#research',
++    '#architecture-story',
++    '#developers-preview'
++  ]);
++  for (const item of homeContent.explore) {
++    assert.match(homeSource, new RegExp(`id="${item.href.slice(1)}"`), `Missing homepage section ${item.href}`);
++  }
++});
++
++test('homepage workflow explains the complete code-controlled decision loop', () => {
++  assert.deepEqual(homeContent.thesis.stages.map(stage => stage.title), [
++    'Prepare state',
++    'Bound the judgment',
++    'Compose in code'
++  ]);
++  assert.match(homeSource, /JSON\.stringify\(choiceRequest, null, 2\)/);
++  assert.match(homeSource, /ILLUSTRATIVE INPUT/);
++  assert.doesNotMatch(homeSource, /GENERIC GENERATIVE INTERFACE/);
++});
++
++test('international visual framing keeps the served language scope explicit', () => {
++  assert.deepEqual(homeContent.availability, {
++    language: 'English only',
++    release: 'Research release',
++    automation: 'Automation disabled'
++  });
++  assert.match(homeSource, /VEYA \/ CONNECTED CONTEXT/);
++  assert.match(homeSource, /TYPED DECISION/);
++  assert.match(homeSource, /Model language:/);
++});
++
++test('all public routes share the international design system', () => {
++  assert.match(indexHtml, /design\.css\?v=international-1/);
++  assert.ok(indexHtml.indexOf('design.css') > indexHtml.indexOf('architecture-explorer.css'));
++  for (const token of ['--design-mint', '--design-coral', '--design-canvas']) {
++    assert.ok(designStyles.includes(token), `Missing shared design token ${token}`);
++  }
++  for (const selector of ['.site-header', '.home-hero', '.documentation', '.instrument', 'footer']) {
++    assert.ok(designStyles.includes(selector), `Missing shared design surface ${selector}`);
++  }
++});
++
++test('mobile research metrics remain a compact two-by-two evidence dashboard', () => {
++  assert.match(homeStyles, /\.home-research-grid\s*\{\s*display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);/);
++  assert.match(homeStyles, /\.home-research-metric strong\s*\{\s*font-size:clamp\(28px,9\.5vw,58px\)/);
++  assert.deepEqual(
++    [...homeSource.matchAll(/metric\('([^']+)'/g)].map(match => match[1]),
++    ['recall_at_8', 'conditional_accuracy', 'accuracy', 'ece']
++  );
++});
++
+ test('documentation links resolve to registered routes', () => {
+   for (const [route, content] of Object.entries(docsContent)) {
+     for (const section of content.sections) {
+diff --git a/web/static/design.css b/web/static/design.css
+new file mode 100644
+index 0000000..70a8b31
+--- /dev/null
++++ b/web/static/design.css
+@@ -0,0 +1,414 @@
++:root {
++  --blue: #123b3a;
++  --night: #0c2929;
++  --ivory: #f4f0e6;
++  --paper: #e9e4d9;
++  --ink: #172e2d;
++  --muted: #687a75;
++  --line: rgba(18, 59, 58, .18);
++  --ease: cubic-bezier(.2, .75, .25, 1);
++  --design-mint: #bdd9c9;
++  --design-coral: #ed8060;
++  --design-canvas: #faf8f2;
++  --design-soft: #e5ede5;
++}
++
++html { scroll-behavior: smooth; scroll-padding-top: 88px; }
++body {
++  background:
++    radial-gradient(ellipse at 93% 14%, rgba(189, 217, 201, .22), transparent 29rem),
++    var(--ivory);
++  color: var(--ink);
++  font-family: Inter, "Avenir Next", Avenir, "Segoe UI", sans-serif;
++  letter-spacing: -.008em;
++}
++
++.site-header {
++  position: sticky;
++  top: 0;
++  z-index: 20;
++  height: 78px;
++  padding: 0 clamp(24px, 6vw, 96px);
++  background: var(--blue);
++  border-bottom: 1px solid rgba(244, 240, 230, .18);
++  box-shadow: 0 6px 24px rgba(12, 41, 41, .08);
++}
++.site-header.is-scrolled {
++  background: rgba(18, 59, 58, .97);
++  box-shadow: 0 10px 32px rgba(12, 41, 41, .18);
++}
++.brand img { width: 118px; height: auto; }
++.site-header nav { gap: clamp(18px, 2.7vw, 42px); }
++.site-header nav a {
++  position: relative;
++  padding: 10px 0;
++  color: rgba(244, 240, 230, .78);
++  font-size: 13px;
++  letter-spacing: .015em;
++}
++.site-header nav a::after {
++  position: absolute;
++  right: 0;
++  bottom: 3px;
++  left: 0;
++  height: 1px;
++  background: var(--design-coral);
++  content: "";
++  transform: scaleX(0);
++  transform-origin: left;
++  transition: transform 220ms var(--ease);
++}
++.site-header nav a:hover,
++.site-header nav a.active { color: var(--ivory); opacity: 1; }
++.site-header nav a:hover::after,
++.site-header nav a.active::after { transform: scaleX(1); }
++.nav-cta,
++.button {
++  min-height: 48px;
++  gap: 18px;
++  border: 1px solid var(--design-coral);
++  border-radius: 999px;
++  background: var(--design-coral);
++  color: #142d2b;
++  padding: 13px 21px;
++  font-size: 13px;
++  font-weight: 700;
++  transition: transform 220ms var(--ease), background 220ms var(--ease), color 220ms var(--ease);
++}
++.nav-cta:hover,
++.button:hover { transform: translateY(-2px); background: #f39476; }
++.button.outline {
++  border-color: rgba(244, 240, 230, .5);
++  background: transparent;
++  color: var(--ivory);
++}
++.button.outline:hover { background: rgba(244, 240, 230, .1); }
++.button.blue { border-color: var(--blue);background: var(--blue);color: var(--ivory); }
++.button.outline-dark { border-color: var(--blue);background: transparent;color: var(--blue); }
++.menu-toggle { font-size: 13px; }
++
++.home-hero,
++#main > .page-hero {
++  background: var(--blue);
++  color: var(--ivory);
++}
++.home-hero {
++  min-height: min(800px, calc(100svh - 78px));
++  grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr);
++  gap: clamp(20px, 4vw, 72px);
++  padding: clamp(58px, 7vw, 104px) clamp(24px, 7vw, 112px) clamp(76px, 9vw, 124px);
++}
++.home-hero:before {
++  background:
++    radial-gradient(ellipse at 75% 48%, rgba(189, 217, 201, .12), transparent 38%),
++    linear-gradient(115deg, transparent 0 57%, rgba(237, 128, 96, .035) 57% 57.2%, transparent 57.2%);
++}
++.home-hero .hero-copy { max-width: 700px; }
++.home-hero .hero-copy h1,
++.home-section-head h2,
++.home-thesis-head h2,
++.docs-article-header h1,
++.page-hero h1,
++.closing h2 {
++  font-family: Georgia, "Times New Roman", serif;
++  font-weight: 400;
++  letter-spacing: -.062em;
++}
++.home-hero .hero-copy h1 {
++  max-width: 760px;
++  margin: 28px 0 30px;
++  font-size: clamp(64px, 7.2vw, 112px);
++  line-height: .96;
++}
++.home-hero .hero-copy p { max-width: 560px;color: rgba(244, 240, 230, .76); }
++.eyebrow,
++.home-label,
++.home-hero-primitives a { letter-spacing: .14em; }
++.home-hero .hero-actions { margin-top: 34px; }
++.home-hero .hero-release { gap: 12px;margin-top: 26px;color: rgba(244, 240, 230, .72); }
++.home-hero .status-badge {
++  border-color: rgba(189, 217, 201, .48);
++  border-radius: 999px;
++  background: rgba(189, 217, 201, .1);
++  color: var(--design-mint);
++}
++.home-hero-primitives {
++  max-width: 560px;
++  margin-top: 25px;
++  border-color: rgba(244, 240, 230, .2);
++}
++.home-hero-primitives a { color: rgba(244, 240, 230, .68); }
++.home-hero-primitives a:hover { color: var(--design-coral); }
++.home-hero .hero-art { min-height: 460px; }
++.hero-decision-field { width: min(100%, 560px); }
++.hero-field-top,
++.hero-field-bottom { color: rgba(244, 240, 230, .62); }
++.hero-network {
++  background:
++    radial-gradient(ellipse at 50% 50%, rgba(189, 217, 201, .22), transparent 47%),
++    linear-gradient(140deg, rgba(244, 240, 230, .035), transparent 68%);
++}
++.hero-network-orbit,
++.hero-network-equator { stroke: rgba(189, 217, 201, .3); }
++.hero-network-orbit-inner { stroke: rgba(189, 217, 201, .19); }
++.hero-network-equator { stroke: rgba(189, 217, 201, .18); }
++.hero-network-core { border-color: rgba(244, 240, 230, .62);background: #1d5550; }
++.hero-network-node i { border-color: var(--design-coral);background: var(--blue); }
++.hero-network-coordinate { color: rgba(189, 217, 201, .64); }
++.home-hero-index { color: var(--design-mint); }
++
++.home-wayfinding {
++  background: var(--design-canvas);
++  color: var(--blue);
++  border-bottom-color: var(--line);
++}
++.home-wayfinding a { border-radius: 8px; }
++.home-wayfinding a:hover { background: white;border-color: var(--line); }
++.home-pad { padding: clamp(84px, 9vw, 144px) clamp(24px, 7vw, 112px); }
++.home-label { color: var(--blue); }
++.home-section-head { gap: clamp(30px, 7vw, 100px); }
++.home-section-head h2,
++.home-thesis-head h2 { letter-spacing: -.06em; }
++.home-text-link { color: var(--blue); }
++.home-text-link:hover { color: #237269; }
++.home-thesis,
++.home-live,
++.home-status { background: var(--design-canvas); }
++.home-thesis-head { margin-top: 58px; }
++.home-workflow-layout { gap: clamp(34px, 6vw, 88px); }
++.home-workflow-steps li { border-color: var(--line); }
++.home-workflow-steps h3 { color: var(--blue); }
++.home-request-card {
++  border: 1px solid rgba(189, 217, 201, .2);
++  border-radius: 14px;
++  background: #173f3c;
++  box-shadow: 0 18px 50px rgba(18, 59, 58, .12);
++}
++.home-request-card figcaption,
++.home-request-card > p { border-color: rgba(244, 240, 230, .22); }
++.home-principles { background: var(--design-soft); }
++.home-principles .home-section-head p { color: var(--muted); }
++.home-principles-grid { gap: 18px; }
++.home-principle,
++.home-principle:first-of-type {
++  min-height: 300px;
++  border: 1px solid rgba(18, 59, 58, .14);
++  border-radius: 12px;
++  background: rgba(250, 248, 242, .86);
++  box-shadow: 0 8px 26px rgba(18, 59, 58, .035);
++}
++.home-principle h3 { color: var(--blue);font-family: Georgia, "Times New Roman", serif; }
++.home-principle p { color: #58706a; }
++.home-principle:hover { border-color: rgba(35, 114, 105, .52); }
++.home-live .home-playground {
++  overflow: hidden;
++  border: 1px solid rgba(18, 59, 58, .18);
++  border-radius: 14px;
++  background: white;
++  box-shadow: 0 18px 60px rgba(18, 59, 58, .08);
++}
++.home-playground .workspace { background: var(--design-canvas); }
++.home-playground .instrument { border-radius: 10px;overflow: hidden; }
++.home-playground .primitive-tabs button.selected { background: var(--blue); }
++.home-playground .instrument-body { background: white; }
++.home-research { background: var(--blue); }
++.home-research .home-label { color: var(--design-mint); }
++.home-research .home-section-head p { color: rgba(244, 240, 230, .78); }
++.home-research-grid {
++  border-color: rgba(189, 217, 201, .28);
++  border-radius: 12px;
++  overflow: hidden;
++}
++.home-research-metric { border-color: rgba(189, 217, 201, .28); }
++.home-research-metric strong { color: var(--design-mint); }
++.home-research-metric:hover { background: rgba(189, 217, 201, .055); }
++.home-fate-bar { border-radius: 8px;overflow: hidden; }
++.home-fate-segment.is-retrieval,
++.home-fate-legend i.is-retrieval { background: var(--design-coral); }
++.home-fate-segment.is-scoring,
++.home-fate-legend i.is-scoring { background: #90b9aa; }
++.home-research-bottom { border-color: rgba(189, 217, 201, .28); }
++.home-research-bottom .home-text-link { color: var(--design-mint); }
++.home-architecture { background: var(--design-canvas); }
++.archx {
++  --archx-ivory: var(--ivory);
++  --archx-line: rgba(189, 217, 201, .24);
++  --archx-muted: rgba(244, 240, 230, .68);
++  background: var(--blue);
++  border-radius: 14px;
++}
++.archx::before {
++  background: radial-gradient(circle at 76% 30%, rgba(189, 217, 201, .13), transparent 42%);
++}
++.archx-toggle button[aria-pressed='true'] { color: var(--blue); }
++.archx-point { background: var(--blue); }
++.home-architecture-foot a { color: #237269; }
++.home-developer { background: #102f30; }
++.home-developer-code .docs-code { border-radius: 12px; }
++.home-status-list>div { border-color: var(--line); }
++.home-status-list span { color: #237269; }
++.home-articles { background: #e9e4d9; }
++.home-article-list,
++.home-article { border-color: var(--line); }
++.home-article:hover { color: #237269; }
++.home-article span { color: #237269; }
++.home-article h3 { font-family: Georgia, "Times New Roman", serif; }
++.home-faq { background: #173f3c; }
++.home-faq-list,
++.home-faq-list details,
++.home-closing { border-color: rgba(189, 217, 201, .26); }
++.home-closing .button { flex-shrink: 0; }
++
++#main > .page-hero {
++  min-height: 330px;
++  padding: clamp(76px, 9vw, 122px) clamp(24px, 8vw, 128px);
++}
++#main > .page-hero:before { background: rgba(189, 217, 201, .2); }
++#main > .page-hero:after { border-color: var(--design-coral);background: var(--design-coral); }
++#main > .page-hero h1 { max-width: 980px;font-size: clamp(56px, 7vw, 98px);line-height: .98; }
++#main > .page-hero p { max-width: 720px;color: rgba(244, 240, 230, .77); }
++.workspace { background: var(--design-canvas); }
++.status-line { color: var(--muted); }
++.status-dot.online { background: #2e8c68; }
++.instrument {
++  overflow: hidden;
++  border: 1px solid var(--line);
++  border-radius: 12px;
++  background: white;
++  box-shadow: 0 18px 56px rgba(18, 59, 58, .07);
++}
++.primitive-tabs { background: var(--design-canvas); }
++.primitive-tabs button.selected { background: var(--blue); }
++.field textarea,
++.field input,
++.field select,
++.candidate-row input {
++  border-color: rgba(18, 59, 58, .2);
++  border-radius: 7px;
++  background: #fcfbf7;
++}
++.field textarea:focus,
++.field input:focus,
++.field select:focus,
++.candidate-row input:focus { border-color: #2e8176; }
++.presets button { border-radius: 999px; }
++.prob-track { overflow: hidden;border-radius: 999px;background: #e5ede5; }
++.prob-fill { border-radius: inherit;background: #237269; }
++.error-box { border-color: var(--design-coral);border-radius: 0 8px 8px 0;background: #fff3ec; }
++
++.documentation { background: var(--design-canvas); }
++.documentation-layout {
++  max-width: 1680px;
++  grid-template-columns: minmax(190px, 230px) minmax(0, 1fr) minmax(150px, 180px);
++  gap: clamp(28px, 4vw, 68px);
++  padding: 0 clamp(24px, 5vw, 80px);
++}
++.docs-sidebar {
++  top: 98px;
++  max-height: calc(100vh - 116px);
++  border-color: var(--line);
++}
++.docs-sidebar input {
++  border-color: var(--line);
++  border-radius: 7px;
++  background: white;
++}
++.docs-nav-group a { border-radius: 0 7px 7px 0; }
++.docs-nav-group a[aria-current=page] { border-left-color: #d56f52;background: rgba(237, 128, 96, .11);color: var(--blue); }
++.docs-article { max-width: 820px;padding-top: 42px; }
++.docs-breadcrumb { color: var(--muted); }
++.docs-breadcrumb a,
++.docs-article-header .eyebrow,
++.docs-end a { color: #237269; }
++.docs-article-header { border-color: var(--line); }
++.docs-article-header .eyebrow:before {
++  width: 22px;height: 22px;
++  mask-image: url('/static/veya-symbol.png');
++  -webkit-mask-image: url('/static/veya-symbol.png');
++}
++.docs-article-header h1 { font-family: Georgia, "Times New Roman", serif; }
++.docs-article-header p { color: var(--muted); }
++.status-badge { border-color: rgba(35, 114, 105, .24);border-radius: 999px;background: rgba(35, 114, 105, .07);color: #176057; }
++.docs-section h2 { font-family: Georgia, "Times New Roman", serif;font-weight: 400; }
++.docs-section p,
++.docs-section li { color: #334c48; }
++.docs-callout { border-color: #237269;border-radius: 0 8px 8px 0;background: var(--design-soft);color: #284440; }
++.docs-callout-warning { border-color: #d56f52;background: #fff0e8; }
++.docs-flow li { border-color: var(--line); }
++.docs-code { border: 1px solid #244c49;border-radius: 10px;background: #123433; }
++.docs-code-bar { border-color: rgba(244, 240, 230, .18); }
++.docs-code-tablist button[aria-selected=true],
++.technical-tabs button[aria-selected=true] { color: #237269;border-color: #d56f52; }
++.docs-table-wrap { border-color: var(--line);border-radius: 8px; }
++.docs-section th { background: var(--design-soft);color: var(--blue); }
++.docs-section th,
++.docs-section td { border-color: var(--line); }
++.docs-link-row a,
++.docs-end a { border-color: rgba(18, 59, 58, .2);border-radius: 999px; }
++.docs-link-row a:hover,
++.docs-end a:hover { background: var(--design-soft); }
++.docs-metric-grid { border-color: var(--line);background: var(--line); }
++.docs-metric { background: white; }
++.docs-metric strong { color: #237269; }
++.docs-live-version { border-color: #237269;border-radius: 0 8px 8px 0;background: var(--design-soft); }
++.docs-toc a { border-color: var(--line); }
++.docs-toc a:hover { color: #237269;border-color: #237269; }
++.docs-drawer-toggle { color: #237269; }
++.docs-sidebar label { color: var(--muted); }
++
++footer {
++  background: #0c2929;
++  color: var(--ivory);
++  padding: clamp(55px, 7vw, 92px) clamp(24px, 7vw, 112px) 24px;
++}
++.footer-brand img { width: 154px; }
++.footer-brand span { font-family: Georgia, "Times New Roman", serif;font-size: 27px; }
++.footer-links a { color: rgba(244, 240, 230, .75);transition: color 180ms ease; }
++.footer-links a:hover { color: var(--design-coral); }
++.footer-bottom { border-color: rgba(189, 217, 201, .22); }
++
++@media (max-width: 900px) {
++  .home-hero { min-height: auto;grid-template-columns: 1fr 1fr; }
++  .home-hero .hero-art { min-height: 340px; }
++  .documentation-layout { grid-template-columns: 1fr; }
++}
++@media (max-width: 680px) {
++  .site-header { height: 66px;padding: 0 22px; }
++  .brand img { width: 108px; }
++  .site-header nav { top: 66px;background: var(--night);border-bottom: 1px solid rgba(189, 217, 201, .2); }
++  .site-header nav a { padding: 12px 8px; }
++  .home-hero { display: block;padding: 58px 24px 52px; }
++  .home-hero .hero-copy h1 { margin: 24px 0 20px;font-size: clamp(54px, 12vw, 78px); }
++  .home-hero .hero-copy p { font-size: 18px; }
++  .home-hero .hero-art { min-height: 300px;margin-top: 24px; }
++  .hero-decision-field { width: min(100%, 360px); }
++  .home-pad { padding: 78px 24px; }
++  .home-principles-grid { grid-template-columns: 1fr; }
++  .home-principle,
++  .home-principle:first-of-type { min-height: 210px; }
++  .home-research-grid { display: grid;grid-template-columns: repeat(2, minmax(0, 1fr)); }
++  .home-research-metric { min-height: 176px;padding: 20px 14px; }
++  .home-research-metric strong { font-size: clamp(29px, 9vw, 54px); }
++  .home-research-metric span { font-size: 15px; }
++  .home-research-metric p { font-size: 11px; }
++  .home-workflow-layout { grid-template-columns: 1fr; }
++  .home-playground .workspace { padding: 12px; }
++  .documentation-layout { padding: 0 20px; }
++  .docs-article { padding-top: 20px; }
++  .docs-article-header h1 { font-size: 46px; }
++  #main > .page-hero { min-height: 280px;padding: 70px 24px; }
++  #main > .page-hero h1 { font-size: clamp(48px, 11vw, 70px); }
++  .workspace { padding: 28px 16px 72px; }
++  .instrument { border-radius: 8px; }
++  footer { padding: 56px 24px 22px; }
++}
++@media (max-width: 420px) {
++  .home-research-metric { min-height: 190px;padding: 17px 11px; }
++  .home-research-metric strong { font-size: 29px; }
++  .home-hero .hero-actions .button { flex: 1 1 auto;padding: 12px 14px; }
++}
++@media (prefers-reduced-motion: reduce) {
++  html { scroll-behavior: auto; }
++  .site-header nav a::after { transition: none; }
++}
++html.force-reduced { scroll-behavior: auto; }
+diff --git a/web/static/home-content.mjs b/web/static/home-content.mjs
+index b1c0128..b7f2c82 100644
+--- a/web/static/home-content.mjs
++++ b/web/static/home-content.mjs
+@@ -1,14 +1,28 @@
+ /** Homepage narrative. Model figures are fetched from the sealed artifact. */
+ export const homeContent = {
+-  eyebrow: 'VEYA / DECISION RESEARCH',
+-  title: 'AI should know\nwhen not to decide.',
+-  summary: 'Veya is a probabilistic model for structured decisions. Give it state, a question, and possible outcomes. Inspect the answer, distribution, or defer.',
++  eyebrow: 'VEYA / STRUCTURED INFERENCE',
++  title: 'Give software\na real decision.',
++  summary: 'Veya turns state and a defined question into a typed answer with probabilities, or an explicit defer. Software can inspect the result instead of parsing a paragraph.',
++  availability: {
++    language: 'English only',
++    release: 'Research release',
++    automation: 'Automation disabled'
++  },
++  explore: [
++    { number: '01', label: 'Run the live model', href: '#live' },
++    { number: '02', label: 'See the evidence', href: '#research' },
++    { number: '03', label: 'Trace the served path', href: '#architecture-story' },
++    { number: '04', label: 'Use the API', href: '#developers-preview' }
++  ],
+   thesis: {
+-    label: 'THE THESIS / 01',
+-    title: 'Decisions have a shape.',
+-    summary: 'Generative interfaces produce language. Veya works over a defined outcome space and returns a typed result that software can inspect. Both approaches have uses; their outputs are different.',
+-    generative: ['Input', 'Tokens', 'String'],
+-    veya: ['State + question', 'Alternatives', 'Probabilities', 'Answer / defer']
++    label: 'THE WORKFLOW / 01',
++    title: 'From state to decision.',
++    summary: 'Keep the model’s job narrow and the application in control: prepare the evidence, define the answer space, then apply your own policy to the typed result.',
++    stages: [
++      { number: '01', title: 'Prepare state', detail: 'Give the question the relevant context, facts, and policy.' },
++      { number: '02', title: 'Bound the judgment', detail: 'Ask one defined question over named alternatives or criteria.' },
++      { number: '03', title: 'Compose in code', detail: 'Use the typed answer and probabilities in your own workflow.' }
++    ]
+   },
+   principles: [
+     { number: '01', title: 'Decisions,\nnot prose.', detail: 'Choice selects from named alternatives. Noul evaluates a proposition. Score estimates over an ordered categorical scale.' },
+diff --git a/web/static/home.css b/web/static/home.css
+index 758f710..cf7ddfd 100644
+--- a/web/static/home.css
++++ b/web/static/home.css
+@@ -15,6 +15,13 @@ html { scroll-padding-top: 90px; }
+ .site-header nav a { font-size:13px;letter-spacing:.015em; }
+ .docs-sidebar { top:calc(var(--docs-header-height) + 16px);max-height:calc(100vh - var(--docs-header-height) - 32px); }
+ .docs-toc { top:calc(var(--docs-header-height) + 18px); }
++.home-wayfinding { display:grid;grid-template-columns:minmax(110px,.55fr) minmax(0,3.45fr);align-items:center;gap:25px;padding:19px var(--home-gutter);background:#f4f2e9;color:var(--blue);border-bottom:1px solid var(--home-faint); }
++.home-wayfinding>span { font:600 10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.13em; }
++.home-wayfinding ol { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;list-style:none;padding:0;margin:0; }
++.home-wayfinding a { min-height:44px;display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid transparent;font-size:13px;font-weight:600;transition:background var(--home-transition),border-color var(--home-transition); }
++.home-wayfinding a:hover { background:var(--ivory);border-color:var(--home-faint); }
++.home-wayfinding a small { font:10px ui-monospace,SFMono-Regular,Menlo,monospace;opacity:.58; }
++.home-wayfinding a b { margin-left:auto;font-weight:400;opacity:.64; }
+ .home-pad { padding:var(--home-section-space) var(--home-gutter); }
+ .home-label { display:inline-flex;align-items:center;gap:12px;font:600 11px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.16em; }
+ .home-label:before { content:"";display:block;width:18px;height:18px;flex:none;background:currentColor;mask:url('/static/veya-symbol.png') center/contain no-repeat;-webkit-mask:url('/static/veya-symbol.png') center/contain no-repeat; }
+@@ -58,6 +65,28 @@ html { scroll-padding-top: 90px; }
+ .hero-field-coordinate { position:absolute;font:600 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:rgba(253,251,242,.44); }
+ .hero-field-coordinate-x { left:50%;bottom:3%;transform:translateX(-50%); }
+ .hero-field-coordinate-y { left:3%;top:50%;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg); }
++.hero-network { position:relative;aspect-ratio:1.27;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,rgba(137,139,255,.19),transparent 45%),linear-gradient(145deg,rgba(253,251,242,.025),transparent 65%); }
++.hero-network:before,.hero-network:after { content:"";position:absolute;z-index:0;left:50%;top:50%;width:58%;aspect-ratio:1;border:1px solid rgba(253,251,242,.12);border-radius:50%;transform:translate(-50%,-50%); }
++.hero-network:after { width:43%;border-color:rgba(253,251,242,.08); }
++.hero-network-lines { position:absolute;inset:0;width:100%;height:100%;overflow:visible; }
++.hero-network-orbit,.hero-network-equator { fill:none;stroke:rgba(253,251,242,.22);stroke-width:1;vector-effect:non-scaling-stroke; }
++.hero-network-orbit-inner { stroke:rgba(253,251,242,.12); }
++.hero-network-equator { stroke:rgba(253,251,242,.12); }
++.hero-network-route { fill:none;stroke:url(#network-glow);stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-dasharray:520;stroke-dashoffset:520;animation:home-path-resolve 1.4s cubic-bezier(.22,1,.36,1) .2s forwards; }
++.hero-network-route-alt { stroke-dasharray:4 6;animation-delay:.45s; }
++.hero-network-core { position:absolute;left:50%;top:50%;width:22%;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transform:translate(-50%,-50%);border:1px solid rgba(253,251,242,.56);background:#0b0965;box-shadow:0 0 0 8px rgba(3,0,139,.63),0 0 36px rgba(191,192,255,.25);animation:home-mark-resolve 700ms cubic-bezier(.22,1,.36,1) .75s both; }
++.hero-network-core>span,.hero-network-core>small { font:600 clamp(6px,.72vw,9px)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em; }
++.hero-network-core img { width:36%;height:36%;object-fit:contain; }
++.hero-network-core>small { font-size:clamp(5px,.55vw,7px);color:rgba(253,251,242,.62);letter-spacing:.08em; }
++.hero-network-node { position:absolute;z-index:1;display:flex;align-items:center;gap:9px;font:600 9px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:rgba(253,251,242,.8);animation:home-point-enter 600ms cubic-bezier(.22,1,.36,1) both; }
++.hero-network-node i { width:8px;height:8px;border:1px solid var(--ivory);border-radius:50%;background:var(--blue);box-shadow:0 0 15px rgba(253,251,242,.35); }
++.hero-network-node-a { left:6%;top:19%;animation-delay:.12s; }
++.hero-network-node-b { right:5%;top:28%;flex-direction:row-reverse;animation-delay:.24s; }
++.hero-network-node-c { left:8%;bottom:20%;animation-delay:.36s; }
++.hero-network-node-d { right:5%;bottom:17%;flex-direction:row-reverse;animation-delay:.48s; }
++.hero-network-coordinate { position:absolute;z-index:1;font:600 8px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:rgba(253,251,242,.44); }
++.hero-network-coordinate-a { left:7%;top:50%; }
++.hero-network-coordinate-b { right:7%;top:50%; }
+ @keyframes home-field-enter { from { opacity:0;transform:translateY(18px); } to { opacity:1;transform:translateY(0); } }
+ @keyframes home-path-resolve { to { stroke-dashoffset:0; } }
+ @keyframes home-point-enter { from { opacity:0;transform:scale(.5); } to { opacity:1;transform:scale(1); } }
+@@ -65,18 +94,23 @@ html { scroll-padding-top: 90px; }
+ .home-hero .hero-actions { margin-top:46px; }
+ .home-hero-index { position:absolute;bottom:34px;right:var(--home-gutter);font:11px ui-monospace,monospace;letter-spacing:.16em;opacity:.55; }
+ .home-thesis { background:var(--ivory); }
+-.home-thesis-head { display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:7vw;align-items:end;margin:70px 0 95px; }
++.home-thesis-head { display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:7vw;align-items:end;margin:70px 0 68px; }
+ .home-thesis-head h2 { font-size:var(--home-heading);font-weight:400;letter-spacing:-.075em;line-height:1;max-width:850px;margin:0; }
+ .home-thesis-head p { max-width:500px;font-size:clamp(18px,1.5vw,22px);line-height:1.55;margin:0; }
+-.thesis-comparison { display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--home-faint);border-bottom:1px solid var(--home-faint); }
+-.thesis-track { padding:36px clamp(24px,4vw,66px) 44px; }
+-.thesis-track:first-child { border-right:1px solid var(--home-faint); }
+-.thesis-track>span { display:block;font:600 11px ui-monospace,monospace;letter-spacing:.14em;margin-bottom:46px;color:var(--blue); }
+-.thesis-track ol { list-style:none;padding:0;margin:0; }
+-.thesis-track li { display:flex;gap:20px;align-items:baseline;border-top:1px solid var(--home-faint);padding:16px 0;font-size:clamp(23px,2.4vw,38px);letter-spacing:-.045em; }
+-.thesis-track li small { font:11px ui-monospace,monospace;color:var(--blue); }
+-.thesis-generative { color:#6b6b77; }
+-.thesis-veya { color:var(--blue);background:rgba(3,0,139,.025); }
++.home-workflow-layout { display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(36px,7vw,108px);align-items:stretch; }
++.home-workflow-steps { list-style:none;padding:0;margin:0;display:flex;flex-direction:column;justify-content:space-between; }
++.home-workflow-steps li { display:grid;grid-template-columns:40px minmax(0,1fr) 24px;gap:16px;align-items:start;padding:24px 0;border-top:1px solid var(--home-faint); }
++.home-workflow-steps li:last-child { border-bottom:1px solid var(--home-faint); }
++.home-workflow-steps li>span { font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);padding-top:5px; }
++.home-workflow-steps h3 { margin:0;font-size:clamp(24px,2.6vw,36px);line-height:1.1;font-weight:500;letter-spacing:-.055em;color:var(--blue); }
++.home-workflow-steps p { margin:10px 0 0;max-width:380px;font-size:15px;line-height:1.55;color:#5d5d70; }
++.home-workflow-steps li>b { font-size:18px;font-weight:400;color:var(--blue);opacity:.58; }
++.home-request-card { align-self:stretch;display:flex;flex-direction:column;min-width:0;margin:0;padding:24px;background:var(--blue);color:var(--ivory); }
++.home-request-card figcaption { display:flex;justify-content:space-between;gap:12px;padding-bottom:17px;border-bottom:1px solid rgba(253,251,242,.25);font:600 10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em; }
++.home-request-card figcaption span:last-child { color:rgba(253,251,242,.6);text-align:right; }
++.home-request-card pre { flex:1;min-width:0;overflow:auto;margin:22px 0;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;color:#fdfbf2; }
++.home-request-card code { font:inherit; }
++.home-request-card>p { border-top:1px solid rgba(253,251,242,.25);padding-top:16px;margin:0;color:rgba(253,251,242,.74);font-size:13px;line-height:1.55; }
+ .home-principles { background:var(--blue);color:var(--ivory); }
+ .home-principle { display:grid;grid-template-columns:80px minmax(0,1.5fr) minmax(230px,.5fr);gap:30px;align-items:end;border-top:1px solid var(--home-blue-line);padding:55px 0;position:relative; }
+ .home-principle:first-of-type { margin-top:70px; }
+@@ -163,6 +197,7 @@ html { scroll-padding-top: 90px; }
+ .home-closing img { width:48px;height:48px;object-fit:contain; }
+ .home-closing p { font-size:clamp(28px,3.4vw,50px);letter-spacing:-.06em;margin:0 auto 0 0; }
+ @media(max-width:1100px) {
++  .home-wayfinding { grid-template-columns:1fr;gap:8px; }
+   .home-section-head,.home-thesis-head { grid-template-columns:1fr 1fr; }
+   .home-hero { grid-template-columns:1fr 1fr; }
+   .hero-decision-field { width:min(100%,460px); }
+@@ -173,6 +208,7 @@ html { scroll-padding-top: 90px; }
+   .home-article { grid-template-columns:140px 1fr 1fr 30px;gap:18px; }
+ }
+ @media(max-width:800px) {
++  .home-wayfinding ol { grid-template-columns:repeat(2,minmax(0,1fr)); }
+   .home-section-head,.home-thesis-head { display:block;margin:40px 0 55px; }
+   .home-section-head p,.home-thesis-head p { margin-top:26px; }
+   .home-hero { display:block;min-height:auto;padding:100px var(--home-gutter) 90px; }
+@@ -188,6 +224,9 @@ html { scroll-padding-top: 90px; }
+ @media(max-width:600px) {
+   :root { --home-gutter:24px;--home-section-space:85px;--home-display:clamp(50px,12vw,70px);--home-heading:clamp(46px,10vw,64px); }
+   .home-hero { padding-top:80px; }
++  .home-wayfinding { padding-top:15px;padding-bottom:15px; }
++  .home-wayfinding ol { gap:4px; }
++  .home-wayfinding a { padding:7px 4px;font-size:12px; }
+   .home-hero .hero-copy h1 { margin:26px 0;letter-spacing:-.073em; }
+   .home-hero .hero-copy p { font-size:18px; }
+   .home-hero .hero-actions { margin-top:32px; }
+@@ -196,18 +235,19 @@ html { scroll-padding-top: 90px; }
+   .hero-field-top,.hero-field-bottom { font-size:8px;letter-spacing:.07em; }
+   .hero-field-coordinate { font-size:7px; }
+   .home-hero-index { display:none; }
+-  .thesis-comparison { display:block; }
+-  .thesis-track:first-child { border-right:0;border-bottom:1px solid var(--home-faint); }
+-  .thesis-track { padding:30px 10px; }
+-  .thesis-track>span { margin-bottom:26px; }
++  .home-workflow-layout { grid-template-columns:1fr;gap:30px; }
++  .home-request-card { padding:19px; }
++  .home-request-card pre { font-size:11px; }
+   .home-principle { display:block; }
+   .home-principle h3 { font-size:clamp(48px,11vw,70px);margin:16px 0 20px; }
+   .home-principle p { font-size:16px; }
+   .home-playground .workspace { padding:12px; }
+   .home-playground .input-panel,.home-playground .result-panel { padding:22px 15px; }
+-  .home-research-grid { display:block; }
+-  .home-research-metric { min-height:245px;padding:30px 22px; }
+-  .home-research-metric strong { font-size:clamp(72px,17vw,110px); }
++  .home-research-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr)); }
++  .home-research-metric { min-height:205px;padding:22px 16px; }
++  .home-research-metric strong { font-size:clamp(28px,9.5vw,58px);letter-spacing:-.075em; }
++  .home-research-metric span { font-size:clamp(15px,3.8vw,20px);line-height:1.15; }
++  .home-research-metric p { font-size:12px;line-height:1.4;margin-top:8px; }
+   .home-research-bottom { display:block; }
+   .home-research-bottom details,.home-research-bottom .home-text-link { margin-top:25px; }
+   .home-evidence-fate { margin-top:65px;padding:35px 0 40px; }
+@@ -227,7 +267,8 @@ html { scroll-padding-top: 90px; }
+   .home-closing p { margin:20px 0 30px; }
+ }
+ @media(prefers-reduced-motion:reduce) {
+-  .hero-decision-field,.hero-field-paths path,.hero-field-point,.hero-field-resolution { animation:none;opacity:1;transform:none; }
++  .hero-decision-field,.hero-field-paths path,.hero-field-point,.hero-field-resolution,.hero-network-route,.hero-network-node,.hero-network-core { animation:none;opacity:1;transform:none; }
++  .hero-network-core { transform:translate(-50%,-50%); }
+   .hero-field-paths path { stroke-dashoffset:0; }
+   .home-principle-axis,.home-article,.home-text-link,.site-header,.home-faq-list summary span { transition:none; }
+   .home-principle:hover .home-principle-axis { width:0; }
+@@ -235,5 +276,62 @@ html { scroll-padding-top: 90px; }
+ }
+ html.force-reduced .home-principle-axis,html.force-reduced .home-article,html.force-reduced .home-text-link,html.force-reduced .site-header { transition:none; }
+ html.force-reduced .home-fate-segment { animation:none;opacity:1; }
+-html.force-reduced .hero-decision-field,html.force-reduced .hero-field-paths path,html.force-reduced .hero-field-point,html.force-reduced .hero-field-resolution { animation:none;opacity:1;transform:none; }
++html.force-reduced .hero-decision-field,html.force-reduced .hero-field-paths path,html.force-reduced .hero-field-point,html.force-reduced .hero-field-resolution,html.force-reduced .hero-network-route,html.force-reduced .hero-network-node,html.force-reduced .hero-network-core { animation:none;opacity:1; }
++html.force-reduced .hero-network-core { transform:translate(-50%,-50%); }
+ html.force-reduced .hero-field-paths path { stroke-dashoffset:0; }
++
++.home-hero .hero-copy h1 { max-width:700px;font-size:clamp(72px,8vw,138px); }
++.home-hero .hero-copy p { max-width:560px; }
++.home-hero .hero-art { min-height:clamp(420px,48vw,620px); }
++.home-hero-primitives { display:flex;gap:0;flex-wrap:wrap;margin-top:28px;border-top:1px solid rgba(253,251,242,.22);max-width:560px; }
++.home-hero-primitives a { padding:13px 20px 0 0;margin-right:20px;color:rgba(253,251,242,.68);font:600 10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;transition:color var(--home-transition); }
++.home-hero-primitives a:hover { color:var(--ivory); }
++.home-thesis-head h2 { max-width:760px; }
++.home-thesis-head p { max-width:460px; }
++.home-workflow-steps li { transition:padding var(--home-transition),background var(--home-transition); }
++.home-workflow-steps li:hover { padding-left:8px;background:rgba(3,0,139,.025); }
++.home-live .home-section-head { margin-bottom:56px; }
++.home-playground .workspace { background:#fffef8; }
++.home-playground .instrument-body { min-height:520px; }
++.home-research-metric { transition:background var(--home-transition); }
++.home-research-metric:hover { background:rgba(253,251,242,.035); }
++.home-research .home-section-head h2 { max-width:820px; }
++.home-thesis-head { margin-bottom:38px; }
++.home-principles { background:#f4f2e9;color:var(--home-ink); }
++.home-principles .home-section-head { margin-bottom:52px; }
++.home-principles .home-section-head p { color:var(--muted); }
++.home-principles-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
++.home-principle,.home-principle:first-of-type { display:flex;flex-direction:column;align-items:flex-start;gap:16px;min-height:330px;padding:26px 28px;background:var(--ivory);border:1px solid var(--home-faint); }
++.home-principle-number { color:var(--blue);opacity:.62; }
++.home-principle h3 { font-size:clamp(34px,3.2vw,50px);line-height:1.01;color:var(--blue); }
++.home-principle p { margin-top:auto;color:#5d5d70; }
++.home-principle-axis { display:none; }
++.home-principle:hover { border-color:rgba(3,0,139,.42);transform:translateY(-4px);transition:transform var(--home-transition),border-color var(--home-transition); }
++.home-developer { background:#111044; }
++@media(max-width:800px) {
++  .home-hero .hero-copy h1 { font-size:clamp(64px,12vw,96px); }
++  .home-hero .hero-art { min-height:360px; }
++  .home-principles-grid { grid-template-columns:1fr; }
++  .home-principle,.home-principle:first-of-type { min-height:230px; }
++}
++@media(max-width:600px) {
++  .home-hero { padding-top:58px;padding-bottom:56px; }
++  .home-hero .hero-copy h1 { font-size:clamp(54px,12vw,72px); }
++  .home-hero .hero-copy h1 { margin:22px 0 18px; }
++  .home-hero .hero-copy p { line-height:1.45; }
++  .home-hero .hero-actions { margin-top:25px; }
++  .home-hero .hero-art { min-height:300px; }
++  .hero-decision-field { width:min(100%,350px); }
++  .home-hero-primitives { margin-top:22px; }
++  .home-hero-primitives a { padding-right:12px;margin-right:12px;font-size:9px; }
++  .hero-network { aspect-ratio:1.1; }
++  .hero-network-node { font-size:8px; }
++  .hero-network-node-a { left:3%; }
++  .hero-network-node-b,.hero-network-node-d { right:2%; }
++  .hero-network-node-c { left:4%; }
++  .hero-network-coordinate { display:none; }
++}
++@media(prefers-reduced-motion:reduce) {
++  .home-principle,.home-principle:hover,.home-workflow-steps li { transition:none;transform:none; }
++}
++html.force-reduced .home-principle,html.force-reduced .home-principle:hover { transition:none;transform:none; }
+diff --git a/web/static/home.mjs b/web/static/home.mjs
+index 715f2a5..d60b23c 100644
+--- a/web/static/home.mjs
++++ b/web/static/home.mjs
+@@ -1,5 +1,5 @@
+-import { homeContent } from './home-content.mjs?v=lab-1';
+-import { quickstart } from './examples.mjs?v=docs-2';
++import { homeContent } from './home-content.mjs?v=lab-5';
++import { choiceRequest, quickstart } from './examples.mjs?v=docs-2';
+ import { VeyaClient } from './model-client.mjs';
+ import { codeTabs, esc, statusBadge, wireCodeTabs, wireCopyButtons } from './ui.mjs?v=docs-2';
+ import { renderArchitectureExplorer, setArchitectureRoute, wireArchitectureExplorer } from './architecture-explorer.mjs';
+@@ -13,38 +13,55 @@ function hero() {
+       <span class="eyebrow">${esc(homeContent.eyebrow)}</span>
+       <h1 id="home-title">${lines(homeContent.title)}</h1>
+       <p>${esc(homeContent.summary)}</p>
+-      <div class="hero-actions"><a class="button" href="#live" data-run-example>Run a live example <span aria-hidden="true">↗</span></a><a class="button outline" href="#research">Read the research <span aria-hidden="true">↓</span></a></div>
+-      <div class="hero-release">${statusBadge('Research')}<span>English checkpoint · automation disabled</span></div>
++      <div class="hero-actions"><a class="button" href="#live" data-run-example>Try Veya live <span aria-hidden="true">↗</span></a><a class="button outline" href="#thesis">Explore the approach <span aria-hidden="true">↓</span></a></div>
++      <div class="hero-release">${statusBadge(homeContent.availability.release)}<span>Model language: ${esc(homeContent.availability.language)} · ${esc(homeContent.availability.automation.toLowerCase())}</span></div>
++      <nav class="home-hero-primitives" aria-label="Explore Veya primitives"><a href="/concepts/choice">Choice</a><a href="/concepts/noul">Noul</a><a href="/concepts/score">Score</a><a href="/concepts/systemone">SystemOne</a></nav>
+     </div>
+     <div class="hero-art" aria-hidden="true"><div class="hero-decision-field">
+-      <div class="hero-field-top"><span>VEYA / DECISION FIELD</span><span>FIG. 01 / 04 → 01</span></div>
+-      <div class="hero-field-plane">
+-        <svg class="hero-field-paths" viewBox="0 0 500 500" preserveAspectRatio="none" focusable="false"><path d="M65 85 H180 L222 207"/><path d="M435 85 H320 L278 207"/><path d="M65 415 H180 L222 293"/><path d="M435 415 H320 L278 293"/></svg>
+-        <span class="hero-field-axis hero-field-axis-x"></span><span class="hero-field-axis hero-field-axis-y"></span>
+-        <span class="hero-field-point hero-field-point-a"><i></i><b>01</b></span><span class="hero-field-point hero-field-point-b"><i></i><b>02</b></span>
+-        <span class="hero-field-point hero-field-point-c"><i></i><b>03</b></span><span class="hero-field-point hero-field-point-d"><i></i><b>04</b></span>
+-        <div class="hero-field-resolution"><span class="hero-field-resolution-corner"></span><img src="/static/veya-symbol.png" alt=""></div>
+-        <span class="hero-field-coordinate hero-field-coordinate-x">X / ALTERNATIVES</span><span class="hero-field-coordinate hero-field-coordinate-y">Y / EVIDENCE</span>
++      <div class="hero-field-top"><span>VEYA / CONNECTED CONTEXT</span><span>STATE → JUDGMENT → OUTPUT</span></div>
++      <div class="hero-network">
++        <svg class="hero-network-lines" viewBox="0 0 560 440" preserveAspectRatio="none" focusable="false">
++          <defs><linearGradient id="network-glow" x1="0" x2="1"><stop offset="0" stop-color="#fdfbf2" stop-opacity=".08"/><stop offset=".5" stop-color="#fdfbf2" stop-opacity=".78"/><stop offset="1" stop-color="#fdfbf2" stop-opacity=".08"/></linearGradient></defs>
++          <ellipse class="hero-network-orbit" cx="280" cy="220" rx="188" ry="164"/>
++          <ellipse class="hero-network-orbit hero-network-orbit-inner" cx="280" cy="220" rx="120" ry="164"/>
++          <path class="hero-network-equator" d="M92 220h376M128 140c84 46 220 46 304 0M128 300c84-46 220-46 304 0"/>
++          <path class="hero-network-route" d="M87 113 212 176 280 220 371 126 475 187"/>
++          <path class="hero-network-route hero-network-route-alt" d="m89 327 106-61 85-46 103 60 91-70"/>
++        </svg>
++        <span class="hero-network-node hero-network-node-a"><i></i><b>STATE</b></span>
++        <span class="hero-network-node hero-network-node-b"><i></i><b>POLICY</b></span>
++        <span class="hero-network-node hero-network-node-c"><i></i><b>OPTIONS</b></span>
++        <span class="hero-network-node hero-network-node-d"><i></i><b>ROUTE</b></span>
++        <div class="hero-network-core"><span>VEYA</span><img src="/static/veya-symbol.png" alt=""><small>TYPED DECISION</small></div>
++        <span class="hero-network-coordinate hero-network-coordinate-a">INPUT / 01</span>
++        <span class="hero-network-coordinate hero-network-coordinate-b">OUTPUT / 02</span>
+       </div>
+-      <div class="hero-field-bottom"><span>POSSIBILITIES</span><span>STRUCTURE</span><span>DECISION / DEFER</span></div>
++      <div class="hero-field-bottom"><span>CONTEXT</span><span>CONNECTED SYSTEMS</span><span>DEFINED OUTCOMES</span></div>
+     </div></div>
+     <div class="home-hero-index" aria-hidden="true">001 / 009</div>
+   </section>`;
+ }
+ 
++function sectionNav() {
++  return `<nav class="home-wayfinding" aria-label="On this page"><span>START HERE</span><ol>${homeContent.explore.map(item => `<li><a href="${esc(item.href)}"><small>${esc(item.number)}</small>${esc(item.label)}<b aria-hidden="true">↗</b></a></li>`).join('')}</ol></nav>`;
++}
++
+ function thesis() {
+-  const comparison = (name, items, className) => `<div class="thesis-track ${className}"><span>${esc(name)}</span><ol>${items.map((item, index) => `<li><small>${String(index + 1).padStart(2, '0')}</small>${esc(item)}</li>`).join('')}</ol></div>`;
++  const request = JSON.stringify(choiceRequest, null, 2);
+   return `<section class="home-thesis home-pad" id="thesis" aria-labelledby="thesis-title">
+-    ${label('01', 'A DIFFERENT OUTPUT')}
++    ${label('01', 'A WORKFLOW YOU CONTROL')}
+     <div class="home-thesis-head"><h2 id="thesis-title">${esc(homeContent.thesis.title)}</h2><p>${esc(homeContent.thesis.summary)}</p></div>
+-    <div class="thesis-comparison">${comparison('GENERIC GENERATIVE INTERFACE', homeContent.thesis.generative, 'thesis-generative')}${comparison('VEYA / STRUCTURED INFERENCE', homeContent.thesis.veya, 'thesis-veya')}</div>
++    <div class="home-workflow-layout">
++      <ol class="home-workflow-steps">${homeContent.thesis.stages.map(stage => `<li><span>${esc(stage.number)}</span><div><h3>${esc(stage.title)}</h3><p>${esc(stage.detail)}</p></div><b aria-hidden="true">↘</b></li>`).join('')}</ol>
++      <figure class="home-request-card"><figcaption><span>CHOICE / REQUEST SHAPE</span><span>ILLUSTRATIVE INPUT</span></figcaption><pre><code>${esc(request)}</code></pre><p>The application defines the state, question, and candidate set. The response is handled by your code.</p></figure>
++    </div>
+   </section>`;
+ }
+ 
+ function principles() {
+   return `<section class="home-principles home-pad" aria-labelledby="principles-title">${label('02', 'THREE PRINCIPLES')}
+-    <h2 id="principles-title" class="visually-hidden">Veya principles</h2>
+-    ${homeContent.principles.map(item => `<article class="home-principle"><span class="home-principle-number">${esc(item.number)}</span><h3>${lines(item.title)}</h3><p>${esc(item.detail)}</p><span class="home-principle-axis" aria-hidden="true"></span></article>`).join('')}
++    <div class="home-section-head"><h2 id="principles-title">Small judgments.<br>Clear boundaries.</h2><p>Each primitive does one job. Your code keeps the policy, workflow, and final action.</p></div>
++    <div class="home-principles-grid">${homeContent.principles.map(item => `<article class="home-principle"><span class="home-principle-number">${esc(item.number)}</span><h3>${lines(item.title)}</h3><p>${esc(item.detail)}</p><span class="home-principle-axis" aria-hidden="true"></span></article>`).join('')}</div>
+   </section>`;
+ }
+ 
+@@ -155,7 +172,7 @@ async function loadStatus(root) {
+ 
+ export function renderHome() {
+   const root = document.querySelector('#main');
+-  root.innerHTML = [hero(), thesis(), principles(), live(), research(), architecture(), developer(), status(), articles(), faq()].join('');
++  root.innerHTML = [hero(), sectionNav(), thesis(), principles(), live(), research(), architecture(), developer(), status(), articles(), faq()].join('');
+   wireCopyButtons(root);
+   wireCodeTabs(root);
+   wireArchitectureExplorer(root);
+diff --git a/web/static/index.html b/web/static/index.html
+index 3b710d7..00e787c 100644
+--- a/web/static/index.html
++++ b/web/static/index.html
+@@ -1 +1 @@
+-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#03008b"><meta name="description" content="__VEYA_DESCRIPTION__"><meta property="og:type" content="website"><meta property="og:title" content="__VEYA_TITLE__"><meta property="og:description" content="__VEYA_DESCRIPTION__"><!--VEYA_SEO--><meta property="og:image" content="/static/veya-lockup.png"><meta name="twitter:card" content="summary_large_image"><title>__VEYA_TITLE__</title><link rel="icon" href="/static/veya-symbol.png"><link rel="stylesheet" href="/static/site.css?v=brand-2"><link rel="stylesheet" href="/static/docs.css?v=docs-1"><link rel="stylesheet" href="/static/home.css?v=lab-2"><link rel="stylesheet" href="/static/architecture-explorer.css?v=lab-2"></head><body><a class="skip" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/" aria-label="Veya home"><img src="/static/veya-lockup-display.png" alt="Veya"></a><button class="menu-toggle" id="menu-toggle" aria-controls="nav" aria-expanded="false">Menu <span aria-hidden="true">☰</span></button><nav id="nav" aria-label="Main navigation"></nav><a class="nav-cta" href="/experience">Try Veya <span aria-hidden="true">↗</span></a></header><main id="main" tabindex="-1"></main><footer><div class="footer-top"><div class="footer-brand"><img src="/static/veya-lockup-display.png" alt="Veya"><span>Decisions, made legible.</span></div><div class="footer-links" id="footer-links"></div></div><div class="footer-bottom"><span>Veya · Research release</span><span>Structured inference. Measured uncertainty.</span></div></footer><script type="module" src="/static/site.js?v=lab-2"></script></body></html>
++<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123b3a"><meta name="description" content="__VEYA_DESCRIPTION__"><meta property="og:type" content="website"><meta property="og:title" content="__VEYA_TITLE__"><meta property="og:description" content="__VEYA_DESCRIPTION__"><!--VEYA_SEO--><meta property="og:image" content="/static/veya-lockup.png"><meta name="twitter:card" content="summary_large_image"><title>__VEYA_TITLE__</title><link rel="icon" href="/static/veya-symbol.png"><link rel="stylesheet" href="/static/site.css?v=brand-4"><link rel="stylesheet" href="/static/docs.css?v=docs-2"><link rel="stylesheet" href="/static/home.css?v=lab-9"><link rel="stylesheet" href="/static/architecture-explorer.css?v=lab-3"><link rel="stylesheet" href="/static/design.css?v=international-1"></head><body><a class="skip" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/" aria-label="Veya home"><img src="/static/veya-lockup-display.png" alt="Veya"></a><button class="menu-toggle" id="menu-toggle" aria-controls="nav" aria-expanded="false">Menu <span aria-hidden="true">☰</span></button><nav id="nav" aria-label="Main navigation"></nav><a class="nav-cta" href="/experience">Try Veya <span aria-hidden="true">↗</span></a></header><main id="main" tabindex="-1"></main><footer><div class="footer-top"><div class="footer-brand"><img src="/static/veya-lockup-display.png" alt="Veya"><span>Decisions, made legible.</span></div><div class="footer-links" id="footer-links"></div></div><div class="footer-bottom"><span>Veya · Research release</span><span>Structured inference. Measured uncertainty.</span></div></footer><script type="module" src="/static/site.js?v=lab-6"></script></body></html>
+diff --git a/web/static/site-config.json b/web/static/site-config.json
+index 458a543..9d33cd9 100644
+--- a/web/static/site-config.json
++++ b/web/static/site-config.json
+@@ -3,7 +3,7 @@
+   "primaryNavigation": ["/principles", "/benchmarks", "/developers", "/getting-started"],
+   "footerNavigation": ["/experience", "/architecture", "/benchmarks", "/developers", "/limitations", "/model-status"],
+   "pages": [
+-    {"href":"/","title":"Veya — Structured decisions","description":"Veya turns state and typed questions into inspectable probabilities, answers, or deferrals.","section":"Overview","order":0,"kind":"home","navLabel":"Overview"},
++    {"href":"/","title":"Veya — Structured decisions for software","description":"Veya turns state and defined questions into typed answers, probabilities, or explicit deferrals.","section":"Overview","order":0,"kind":"home","navLabel":"Overview"},
+     {"href":"/getting-started","title":"Getting started — Veya","description":"Make your first Veya Choice request and inspect the structured result.","section":"Start","order":1,"kind":"docs","navLabel":"Getting started","topLabel":"Docs"},
+     {"href":"/experience","title":"Try Veya — Live model","description":"Run Choice, Noul, Score, and SystemOne against the audited Veya research checkpoint.","section":"Start","order":2,"kind":"playground","navLabel":"Try Veya"},
+     {"href":"/concepts/choice","title":"Choice — Veya concepts","description":"Choose among named candidates and inspect the candidate distribution.","section":"Core concepts","order":3,"kind":"docs","navLabel":"Choice"},
+@@ -12,11 +12,11 @@
+     {"href":"/concepts/systemone","title":"SystemOne — Veya concepts","description":"Run several typed questions over one shared state with stable question IDs.","section":"Core concepts","order":6,"kind":"docs","navLabel":"SystemOne"},
+     {"href":"/architecture","title":"Architecture — Veya","description":"Trace Veya requests through validation, routing, scoring, calibration, and deferral.","section":"System","order":7,"kind":"docs","navLabel":"Architecture"},
+     {"href":"/architecture/high-cardinality-choice","title":"High-cardinality Choice — Veya","description":"Understand the served learned top-eight shortlist path for large Choice sets.","section":"System","order":8,"kind":"docs","navLabel":"High-N Choice"},
+-    {"href":"/benchmarks","title":"Benchmarks — Veya","description":"Inspect sealed aggregate CLINC150 validation results and benchmark methodology.","section":"Evidence","order":9,"kind":"docs","navLabel":"Benchmarks"},
++    {"href":"/benchmarks","title":"Benchmarks — Veya","description":"Inspect sealed aggregate CLINC150 validation results and benchmark methodology.","section":"Evidence","order":9,"kind":"docs","navLabel":"Evidence","topLabel":"Evidence"},
+     {"href":"/limitations","title":"Limitations — Veya","description":"Read the audited limits of Veya's current research release.","section":"Evidence","order":10,"kind":"docs","navLabel":"Limitations"},
+     {"href":"/model-status","title":"Model status — Veya","description":"See current primitive and language support from the audited model release.","section":"Evidence","order":11,"kind":"docs","navLabel":"Model status"},
+-    {"href":"/developers","title":"Developers — Veya","description":"Use the validated same-origin Veya gateway with copyable requests.","section":"Developers","order":12,"kind":"docs","navLabel":"Developer guide"},
++    {"href":"/developers","title":"Developers — Veya","description":"Use the validated same-origin Veya gateway with copyable requests.","section":"Developers","order":12,"kind":"docs","navLabel":"Developers","topLabel":"Developers"},
+     {"href":"/developers/api","title":"API reference — Veya","description":"Read Veya gateway request limits, response fields, errors, and version metadata.","section":"Developers","order":13,"kind":"docs","navLabel":"API reference"},
+-    {"href":"/principles","title":"Principles — Veya","description":"The principles behind Veya's structured decisions and visible uncertainty.","section":"Overview","order":14,"kind":"docs","navLabel":"Principles","topLabel":"Research"}
++    {"href":"/principles","title":"Principles — Veya","description":"The principles behind Veya's structured decisions and visible uncertainty.","section":"Overview","order":14,"kind":"docs","navLabel":"Approach","topLabel":"Approach"}
+   ]
+ }
+diff --git a/web/static/site.css b/web/static/site.css
+index 8004cfe..25bfb96 100644
+--- a/web/static/site.css
++++ b/web/static/site.css
+@@ -2,6 +2,9 @@
+ 
+ .questions-editor{min-height:250px!important}.prob-progress{display:block;width:100%;height:5px;appearance:none;border:0;background:#e9e8f1}.prob-progress::-webkit-progress-bar{background:#e9e8f1}.prob-progress::-webkit-progress-value{background:var(--blue)}.prob-progress::-moz-progress-bar{background:var(--blue)}
+ 
++.brand img{width:112px;height:auto;display:block;flex:none}
++@media(max-width:680px){.brand img{width:96px}}
++
+ .json-label{display:block;margin:18px 0 8px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}.candidate-json{width:100%;min-height:85px!important;background:#fafaf7;border:1px solid var(--line);padding:12px;font:12px/1.5 ui-monospace,monospace;resize:vertical}
+ 
+ /* Cinematic system: the four points and two decision axes resolve into the supplied mark. */
+diff --git a/web/static/site.js b/web/static/site.js
+index 5f5ac1c..d95bfd6 100644
+--- a/web/static/site.js
++++ b/web/static/site.js
+@@ -1,4 +1,4 @@
+-import { renderHome } from './home.mjs?v=lab-2';
++import { renderHome } from './home.mjs?v=lab-6';
+ import { experience } from './playground.mjs?v=lab-2';
+ import { renderDocs } from './docs.mjs?v=docs-2';
+ import { esc } from './ui.mjs?v=docs-2';
+-- 
+2.54.0 (Apple Git-157)
+

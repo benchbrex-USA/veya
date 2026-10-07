@@ -1,5 +1,10 @@
 # Cloudflare Container Deployment Implementation Plan
 
+> Historical implementation plan from 2026-10-04. It is not the operator runbook.
+> The active Worker configuration is `wrangler.jsonc`.
+
+# Cloudflare Container Deployment Implementation Plan
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Run the exact audited Veya release in a private Cloudflare Container behind the existing `https://veya.veya-8d0.workers.dev` Worker, with no laptop or Tailscale dependency.

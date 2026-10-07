@@ -1,5 +1,10 @@
 # Cloudflare Container Deployment Design
 
+> Historical design note from 2026-10-04. It is not the operator runbook.
+> The active Worker configuration is `wrangler.jsonc`.
+
+# Cloudflare Container Deployment Design
+
 ## Goal
 
 Run the exact audited Veya release entirely on Cloudflare so the public website and inference API no longer depend on the user's Mac, Tailscale, or an external tunnel.

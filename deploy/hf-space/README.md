@@ -131,13 +131,13 @@ there, treat 429 from this origin as expected under load rather than as a fault.
 
 ## Why the checkpoint is not in this repository
 
-`models/production/model.safetensors` (804 MB) lives in a private model
-repository. `space/fetch_checkpoint.py` downloads that single file at boot from
-a pinned revision and asserts its digest against
-`manifest.base_checkpoint_hash` before the model service is allowed to start.
-This keeps a public Space from republishing private research weights as LFS
-blobs, and it means the weights are re-verified on every boot rather than
-trusted from an image layer.
+`models/production/model.safetensors` (804 MB) lives outside the image.
+`space/fetch_checkpoint.py` downloads that single file at boot and asserts its
+digest against `manifest.base_checkpoint_hash` before the model service is
+allowed to start. On Hugging Face it uses a pinned private-repo revision. On
+Cloudflare it uses `VEYA_CHECKPOINT_URL` with `VEYA_CHECKPOINT_TOKEN`. Either
+way the weights are re-verified on every boot rather than trusted from an
+image layer.
 
 If the digest does not match, the fetch fails, the model service is never
 started, and the Space exits so the runtime restarts it. `/readyz` stays 503 in
@@ -151,7 +151,9 @@ that state.
 | `VEYA_ALLOWED_ORIGINS` | Comma-separated CORS allowlist. Browsers only — it is not an access control. |
 | `VEYA_DEVICE` | `cpu`. No accelerator is attached on the free tier. |
 | `VEYA_MODEL_PORT` | Loopback port for the model service (default `8080`). Never published. |
-| `VEYA_HF_TOKEN` | Read access to the private model repository. Falls back to the runtime-injected `HF_TOKEN`. |
+| `VEYA_HF_TOKEN` | Read access to the private model repository. Falls back to the runtime-injected `HF_TOKEN`. Used only when `VEYA_CHECKPOINT_URL` is unset. |
+| `VEYA_CHECKPOINT_URL` | Authenticated checkpoint URL. When set, this replaces the Hugging Face download. |
+| `VEYA_CHECKPOINT_TOKEN` | Bearer credential for `VEYA_CHECKPOINT_URL`. Required with that URL. Never log or commit it. |
 | `VEYA_REQUEST_TIMEOUT` | Upstream inference timeout in seconds (default `30`). |
 
 The model service binds `127.0.0.1` inside the container and is not reachable
@@ -173,6 +175,17 @@ Space plus an `Authorization` header injected by the proxy — see
 `deploy/hf-space/DEPLOY.md` in the source repository. That path is documented but
 not implemented, and Hugging Face's support for authenticated Space-to-Space
 calls from a third-party proxy has not been verified here.
+
+## Cloudflare Worker
+
+The active edge is `worker/veya-container.mjs`. It forwards to one Cloudflare
+Container named `veya-core`. It does not use an external origin. The image is
+`deploy/cloudflare/Dockerfile`. Historical notes about a laptop tunnel are not
+the deployment path.
+
+`/healthz` answers as soon as the gateway binds. `/readyz` stays 503 while
+ModernBERT-large loads on CPU. That 503 means the audited release is not
+latched yet. `/startupz` names a component only after a startup gate fails.
 
 ## Reproducing this Space
 

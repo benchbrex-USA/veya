@@ -1,0 +1,152 @@
+{
+  "format": "veya-promotion-matrix-v1",
+  "promoted_count": 0,
+  "items": [
+    {
+      "kind": "veya_checkpoint",
+      "name": "veya-core",
+      "version": "0.3.5-audit-baseline.1",
+      "measurement": "previously_measured",
+      "reason": "Audited research release. Not re-promoted.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "retriever",
+      "name": "production-shortlist-k8",
+      "version": "manifest",
+      "measurement": "previously_measured",
+      "reason": "Unchanged production retriever. Schema-held-out clean Recall@8 was 0.349 on naturalized candidates in the robustness run.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "retriever",
+      "name": "phase10-domain-general-k8",
+      "version": "research",
+      "measurement": "measured",
+      "reason": "Clean Recall@8 0.431. Full-string long-suffix Recall@8 0.077. Not promoted.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "retriever",
+      "name": "query-view-max-fusion",
+      "version": "research-eval",
+      "measurement": "measured",
+      "reason": "Phase-10 projection with deterministic views: long-suffix Recall@8 0.328 and clean Recall@8 unchanged at 0.431. Not promoted; end-to-end scorer and adversarial suffixes were not measured.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": {
+        "long_suffix_recall_at_8": 0.328,
+        "clean_recall_at_8": 0.431
+      },
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "retriever",
+      "name": "noise-augmented-projection",
+      "version": "one-seed",
+      "measurement": "measured",
+      "reason": "Train-only suffix augmentation plus one hard-negative refresh. Clean Recall@8 fell to 0.306 and long-suffix Recall@8 stayed at 0.074.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": {
+        "clean_recall_at_8": 0.306,
+        "long_suffix_recall_at_8": 0.074
+      },
+      "artifact_sha256": null,
+      "rejected": true,
+      "status": "REJECTED"
+    },
+    {
+      "kind": "calibration",
+      "name": "packed-and-hierarchical",
+      "version": "manifest",
+      "measurement": "previously_measured",
+      "reason": "Not refit.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "model_profile",
+      "name": "provider-baselines",
+      "version": "experts-profile-v1",
+      "measurement": "blocked",
+      "reason": "NIM credential was not configured. No live expert benchmark.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "routing_policy",
+      "name": "experts-router",
+      "version": "hypothesis",
+      "measurement": "not_tested",
+      "reason": "Routes remain capability constraints, not measured winners.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "action_head",
+      "name": "act_weight",
+      "version": "0.0",
+      "measurement": "not_tested",
+      "reason": "No held-out defer labels were found. act_weight stays 0.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    },
+    {
+      "kind": "training_sweep",
+      "name": "veya-train-config",
+      "version": "reference",
+      "measurement": "not_tested",
+      "reason": "The decision-model learning-rate sweep was not run.",
+      "metrics": null,
+      "latency": null,
+      "cost": null,
+      "robustness": null,
+      "artifact_sha256": null,
+      "rejected": false,
+      "status": "RESEARCH"
+    }
+  ]
+}

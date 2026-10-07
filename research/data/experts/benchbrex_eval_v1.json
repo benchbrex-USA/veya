@@ -1,0 +1,18 @@
+{
+  "format": "benchbrex-eval-v1",
+  "version": "v1",
+  "rows": 21,
+  "sha256": "17d5e53c35776c320100b171ce1f81d782b7ffc0d59cd6e398ff295ff7a4365e",
+  "task_families": [
+    "coding",
+    "general_reasoning",
+    "multimodal",
+    "quantum",
+    "safety",
+    "text_decision"
+  ],
+  "judge": "deterministic_scoring_only",
+  "llm_judge": false,
+  "generalization_claim": false,
+  "notes": "Authored fixtures for routing and expert evaluation. Not a sealed blind set and not a quality certificate."
+}

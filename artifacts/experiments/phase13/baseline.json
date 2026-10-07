@@ -1,0 +1,189 @@
+{
+  "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+  "format": "veya-phase13-baseline-v1",
+  "gateway_spot_check": {
+    "answer": "none",
+    "confidence": 0.4876,
+    "correct": false,
+    "counterfactual_id": "api_401",
+    "deferred": false,
+    "id": "p13e-002197",
+    "max_probability": null,
+    "probabilities": {
+      "billing": 0.0838,
+      "none": 0.7786,
+      "sales": 0.0096,
+      "technical": 0.1281
+    },
+    "route": "packed",
+    "slice": "resolved_vs_active",
+    "state": "Payment succeeded and billing confirmed there is no payment problem, but the API returns 401 and access needs restoration.",
+    "tags": [
+      "regression",
+      "resolved_vs_active"
+    ],
+    "target": "technical",
+    "variant": "regression"
+  },
+  "metrics": {
+    "brier": 1.1437739382693366,
+    "counterfactual": {
+      "compared": 3360,
+      "consistency": 0.8675595238095238,
+      "variant_accuracy": 0.21696428571428572
+    },
+    "ece_entropy_confidence": 0.29174317059791555,
+    "ece_max_probability": 0.5153904827207899,
+    "gates": {
+      "checks": {
+        "high_confidence_error_rate": {
+          "observed": 0.7687296416938111,
+          "passed": false,
+          "threshold": 0.005
+        },
+        "negation": {
+          "observed": 0.24027777777777778,
+          "passed": false,
+          "threshold": 0.97
+        },
+        "overall": {
+          "observed": 0.24684585847504115,
+          "passed": false,
+          "threshold": 0.98
+        },
+        "paraphrase": {
+          "observed": 0.24166666666666667,
+          "passed": false,
+          "threshold": 0.98
+        },
+        "prompt_injection": {
+          "observed": 0.25517241379310346,
+          "passed": false,
+          "threshold": 0.98
+        },
+        "resolved_vs_active": {
+          "observed": 0.19903912148249828,
+          "passed": false,
+          "threshold": 0.97
+        }
+      },
+      "passed": false
+    },
+    "high_confidence_error_rate_entropy_confidence": {
+      "count": 55,
+      "errors": 34,
+      "floor": 0.9,
+      "rate": 0.6181818181818182
+    },
+    "high_confidence_error_rate_max_probability": {
+      "count": 921,
+      "errors": 708,
+      "floor": 0.9,
+      "rate": 0.7687296416938111
+    },
+    "minimal_pairs": {
+      "all_members_correct_rate": 0.0,
+      "collapse_rate": 0.10714285714285714,
+      "families": 56
+    },
+    "overall_accuracy": 0.24684585847504115,
+    "paraphrase": {
+      "accuracy": 0.24166666666666667,
+      "all_correct_rate": 0.08333333333333333,
+      "goals": 24,
+      "unanimous_rate": 0.6666666666666666
+    },
+    "rows": 3646,
+    "slice_accuracy": {
+      "counterfactual": 0.21696428571428572,
+      "minimal_pair": 0.21872316060692815,
+      "misleading_keywords": 0.18426501035196688,
+      "missing_correct_candidate": 1.0,
+      "multi_intent": 0.46153846153846156,
+      "negation": 0.24027777777777778,
+      "no_fit": 1.0,
+      "normal": 0.24166666666666667,
+      "paraphrase": 0.24166666666666667,
+      "prompt_injection": 0.25517241379310346,
+      "regression": 0.09090909090909091,
+      "resolved_vs_active": 0.19903912148249828
+    },
+    "temperature_fit": false
+  },
+  "release": "0.3.5-audit-baseline.1",
+  "reranker_id": "base_decision_head",
+  "scored_rows": 3646,
+  "scoring_endpoint": "http://127.0.0.1:8080/v1/choice",
+  "seal_row_count": 3646,
+  "seal_sha256": "406191bbdd83a2f7b053f14d75e2b4a0c047f96befea9234bf19df25ff7c7bf8",
+  "temperature_fit": false,
+  "train_prohibited": true,
+  "versions": {
+    "gateway": {
+      "architecture_version": "veya-shortlist-v1",
+      "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80",
+      "checkpoint": "rl-agent",
+      "model_version": "0.3.5",
+      "release": "0.3.5-audit-baseline.1",
+      "release_manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+      "release_status": {
+        "english_choice": "RESEARCH RELEASE",
+        "english_noul": "RESEARCH ONLY",
+        "english_score_categorical": "RESEARCH ONLY",
+        "multilingual_choice": "RESEARCH ONLY",
+        "multilingual_noul": "RESEARCH ONLY",
+        "multilingual_score": "RESEARCH ONLY"
+      },
+      "reranker_id": "base_decision_head",
+      "supported_languages": [
+        "en"
+      ],
+      "supported_primitives": [
+        "choice",
+        "noul",
+        "score-categorical"
+      ]
+    },
+    "model": {
+      "architecture_version": "veya-shortlist-v1",
+      "calibration_version": "ag_news_test_0_400__banking77_test_20way_0_80",
+      "checkpoint": "rl-agent",
+      "checkpoint_sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+      "choice_router_version": 1,
+      "encoder": "answerdotai/ModernBERT-large",
+      "encoder_adaptation_id": null,
+      "encoder_delta_sha256": null,
+      "head_max_len": 192,
+      "hypothesis_calibration_sha256": null,
+      "hypothesis_head_sha256": null,
+      "hypothesis_scorer_id": null,
+      "hypothesis_temperature": null,
+      "hypothesis_template_version": null,
+      "max_len": 512,
+      "model_version": "0.3.5",
+      "release": "0.3.5-audit-baseline.1",
+      "release_manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+      "release_status": {
+        "english_choice": "RESEARCH RELEASE",
+        "english_noul": "RESEARCH ONLY",
+        "english_score_categorical": "RESEARCH ONLY",
+        "multilingual_choice": "RESEARCH ONLY",
+        "multilingual_noul": "RESEARCH ONLY",
+        "multilingual_score": "RESEARCH ONLY"
+      },
+      "reranker_id": "base_decision_head",
+      "reranker_sha256": null,
+      "route_calibration_temperature": 1.971127355603397,
+      "selective_policy_sha256": "80e7be582c9c890cf73da701cbd86a71c6d908331186ee68f1021763011cd620",
+      "shortlist_sha256": "b974fd75de2f3f8b93a69501d17035d59c05d165ea693dc1340f6df78f8562e1",
+      "supported_languages": [
+        "en"
+      ],
+      "supported_primitives": [
+        "choice",
+        "noul",
+        "score-categorical"
+      ]
+    }
+  }
+}

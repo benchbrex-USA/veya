@@ -1,0 +1,113 @@
+{
+  "generated_at": "2026-10-07",
+  "read_only": true,
+  "mutation_performed": false,
+  "identity": {
+    "account_name": "veya",
+    "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
+    "account_type": "standard",
+    "created_on": "2026-10-02T22:45:02.901525Z",
+    "workers_subdomain": "veya-8d0",
+    "verification": "Cloudflare API read through the existing Composio cloudflare_mcp alias veya returned account name veya."
+  },
+  "wrangler": {
+    "local_version": "4.147.0",
+    "latest_version": "4.148.0",
+    "authenticated_account_name": "BenchBrex.com",
+    "authenticated_account_id": "60690c4aa1e8b60819a655ffbf26e122",
+    "oauth_email_present": true,
+    "containers_write_scope": false,
+    "secrets_store_write_scope": false,
+    "profiles": "none",
+    "classification": "WRONG_ACCOUNT",
+    "mutation_allowed": false
+  },
+  "plan": {
+    "workers_paid": "UNVERIFIED",
+    "subscriptions_status": 403,
+    "subscriptions_error": "Authentication error",
+    "workers_account_settings": {
+      "default_usage_model": "standard",
+      "green_compute": false
+    },
+    "containers_applications_endpoint": {
+      "status": 200,
+      "count": 0
+    },
+    "note": "An empty Containers list does not prove the Workers Paid entitlement. Subscriptions could not be read."
+  },
+  "resources": {
+    "workers": [
+      {
+        "name": "veya",
+        "classification": "VEYA_ACTIVE",
+        "created_on": "2026-10-02T23:12:38.763604Z",
+        "modified_on": "2026-10-04T00:07:00.211705Z",
+        "compatibility_date": "2026-09-01",
+        "usage_model": "standard",
+        "bindings": [
+          {"name": "VEYA_ORIGIN", "type": "plain_text", "value": "[not read]"}
+        ],
+        "secrets": [],
+        "routes": [],
+        "custom_domains": [],
+        "active_deployment_id": "27749060-a227-49ab-b81b-bd0a10162545",
+        "active_version_id": "2d0891c9-23f5-492f-b050-1e8b8f5d5bc0",
+        "active_version_number": 11,
+        "deployment_created_on": "2026-10-04T00:06:59.003696Z",
+        "live_edge_health": {
+          "url": "https://veya.veya-8d0.workers.dev/__edge_health",
+          "status": 200,
+          "body": {"edge": "ok", "origin_configured": true}
+        }
+      }
+    ],
+    "containers": [],
+    "durable_objects": [],
+    "r2_buckets": [],
+    "kv": [],
+    "d1": [],
+    "queues": [],
+    "workflows": [],
+    "pages": [],
+    "vectorize": [],
+    "ai_gateway": [],
+    "logpush": [],
+    "zones": [],
+    "secrets_store": [
+      {
+        "name": "default_secrets_store",
+        "id": "d2aa033a3de2445b9897c02a2dd0addc",
+        "classification": "SHARED",
+        "secret_names": []
+      }
+    ],
+    "rate_limits": "NOT_OBSERVABLE_NO_BINDINGS_ON_LIVE_WORKER",
+    "observability": "NOT_LISTED_BY_AVAILABLE_READ_APIS"
+  },
+  "r2_audit": {
+    "bucket_count": 0,
+    "per_bucket_commands": "NOT_APPLICABLE_NO_BUCKETS",
+    "object_inventory": "NOT_APPLICABLE_NO_BUCKETS",
+    "s3_credentials": "UNSET",
+    "selected_bucket": null,
+    "intended_bucket_name": "veya-model-artifacts",
+    "bucket_created": false,
+    "reason": "No existing bucket was suitable. The bucket was not created because Wrangler is authenticated to BenchBrex.com and Workers Paid is unverified."
+  },
+  "local_checkpoint": {
+    "path": "models/production/model.safetensors",
+    "symlink": false,
+    "size": 842609210,
+    "sha256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "manifest_release": "0.3.5-audit-baseline.1",
+    "manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+    "manifest_base_checkpoint_hash": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+    "local_equals_manifest": true,
+    "r2_sha256": "NOT_IN_R2"
+  },
+  "docker": {
+    "cli": "NOT_INSTALLED",
+    "image_built": false
+  }
+}

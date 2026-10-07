@@ -39,7 +39,7 @@ jobs:
           python -m pip install --upgrade pip
           # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install -e .
+          pip install -e . pytest
 
       - name: Import check
         run: python -c "import veya; print(veya.__version__); print(sorted(veya.__all__))"
@@ -73,6 +73,9 @@ jobs:
       - name: Email cleaning tests
         run: python tests/test_email.py
 
+      - name: Quantum integration tests (no network, no checkpoint)
+        run: python -m pytest -q tests/test_quantum.py tests/test_experts.py
+
   lint:
     name: lint
     runs-on: ubuntu-latest
@@ -83,14 +86,14 @@ jobs:
           python-version: "3.11"
       - run: pip install ruff mypy
       - name: Ruff
-        run: ruff check veya/ --select=E9,F63,F7,F82,F401,F811 --line-length=120
+        run: ruff check veya/ quantum/ experts/ --select=E9,F63,F7,F82,F401,F811 --line-length=120
       - name: Mypy (type gate on the shipped package)
         # --ignore-missing-imports lets the gate run without pulling torch/transformers
         # wheels: unresolvable third-party imports are treated as Any, our own
         # annotations are still checked.
-        run: mypy --ignore-missing-imports veya/
+        run: mypy --ignore-missing-imports veya/ quantum/ experts/
       - name: Byte-compile every module
-        run: python -m compileall -q veya/ tests/
+        run: python -m compileall -q veya/ quantum/ experts/ tests/
 
   build:
     name: package
@@ -155,6 +158,15 @@ jobs:
 
       - name: Server security tests
         run: pytest tests/test_server_security.py -v
+
+      - name: Quantum boundary tests (no network, no checkpoint)
+        run: pytest tests/test_quantum.py tests/test_experts.py -q
+
+      - name: Free-tier Cloudflare proxy tests
+        run: |
+          pytest tests/test_checkpoint_fetch.py tests/test_cloudflare_config.py -v
+          python deploy/hf-space/assemble.py
+          python deploy/hf-space/assemble.py --check
 
   # ----- G21 tier 2: main-branch gate -----------------------------------------
   # Runs only for pushes to main, after every PR-tier check above has passed.

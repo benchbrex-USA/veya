@@ -43,7 +43,7 @@ train = ["datasets>=2.14.0,<4"]
 
 [tool.setuptools]
 # assets/, research/ and notebooks/ sit in the root, so auto-discovery bails out.
-packages = ["veya", "veya.experimental", "web"]
+packages = ["veya", "veya.experimental", "quantum", "experts", "web"]
 
 [tool.setuptools.package-data]
 web = ["static/*"]

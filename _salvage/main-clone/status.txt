@@ -1,0 +1,64 @@
+ M .github/workflows/ci.yml
+ M .gitignore
+ M README.md
+ M deploy/hf-space/DEPLOY.md
+ M deploy/hf-space/README.md
+ M deploy/hf-space/space/fetch_checkpoint.py
+ M docs/superpowers/plans/2026-10-04-cloudflare-container-deployment.md
+ M docs/superpowers/specs/2026-10-04-cloudflare-container-deployment-design.md
+ M pyproject.toml
+?? .wrangler/state/v3/cache/miniflare-CacheObject/metadata.sqlite
+?? .wrangler/state/v3/cache/miniflare-CacheObject/metadata.sqlite-shm
+?? .wrangler/state/v3/cache/miniflare-CacheObject/metadata.sqlite-wal
+?? .wrangler/state/v3/d1/miniflare-D1DatabaseObject/metadata.sqlite
+?? .wrangler/state/v3/d1/miniflare-D1DatabaseObject/metadata.sqlite-shm
+?? .wrangler/state/v3/d1/miniflare-D1DatabaseObject/metadata.sqlite-wal
+?? .wrangler/state/v3/kv/miniflare-KVNamespaceObject/metadata.sqlite
+?? .wrangler/state/v3/kv/miniflare-KVNamespaceObject/metadata.sqlite-shm
+?? .wrangler/state/v3/kv/miniflare-KVNamespaceObject/metadata.sqlite-wal
+?? .wrangler/state/v3/observability/miniflare-wobs-trace-store/a590acd76969f996ec6e4b599c3c09f58c283a76f2d61392b5d3046caf557602.sqlite
+?? .wrangler/state/v3/observability/miniflare-wobs-trace-store/a590acd76969f996ec6e4b599c3c09f58c283a76f2d61392b5d3046caf557602.sqlite-shm
+?? .wrangler/state/v3/observability/miniflare-wobs-trace-store/a590acd76969f996ec6e4b599c3c09f58c283a76f2d61392b5d3046caf557602.sqlite-wal
+?? .wrangler/state/v3/observability/miniflare-wobs-trace-store/metadata.sqlite
+?? .wrangler/state/v3/observability/miniflare-wobs-trace-store/metadata.sqlite-shm
+?? .wrangler/state/v3/observability/miniflare-wobs-trace-store/metadata.sqlite-wal
+?? .wrangler/state/v3/r2/miniflare-R2BucketObject/metadata.sqlite
+?? .wrangler/state/v3/r2/miniflare-R2BucketObject/metadata.sqlite-shm
+?? .wrangler/state/v3/r2/miniflare-R2BucketObject/metadata.sqlite-wal
+?? artifacts/deployment/cloudflare/account-inventory.json
+?? artifacts/experiments/experts/checkpoint_smoke.json
+?? artifacts/experiments/experts/promotion_matrix.json
+?? artifacts/experiments/phase10_max_fusion_e2e/changes.jsonl
+?? artifacts/experiments/phase10_max_fusion_e2e/result.json
+?? artifacts/experiments/phase10_max_fusion_e2e/view_embeddings.npz
+?? artifacts/experiments/phase10_max_fusion_e2e/view_embeddings.npz.json
+?? artifacts/experiments/phase13/baseline.json
+?? artifacts/experiments/phase13/baseline_predictions.jsonl
+?? artifacts/experiments/retrieval_robustness/noise_projection.pt
+?? artifacts/experiments/retrieval_robustness/perturbed_embeddings.npz
+?? artifacts/experiments/retrieval_robustness/perturbed_embeddings.npz.json
+?? artifacts/experiments/retrieval_robustness/report.json
+?? docs/experts/ROUTING.md
+?? docs/investor-deploy.md
+?? docs/quantum/ARCHITECTURE.md
+?? docs/quantum/NATIVE_MULTIMODAL.md
+?? docs/quantum/PROVENANCE.md
+?? docs/quantum/SUPPORT_CONDITIONING.md
+?? docs/what-was-built.md
+?? research/data/experts/benchbrex_eval_v1.json
+?? research/data/experts/benchbrex_eval_v1.jsonl
+?? research/data/phase13/calibration.jsonl
+?? research/data/phase13/seal.json
+?? research/data/phase13/sealed_eval.jsonl
+?? research/data/phase13/train.jsonl
+?? research/veyabench/phase13_counterfactual.py
+?? research/veyabench/retrieval_robustness.py
+?? research/veyabench/run_max_fusion_e2e.py
+?? research/veyabench/run_phase13_baseline.py
+?? research/veyabench/run_retrieval_robustness.py
+?? scripts/veya-serve.sh
+?? tests/test_checkpoint_fetch.py
+?? tests/test_experts.py
+?? tests/test_phase13_counterfactual.py
+?? tests/test_quantum.py
+?? tests/test_retrieval_robustness_views.py

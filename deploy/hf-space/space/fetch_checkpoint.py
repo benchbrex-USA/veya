@@ -26,6 +26,7 @@ import os
 import shutil
 import sys
 import time
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +63,43 @@ def token() -> str:
     return ""
 
 
+def download_from_url(url: str, credential: str, target: Path) -> Path:
+    """Stream an authenticated checkpoint to ``target`` only after the body is complete."""
+    partial = target.with_name(target.name + ".part")
+    request = urllib.request.Request(
+        url,
+        headers={"Authorization": f"Bearer {credential}"},
+    )
+    try:
+        with urllib.request.urlopen(request) as response, partial.open("wb") as handle:
+            while True:
+                block = response.read(CHUNK)
+                if not block:
+                    break
+                handle.write(block)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(partial, target)
+    except Exception:
+        if partial.exists():
+            partial.unlink()
+        raise
+    return target
+
+
+def verify_downloaded(target: Path, expected: str, started: float) -> int:
+    elapsed = time.perf_counter() - started
+    size_mb = target.stat().st_size / 1e6
+    log(f"downloaded {size_mb:.1f} MB in {elapsed:.1f}s; hashing")
+    digest = sha256_of(target)
+    if digest != expected:
+        log(f"SHA-256 MISMATCH: got {digest}, manifest pins {expected}")
+        target.unlink()
+        return 1
+    log(f"verified sha256={digest} in {time.perf_counter() - started:.1f}s total")
+    return 0
+
+
 def main() -> int:
     if not MANIFEST.is_file():
         log(f"release manifest is missing: {MANIFEST}")
@@ -83,6 +121,24 @@ def main() -> int:
             return 0
         log(f"baked {FILENAME} hashes to {digest}, not the pinned {expected}; discarding it")
         target.unlink()
+
+    artifact_url = os.environ.get("VEYA_CHECKPOINT_URL", "").strip()
+    if artifact_url:
+        credential = os.environ.get("VEYA_CHECKPOINT_TOKEN", "")
+        if not credential:
+            log("VEYA_CHECKPOINT_URL is set but VEYA_CHECKPOINT_TOKEN is missing")
+            return 1
+        log("downloading checkpoint from the configured artifact URL")
+        started = time.perf_counter()
+        try:
+            download_from_url(artifact_url, credential, target)
+        except Exception as exc:
+            log(f"download failed: {type(exc).__name__}")
+            partial = target.with_name(target.name + ".part")
+            if partial.exists():
+                partial.unlink()
+            return 1
+        return verify_downloaded(target, expected, started)
 
     credential = token()
     if not credential:
@@ -116,17 +172,7 @@ def main() -> int:
 
     if downloaded.resolve() != target.resolve():
         shutil.move(str(downloaded), str(target))
-    elapsed = time.perf_counter() - started
-    size_mb = target.stat().st_size / 1e6
-    log(f"downloaded {size_mb:.1f} MB in {elapsed:.1f}s; hashing")
-
-    digest = sha256_of(target)
-    if digest != expected:
-        log(f"SHA-256 MISMATCH: got {digest}, manifest pins {expected}")
-        target.unlink()
-        return 1
-    log(f"verified sha256={digest} in {time.perf_counter() - started:.1f}s total")
-    return 0
+    return verify_downloaded(target, expected, started)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,211 @@
+From 6b367bacdf45218ecd4235cc69dfd974583ad1e3 Mon Sep 17 00:00:00 2001
+From: Parth Patel <benchbrex@gmail.com>
+Date: Mon, 5 Oct 2026 02:07:28 +0530
+Subject: [PATCH] copilot: preserved uncommitted work
+
+Session: You can make further improvements to the
+Project: Veya
+Branch: benchbrex-usa-website-enhancements
+Workspace: fe30ce10-990e-4c06-92f9-ba9e27914d92
+Files: 3 changed
+
+Auto-saved before the worktree was removed so no work is lost.
+Restore it as a branch with `git branch <name> <this-commit>`.
+---
+ web/static/home-content.mjs | 11 +++++++++
+ web/static/home.css         | 16 +++++++++++++
+ web/static/home.mjs         | 46 +++++++++++++++++++++++++++++--------
+ 3 files changed, 63 insertions(+), 10 deletions(-)
+
+diff --git a/web/static/home-content.mjs b/web/static/home-content.mjs
+index b1c0128..861d1b9 100644
+--- a/web/static/home-content.mjs
++++ b/web/static/home-content.mjs
+@@ -3,6 +3,17 @@ export const homeContent = {
+   eyebrow: 'VEYA / DECISION RESEARCH',
+   title: 'AI should know\nwhen not to decide.',
+   summary: 'Veya is a probabilistic model for structured decisions. Give it state, a question, and possible outcomes. Inspect the answer, distribution, or defer.',
++  proofPoints: [
++    { value: '4', label: 'served primitives', detail: 'Choice, Noul, categorical Score, and SystemOne each preserve a distinct task shape.' },
++    { value: '1', label: 'decision axis', detail: 'The model returns answer, probability, and defer metadata rather than a vague prose response.' },
++    { value: '0', label: 'hidden automation', detail: 'The live release keeps automation disabled and makes its limits explicit.' },
++    { value: '100%', label: 'inspectable output', detail: 'The interface presents the returned route, calibration, and technical data for review.' }
++  ],
++  capabilities: [
++    { title: 'Named outcomes', detail: 'Define alternatives instead of asking the model to invent a label from free-text prose.' },
++    { title: 'Visible uncertainty', detail: 'Review the returned probability mass and the route that produced it before trusting a decision.' },
++    { title: 'Explicit defer', detail: 'Unsupported or withheld cases stay visible as a reasoned defer instead of a confident guess.' }
++  ],
+   thesis: {
+     label: 'THE THESIS / 01',
+     title: 'Decisions have a shape.',
+diff --git a/web/static/home.css b/web/static/home.css
+index 758f710..98aaa7f 100644
+--- a/web/static/home.css
++++ b/web/static/home.css
+@@ -64,6 +64,18 @@ html { scroll-padding-top: 90px; }
+ @keyframes home-mark-resolve { from { opacity:0;transform:scale(.78); } to { opacity:1;transform:scale(1); } }
+ .home-hero .hero-actions { margin-top:46px; }
+ .home-hero-index { position:absolute;bottom:34px;right:var(--home-gutter);font:11px ui-monospace,monospace;letter-spacing:.16em;opacity:.55; }
++.home-proof { background:var(--ivory); border-top:1px solid var(--home-faint); }
++.home-proof-grid { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px; }
++.home-proof-card { background:linear-gradient(180deg,#f8f6f1 0%,rgba(3,0,139,.04) 100%); border:1px solid var(--home-faint); padding:28px 24px; min-height:180px; display:flex; flex-direction:column; justify-content:space-between; }
++.home-proof-card strong { font-size:clamp(34px,4vw,64px); font-weight:400; letter-spacing:-.08em; line-height:.9; color:var(--blue); }
++.home-proof-card span { display:block; margin-top:14px; font:600 11px ui-monospace,monospace; letter-spacing:.12em; text-transform:uppercase; }
++.home-proof-card p { margin:16px 0 0; color:var(--muted); line-height:1.55; max-width:36ch; }
++.home-capabilities { background:var(--paper); }
++.home-capability-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; margin-top:20px; }
++.home-capability { position:relative; background:rgba(253,251,242,.8); border:1px solid var(--home-faint); padding:28px 24px 26px; min-height:220px; }
++.home-capability-mark { width:42px; height:42px; border-radius:50%; background:radial-gradient(circle at 35% 35%, rgba(255,255,255,.9), rgba(3,0,139,.8)); border:1px solid rgba(3,0,139,.26); box-shadow:0 0 0 8px rgba(3,0,139,.06); }
++.home-capability h3 { font-size:clamp(28px,2vw,38px); line-height:1.05; letter-spacing:-.06em; font-weight:400; margin:18px 0 12px; }
++.home-capability p { margin:0; color:var(--muted); line-height:1.6; }
+ .home-thesis { background:var(--ivory); }
+ .home-thesis-head { display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:7vw;align-items:end;margin:70px 0 95px; }
+ .home-thesis-head h2 { font-size:var(--home-heading);font-weight:400;letter-spacing:-.075em;line-height:1;max-width:850px;margin:0; }
+@@ -166,6 +178,8 @@ html { scroll-padding-top: 90px; }
+   .home-section-head,.home-thesis-head { grid-template-columns:1fr 1fr; }
+   .home-hero { grid-template-columns:1fr 1fr; }
+   .hero-decision-field { width:min(100%,460px); }
++  .home-proof-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
++  .home-capability-grid { grid-template-columns:1fr; }
+   .home-research-bottom { grid-template-columns:1fr 1fr; }
+   .home-research-bottom .home-text-link { grid-column:1/-1;justify-self:start; }
+   .home-evidence-fate { grid-template-columns:1fr;gap:35px; }
+@@ -175,6 +189,7 @@ html { scroll-padding-top: 90px; }
+ @media(max-width:800px) {
+   .home-section-head,.home-thesis-head { display:block;margin:40px 0 55px; }
+   .home-section-head p,.home-thesis-head p { margin-top:26px; }
++  .home-proof-grid { grid-template-columns:1fr 1fr; }
+   .home-hero { display:block;min-height:auto;padding:100px var(--home-gutter) 90px; }
+   .home-hero .hero-art { min-height:310px; }
+   .hero-decision-field { width:min(100%,500px); }
+@@ -187,6 +202,7 @@ html { scroll-padding-top: 90px; }
+ }
+ @media(max-width:600px) {
+   :root { --home-gutter:24px;--home-section-space:85px;--home-display:clamp(50px,12vw,70px);--home-heading:clamp(46px,10vw,64px); }
++  .home-proof-grid { grid-template-columns:1fr; }
+   .home-hero { padding-top:80px; }
+   .home-hero .hero-copy h1 { margin:26px 0;letter-spacing:-.073em; }
+   .home-hero .hero-copy p { font-size:18px; }
+diff --git a/web/static/home.mjs b/web/static/home.mjs
+index 715f2a5..159c7f5 100644
+--- a/web/static/home.mjs
++++ b/web/static/home.mjs
+@@ -32,24 +32,50 @@ function hero() {
+   </section>`;
+ }
+ 
++function proof() {
++  return `<section class="home-proof home-pad" aria-label="Veya value highlights">
++    <div class="home-proof-grid">${homeContent.proofPoints.map(item => `
++      <article class="home-proof-card">
++        <strong>${esc(item.value)}</strong>
++        <span>${esc(item.label)}</span>
++        <p>${esc(item.detail)}</p>
++      </article>`).join('')}
++    </div>
++  </section>`;
++}
++
++function capabilities() {
++  return `<section class="home-capabilities home-pad" aria-labelledby="capabilities-title">
++    ${label('01', 'WHY VEYA')}
++    <div class="home-section-head"><h2 id="capabilities-title">A model that keeps its work legible.</h2><p>Veya is designed for software teams that need a decision object, not a vague generation. Each route keeps the question type, evidence boundary, and output shape explicit.</p></div>
++    <div class="home-capability-grid">${homeContent.capabilities.map(item => `
++      <article class="home-capability">
++        <div class="home-capability-mark" aria-hidden="true"></div>
++        <h3>${esc(item.title)}</h3>
++        <p>${esc(item.detail)}</p>
++      </article>`).join('')}
++    </div>
++  </section>`;
++}
++
+ function thesis() {
+   const comparison = (name, items, className) => `<div class="thesis-track ${className}"><span>${esc(name)}</span><ol>${items.map((item, index) => `<li><small>${String(index + 1).padStart(2, '0')}</small>${esc(item)}</li>`).join('')}</ol></div>`;
+   return `<section class="home-thesis home-pad" id="thesis" aria-labelledby="thesis-title">
+-    ${label('01', 'A DIFFERENT OUTPUT')}
++    ${label('02', 'A DIFFERENT OUTPUT')}
+     <div class="home-thesis-head"><h2 id="thesis-title">${esc(homeContent.thesis.title)}</h2><p>${esc(homeContent.thesis.summary)}</p></div>
+     <div class="thesis-comparison">${comparison('GENERIC GENERATIVE INTERFACE', homeContent.thesis.generative, 'thesis-generative')}${comparison('VEYA / STRUCTURED INFERENCE', homeContent.thesis.veya, 'thesis-veya')}</div>
+   </section>`;
+ }
+ 
+ function principles() {
+-  return `<section class="home-principles home-pad" aria-labelledby="principles-title">${label('02', 'THREE PRINCIPLES')}
++  return `<section class="home-principles home-pad" aria-labelledby="principles-title">${label('03', 'THREE PRINCIPLES')}
+     <h2 id="principles-title" class="visually-hidden">Veya principles</h2>
+     ${homeContent.principles.map(item => `<article class="home-principle"><span class="home-principle-number">${esc(item.number)}</span><h3>${lines(item.title)}</h3><p>${esc(item.detail)}</p><span class="home-principle-axis" aria-hidden="true"></span></article>`).join('')}
+   </section>`;
+ }
+ 
+ function live() {
+-  return `<section class="home-live home-pad" id="live" aria-labelledby="live-title">${label('03', 'THE MODEL / LIVE')}
++  return `<section class="home-live home-pad" id="live" aria-labelledby="live-title">${label('04', 'THE MODEL / LIVE')}
+     <div class="home-section-head"><h2 id="live-title">Give the model<br>a decision.</h2><div><p>Run the same validated Veya gateway used by the dedicated playground. This is a real response from the served research checkpoint.</p><a href="/experience" class="home-text-link">Open the full experience ↗</a></div></div>
+     <div class="home-playground" id="home-playground"></div>
+   </section>`;
+@@ -57,7 +83,7 @@ function live() {
+ 
+ function research() {
+   const metric = (key, labelText, note) => `<div class="home-research-metric"><strong data-research="${esc(key)}">—</strong><span>${esc(labelText)}</span><p>${esc(note)}</p></div>`;
+-  return `<section class="home-research home-pad" id="research" aria-labelledby="research-title">${label('04', 'SEALED EVALUATION')}
++  return `<section class="home-research home-pad" id="research" aria-labelledby="research-title">${label('05', 'SEALED EVALUATION')}
+     <div class="home-section-head"><h2 id="research-title">The bottleneck<br>is visible.</h2><p>When the correct label reaches the shortlist, the decision head usually finds it. On an unseen domain, retrieval often misses it. These numbers must be read together.</p></div>
+     <div class="home-research-grid" aria-live="polite">
+       ${metric('recall_at_8', 'Blind Recall@8', 'The target reached the eight-candidate shortlist.')}
+@@ -74,7 +100,7 @@ function research() {
+ }
+ 
+ function architecture() {
+-  return `<section class="home-architecture home-pad" id="architecture-story" aria-labelledby="architecture-title">${label('05', 'THE SERVED PATH')}
++  return `<section class="home-architecture home-pad" id="architecture-story" aria-labelledby="architecture-title">${label('06', 'THE SERVED PATH')}
+     <div class="home-section-head"><h2 id="architecture-title">A route for<br>the question.</h2><p>Choice uses the packed head for small sets. At 20 or more candidates, the served model retrieves eight before the base decision head and route calibration. The experimental hypothesis scorer is not served.</p></div>
+     ${renderArchitectureExplorer()}
+     <div class="home-architecture-foot"><span>SERVED / PACKED + LEARNED K8</span><span>RESEARCH / PHASE 9 HYPOTHESIS SCORER</span><span>RETIRED / PHASE 6 RERANKER HEADS</span><a href="/architecture">Trace the architecture ↗</a></div>
+@@ -82,14 +108,14 @@ function architecture() {
+ }
+ 
+ function developer() {
+-  return `<section class="home-developer home-pad" id="developers-preview" aria-labelledby="developer-title">${label('06', 'FOR BUILDERS')}
++  return `<section class="home-developer home-pad" id="developers-preview" aria-labelledby="developer-title">${label('07', 'FOR BUILDERS')}
+     <div class="home-section-head"><h2 id="developer-title">A decision<br>your software<br>can inspect.</h2><div><p>A small JSON request goes through the same-origin website gateway. The response keeps its decision, probabilities, defer reason, and technical metadata.</p><a href="/developers/api" class="home-text-link">Read the API reference ↗</a></div></div>
+     <div class="home-developer-code">${codeTabs([{label:'curl',language:'bash',code:quickstart.curl},{label:'Python',language:'python',code:quickstart.python},{label:'TypeScript',language:'typescript',code:quickstart.typescript}],'home-developer-example')}</div>
+   </section>`;
+ }
+ 
+ function status() {
+-  return `<section class="home-status home-pad" id="model-status-preview" aria-labelledby="status-title">${label('07', 'RELEASE STATE')}
++  return `<section class="home-status home-pad" id="model-status-preview" aria-labelledby="status-title">${label('08', 'RELEASE STATE')}
+     <div class="home-section-head"><h2 id="status-title">What is served.<br>What is research.</h2><p>Release labels are part of the product, not fine print. The live service version is checked separately from the audited manifest.</p></div>
+     <div class="home-status-list">${homeContent.status.map(item => `<div><span>${esc(item.label)}</span><strong${item.liveKey ? ` data-status="${esc(item.liveKey)}"` : ''}>${esc(item.value)}</strong></div>`).join('')}</div>
+     <p class="home-status-live" data-status="live" role="status">Checking active release…</p><a href="/model-status" class="home-text-link">Full model status ↗</a>
+@@ -97,14 +123,14 @@ function status() {
+ }
+ 
+ function articles() {
+-  return `<section class="home-articles home-pad" id="research-notes" aria-labelledby="articles-title">${label('08', 'RESEARCH NOTES')}
++  return `<section class="home-articles home-pad" id="research-notes" aria-labelledby="articles-title">${label('09', 'RESEARCH NOTES')}
+     <div class="home-section-head"><h2 id="articles-title">Read beneath<br>the result.</h2><p>Architecture, evidence, and limits are documented alongside the live instrument.</p></div>
+     <div class="home-article-list">${homeContent.articles.map(item => `<a href="${esc(item.href)}" class="home-article"><span>${esc(item.number)} / ${esc(item.category)}</span><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p><b aria-hidden="true">↗</b></a>`).join('')}</div>
+   </section>`;
+ }
+ 
+ function faq() {
+-  return `<section class="home-faq home-pad" id="faq" aria-labelledby="faq-title">${label('09', 'QUESTIONS / ANSWERS')}
++  return `<section class="home-faq home-pad" id="faq" aria-labelledby="faq-title">${label('10', 'QUESTIONS / ANSWERS')}
+     <div class="home-section-head"><h2 id="faq-title">The important<br>questions.</h2><p>Specific answers for the current audited release.</p></div>
+     <div class="home-faq-list">${homeContent.faq.map(item => `<details><summary>${esc(item.question)}<span aria-hidden="true">+</span></summary><p>${esc(item.answer)}</p></details>`).join('')}</div>
+     <div class="home-closing"><img src="/static/veya-symbol.png" alt="" loading="lazy"><p>Decisions, made legible.</p><a class="button" href="/experience">Experience Veya ↗</a></div>
+@@ -155,7 +181,7 @@ async function loadStatus(root) {
+ 
+ export function renderHome() {
+   const root = document.querySelector('#main');
+-  root.innerHTML = [hero(), thesis(), principles(), live(), research(), architecture(), developer(), status(), articles(), faq()].join('');
++  root.innerHTML = [hero(), proof(), capabilities(), thesis(), principles(), live(), research(), architecture(), developer(), status(), articles(), faq()].join('');
+   wireCopyButtons(root);
+   wireCodeTabs(root);
+   wireArchitectureExplorer(root);
+-- 
+2.54.0 (Apple Git-157)
+

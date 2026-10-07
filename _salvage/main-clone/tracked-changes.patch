@@ -1,0 +1,323 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 39f1724..a13ba2d 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -39,7 +39,7 @@ jobs:
+           python -m pip install --upgrade pip
+           # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
+           pip install torch --index-url https://download.pytorch.org/whl/cpu
+-          pip install -e .
++          pip install -e . pytest
+ 
+       - name: Import check
+         run: python -c "import veya; print(veya.__version__); print(sorted(veya.__all__))"
+@@ -73,6 +73,9 @@ jobs:
+       - name: Email cleaning tests
+         run: python tests/test_email.py
+ 
++      - name: Quantum integration tests (no network, no checkpoint)
++        run: python -m pytest -q tests/test_quantum.py tests/test_experts.py
++
+   lint:
+     name: lint
+     runs-on: ubuntu-latest
+@@ -83,14 +86,14 @@ jobs:
+           python-version: "3.11"
+       - run: pip install ruff mypy
+       - name: Ruff
+-        run: ruff check veya/ --select=E9,F63,F7,F82,F401,F811 --line-length=120
++        run: ruff check veya/ quantum/ experts/ --select=E9,F63,F7,F82,F401,F811 --line-length=120
+       - name: Mypy (type gate on the shipped package)
+         # --ignore-missing-imports lets the gate run without pulling torch/transformers
+         # wheels: unresolvable third-party imports are treated as Any, our own
+         # annotations are still checked.
+-        run: mypy --ignore-missing-imports veya/
++        run: mypy --ignore-missing-imports veya/ quantum/ experts/
+       - name: Byte-compile every module
+-        run: python -m compileall -q veya/ tests/
++        run: python -m compileall -q veya/ quantum/ experts/ tests/
+ 
+   build:
+     name: package
+@@ -156,6 +159,15 @@ jobs:
+       - name: Server security tests
+         run: pytest tests/test_server_security.py -v
+ 
++      - name: Quantum boundary tests (no network, no checkpoint)
++        run: pytest tests/test_quantum.py tests/test_experts.py -q
++
++      - name: Free-tier Cloudflare proxy tests
++        run: |
++          pytest tests/test_checkpoint_fetch.py tests/test_cloudflare_config.py -v
++          python deploy/hf-space/assemble.py
++          python deploy/hf-space/assemble.py --check
++
+   # ----- G21 tier 2: main-branch gate -----------------------------------------
+   # Runs only for pushes to main, after every PR-tier check above has passed.
+   # Adds the integration (server startup, health/readiness probes) and
+diff --git a/.gitignore b/.gitignore
+index 90acf8c..52885a6 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -53,6 +53,8 @@ data/external/sgd/
+ # credentials - never commit
+ .env
+ .env.*
++.dev.vars
++.dev.vars.*
+ *.pypirc
+ .pypirc
+ *.token
+@@ -67,6 +69,8 @@ credentials.json
+ 
+ # Node build artifacts - the wrangler/workerd binaries exceed GitHub's 100MB per-file limit
+ node_modules/
++.dev.vars
++.dev.vars.*
+ 
+ # Local isolated implementation worktrees
+ .worktrees/
+diff --git a/README.md b/README.md
+index f9dc954..d69d5fb 100644
+--- a/README.md
++++ b/README.md
+@@ -45,6 +45,26 @@ The benchmark sections below are historical capability measurements, often on tr
+ 
+ Veya's base API evaluates typed questions (`choice`, `score`, `noul`) without text generation. Historical T4 measurements were 33 ms for one question and 7.2 ms/question batched. The audited high-cardinality route is multi-stage: learned retrieval followed by a packed rerank.
+ 
++## Optional quantum calibration (experimental)
++
++An optional path can send a calibration plot to a separately deployed NVIDIA NIM endpoint, validate the reply into a `QuantumObservation`, and ask Veya for a bounded decision. It is off unless the process is configured. It does not change the audited checkpoint, the release manifest, or the Choice route, and it does not control quantum hardware.
++
++Ising (`nvidia/ising-calibration-1.5-31b`) is the external specialist. Veya remains the decision layer. Ising prose is not a calibrated Veya probability. The policy gate defers execution. See [docs/quantum/ARCHITECTURE.md](docs/quantum/ARCHITECTURE.md).
++
++Hosted NIM, including `https://integrate.api.nvidia.com/v1`, sends plots off the machine. Use `VEYA_EXTERNAL_MODEL_POLICY=self_hosted` for a private endpoint. The default policy is `disabled`. No API key belongs in the repository.
++
++| Variable | Role |
++|---|---|
++| `VEYA_QUANTUM_ENABLED` | Must be `1` before any outbound call |
++| `VEYA_EXTERNAL_MODEL_POLICY` | `disabled` (default), `self_hosted`, or `hosted` |
++| `VEYA_NIM_BASE_URL` | Operator-configured OpenAI-compatible origin. Callers cannot choose it |
++| `VEYA_NIM_API_KEY` | Hosted credential. Never logged |
++| `VEYA_ISING_MODEL` | Allowlisted specialist. Default `nvidia/ising-calibration-1.5-31b` |
++
++`POST /api/quantum/analyze` is perception. `POST /api/quantum/decide` asks Veya. If `models/production/model.safetensors` is absent, checkpoint-dependent tests stay blocked. This feature does not synthesize weights. NVIDIA Ising is third-party; BenchBrex does not own it. Provenance notes are in [docs/quantum/PROVENANCE.md](docs/quantum/PROVENANCE.md).
++
++`POST /api/experts/route` picks an allowlisted expert for tasks that are not a bounded Veya decision. It does not call that expert. Profiles are provider starting points, not tuned optima. The policy is in [docs/experts/ROUTING.md](docs/experts/ROUTING.md).
++
+ Three checkpoints, and a `Router` that picks between them per request:
+ 
+ | | encoder | params | context | audited status |
+diff --git a/deploy/hf-space/DEPLOY.md b/deploy/hf-space/DEPLOY.md
+index 5f2cc44..e69dfca 100644
+--- a/deploy/hf-space/DEPLOY.md
++++ b/deploy/hf-space/DEPLOY.md
+@@ -1,5 +1,11 @@
+ # Deploying the Veya serving stack
+ 
++> Historical record. Instructions below that mention an external Worker origin
++> or a quick tunnel are not the active deployment. The active path is
++> `deploy/cloudflare/Dockerfile` and `worker/veya-container.mjs`.
++
++# Deploying the Veya serving stack
++
+ This is the operator runbook. It lives in `deploy/`, which `assemble.py` never
+ copies into the upload tree, so nothing written here is published.
+ 
+diff --git a/deploy/hf-space/README.md b/deploy/hf-space/README.md
+index 814e92a..2b52dfa 100644
+--- a/deploy/hf-space/README.md
++++ b/deploy/hf-space/README.md
+@@ -131,13 +131,13 @@ there, treat 429 from this origin as expected under load rather than as a fault.
+ 
+ ## Why the checkpoint is not in this repository
+ 
+-`models/production/model.safetensors` (804 MB) lives in a private model
+-repository. `space/fetch_checkpoint.py` downloads that single file at boot from
+-a pinned revision and asserts its digest against
+-`manifest.base_checkpoint_hash` before the model service is allowed to start.
+-This keeps a public Space from republishing private research weights as LFS
+-blobs, and it means the weights are re-verified on every boot rather than
+-trusted from an image layer.
++`models/production/model.safetensors` (804 MB) lives outside the image.
++`space/fetch_checkpoint.py` downloads that single file at boot and asserts its
++digest against `manifest.base_checkpoint_hash` before the model service is
++allowed to start. On Hugging Face it uses a pinned private-repo revision. On
++Cloudflare it uses `VEYA_CHECKPOINT_URL` with `VEYA_CHECKPOINT_TOKEN`. Either
++way the weights are re-verified on every boot rather than trusted from an
++image layer.
+ 
+ If the digest does not match, the fetch fails, the model service is never
+ started, and the Space exits so the runtime restarts it. `/readyz` stays 503 in
+@@ -151,7 +151,9 @@ that state.
+ | `VEYA_ALLOWED_ORIGINS` | Comma-separated CORS allowlist. Browsers only — it is not an access control. |
+ | `VEYA_DEVICE` | `cpu`. No accelerator is attached on the free tier. |
+ | `VEYA_MODEL_PORT` | Loopback port for the model service (default `8080`). Never published. |
+-| `VEYA_HF_TOKEN` | Read access to the private model repository. Falls back to the runtime-injected `HF_TOKEN`. |
++| `VEYA_HF_TOKEN` | Read access to the private model repository. Falls back to the runtime-injected `HF_TOKEN`. Used only when `VEYA_CHECKPOINT_URL` is unset. |
++| `VEYA_CHECKPOINT_URL` | Authenticated checkpoint URL. When set, this replaces the Hugging Face download. |
++| `VEYA_CHECKPOINT_TOKEN` | Bearer credential for `VEYA_CHECKPOINT_URL`. Required with that URL. Never log or commit it. |
+ | `VEYA_REQUEST_TIMEOUT` | Upstream inference timeout in seconds (default `30`). |
+ 
+ The model service binds `127.0.0.1` inside the container and is not reachable
+@@ -174,6 +176,17 @@ Space plus an `Authorization` header injected by the proxy — see
+ not implemented, and Hugging Face's support for authenticated Space-to-Space
+ calls from a third-party proxy has not been verified here.
+ 
++## Cloudflare Worker
++
++The active edge is `worker/veya-container.mjs`. It forwards to one Cloudflare
++Container named `veya-core`. It does not use an external origin. The image is
++`deploy/cloudflare/Dockerfile`. Historical notes about a laptop tunnel are not
++the deployment path.
++
++`/healthz` answers as soon as the gateway binds. `/readyz` stays 503 while
++ModernBERT-large loads on CPU. That 503 means the audited release is not
++latched yet. `/startupz` names a component only after a startup gate fails.
++
+ ## Reproducing this Space
+ 
+ The container is built from `deploy/hf-space/` in the source repository. That
+diff --git a/deploy/hf-space/space/fetch_checkpoint.py b/deploy/hf-space/space/fetch_checkpoint.py
+index f3925bd..ec79b90 100644
+--- a/deploy/hf-space/space/fetch_checkpoint.py
++++ b/deploy/hf-space/space/fetch_checkpoint.py
+@@ -26,6 +26,7 @@ import os
+ import shutil
+ import sys
+ import time
++import urllib.request
+ from pathlib import Path
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+@@ -62,6 +63,43 @@ def token() -> str:
+     return ""
+ 
+ 
++def download_from_url(url: str, credential: str, target: Path) -> Path:
++    """Stream an authenticated checkpoint to ``target`` only after the body is complete."""
++    partial = target.with_name(target.name + ".part")
++    request = urllib.request.Request(
++        url,
++        headers={"Authorization": f"Bearer {credential}"},
++    )
++    try:
++        with urllib.request.urlopen(request) as response, partial.open("wb") as handle:
++            while True:
++                block = response.read(CHUNK)
++                if not block:
++                    break
++                handle.write(block)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(partial, target)
++    except Exception:
++        if partial.exists():
++            partial.unlink()
++        raise
++    return target
++
++
++def verify_downloaded(target: Path, expected: str, started: float) -> int:
++    elapsed = time.perf_counter() - started
++    size_mb = target.stat().st_size / 1e6
++    log(f"downloaded {size_mb:.1f} MB in {elapsed:.1f}s; hashing")
++    digest = sha256_of(target)
++    if digest != expected:
++        log(f"SHA-256 MISMATCH: got {digest}, manifest pins {expected}")
++        target.unlink()
++        return 1
++    log(f"verified sha256={digest} in {time.perf_counter() - started:.1f}s total")
++    return 0
++
++
+ def main() -> int:
+     if not MANIFEST.is_file():
+         log(f"release manifest is missing: {MANIFEST}")
+@@ -84,6 +122,24 @@ def main() -> int:
+         log(f"baked {FILENAME} hashes to {digest}, not the pinned {expected}; discarding it")
+         target.unlink()
+ 
++    artifact_url = os.environ.get("VEYA_CHECKPOINT_URL", "").strip()
++    if artifact_url:
++        credential = os.environ.get("VEYA_CHECKPOINT_TOKEN", "")
++        if not credential:
++            log("VEYA_CHECKPOINT_URL is set but VEYA_CHECKPOINT_TOKEN is missing")
++            return 1
++        log("downloading checkpoint from the configured artifact URL")
++        started = time.perf_counter()
++        try:
++            download_from_url(artifact_url, credential, target)
++        except Exception as exc:
++            log(f"download failed: {type(exc).__name__}")
++            partial = target.with_name(target.name + ".part")
++            if partial.exists():
++                partial.unlink()
++            return 1
++        return verify_downloaded(target, expected, started)
++
+     credential = token()
+     if not credential:
+         log("no read token available; set the VEYA_HF_TOKEN Space secret")
+@@ -116,17 +172,7 @@ def main() -> int:
+ 
+     if downloaded.resolve() != target.resolve():
+         shutil.move(str(downloaded), str(target))
+-    elapsed = time.perf_counter() - started
+-    size_mb = target.stat().st_size / 1e6
+-    log(f"downloaded {size_mb:.1f} MB in {elapsed:.1f}s; hashing")
+-
+-    digest = sha256_of(target)
+-    if digest != expected:
+-        log(f"SHA-256 MISMATCH: got {digest}, manifest pins {expected}")
+-        target.unlink()
+-        return 1
+-    log(f"verified sha256={digest} in {time.perf_counter() - started:.1f}s total")
+-    return 0
++    return verify_downloaded(target, expected, started)
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/docs/superpowers/plans/2026-10-04-cloudflare-container-deployment.md b/docs/superpowers/plans/2026-10-04-cloudflare-container-deployment.md
+index 90c5807..cf69c30 100644
+--- a/docs/superpowers/plans/2026-10-04-cloudflare-container-deployment.md
++++ b/docs/superpowers/plans/2026-10-04-cloudflare-container-deployment.md
+@@ -1,5 +1,10 @@
+ # Cloudflare Container Deployment Implementation Plan
+ 
++> Historical implementation plan from 2026-10-04. It is not the operator runbook.
++> The active Worker configuration is `wrangler.jsonc`.
++
++# Cloudflare Container Deployment Implementation Plan
++
+ > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+ 
+ **Goal:** Run the exact audited Veya release in a private Cloudflare Container behind the existing `https://veya.veya-8d0.workers.dev` Worker, with no laptop or Tailscale dependency.
+diff --git a/docs/superpowers/specs/2026-10-04-cloudflare-container-deployment-design.md b/docs/superpowers/specs/2026-10-04-cloudflare-container-deployment-design.md
+index cfc6f43..271881f 100644
+--- a/docs/superpowers/specs/2026-10-04-cloudflare-container-deployment-design.md
++++ b/docs/superpowers/specs/2026-10-04-cloudflare-container-deployment-design.md
+@@ -1,5 +1,10 @@
+ # Cloudflare Container Deployment Design
+ 
++> Historical design note from 2026-10-04. It is not the operator runbook.
++> The active Worker configuration is `wrangler.jsonc`.
++
++# Cloudflare Container Deployment Design
++
+ ## Goal
+ 
+ Run the exact audited Veya release entirely on Cloudflare so the public website and inference API no longer depend on the user's Mac, Tailscale, or an external tunnel.
+diff --git a/pyproject.toml b/pyproject.toml
+index 329b88c..970d7c8 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -43,7 +43,7 @@ train = ["datasets>=2.14.0,<4"]
+ 
+ [tool.setuptools]
+ # assets/, research/ and notebooks/ sit in the root, so auto-discovery bails out.
+-packages = ["veya", "veya.experimental", "web"]
++packages = ["veya", "veya.experimental", "quantum", "experts", "web"]
+ 
+ [tool.setuptools.package-data]
+ web = ["static/*"]

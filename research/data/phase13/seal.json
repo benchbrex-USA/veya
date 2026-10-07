@@ -1,0 +1,87 @@
+{
+  "abstention": {
+    "candidate": "none",
+    "fitted_margin_threshold": null,
+    "scoring": "argmax over the submitted candidates, including none"
+  },
+  "candidate_order": [
+    "billing",
+    "technical",
+    "sales",
+    "none"
+  ],
+  "candidates": {
+    "billing": "Refunds, incorrect charges, failed payments, and invoices that still require correction",
+    "none": "None of these teams owns the unresolved request",
+    "sales": "Pricing, quotes, plan selection, upgrades, and contract negotiation",
+    "technical": "API errors, authentication or authorization failures, outages, and provisioning or access failures"
+  },
+  "format": "veya-phase13-seal-v1",
+  "gates": {
+    "high_confidence_error_rate": 0.005,
+    "negation": 0.97,
+    "overall": 0.98,
+    "paraphrase": 0.98,
+    "prompt_injection": 0.98,
+    "resolved_vs_active": 0.97
+  },
+  "high_confidence": {
+    "also_reported": [
+      "entropy_confidence"
+    ],
+    "error_rate_max": 0.005,
+    "floor": 0.9,
+    "gated_score": "max_candidate_probability"
+  },
+  "instruction": "Which team should take the next unresolved action?",
+  "pairwise_margin": 0.5,
+  "provenance": {
+    "construction": "Authored situations expanded by a fixed grammar of resolved prefixes, negations, keyword baits, quoted instructions, and missing-candidate drops.",
+    "human_rater_panel": false,
+    "limitation": "Eight situations per team. This is not an open-world sample.",
+    "not_a_human_rater_panel": true,
+    "source": "constructed_from_authored_frames_v1"
+  },
+  "row_count": 3646,
+  "sha256": "406191bbdd83a2f7b053f14d75e2b4a0c047f96befea9234bf19df25ff7c7bf8",
+  "slice_counts": {
+    "misleading_keywords": 480,
+    "missing_correct_candidate": 120,
+    "multi_intent": 13,
+    "negation": 720,
+    "no_fit": 14,
+    "normal": 120,
+    "prompt_injection": 722,
+    "resolved_vs_active": 1457
+  },
+  "splits": {
+    "calibration": {
+      "row_count": 160,
+      "sha256": "f58013b4b8ecedc4cd1adc6c7e45d228c0e7305f46d6e862a2495fc0af967a26"
+    },
+    "sealed_eval": {
+      "row_count": 3646,
+      "sha256": "406191bbdd83a2f7b053f14d75e2b4a0c047f96befea9234bf19df25ff7c7bf8"
+    },
+    "train": {
+      "row_count": 504,
+      "sha256": "d3bba950b14bc13f139aa447c6e53d4213e638b9e593e441662328825be140db"
+    }
+  },
+  "tag_counts": {
+    "counterfactual": 3360,
+    "minimal_pair": 3493,
+    "misleading_keywords": 483,
+    "missing_correct_candidate": 120,
+    "multi_intent": 13,
+    "negation": 720,
+    "no_fit": 14,
+    "normal": 120,
+    "paraphrase": 120,
+    "prompt_injection": 725,
+    "regression": 22,
+    "resolved_vs_active": 1457
+  },
+  "temperature_fit_prohibited": true,
+  "train_prohibited": true
+}
