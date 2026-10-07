@@ -8,6 +8,11 @@
   "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
   "main": "worker/veya-production.mjs",
   "compatibility_date": "2026-10-04",
+  // workers.dev stays on (the only hostname today). Version-preview URLs are
+  // off account-side since 7 Oct 11:06 IST; a deploy without this key turns
+  // them back on, which would expose every uploaded version publicly.
+  "workers_dev": true,
+  "preview_urls": false,
   "containers": [
     {
       "name": "veya-production-runtime",
