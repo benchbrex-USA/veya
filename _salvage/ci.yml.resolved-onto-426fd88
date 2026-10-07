@@ -1,0 +1,232 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # transformers probes for TensorFlow at import; when TF is present its abseil runtime can
+  # deadlock model construction. Veya is torch-only.
+  USE_TF: "0"
+  USE_TORCH: "1"
+  TOKENIZERS_PARALLELISM: "false"
+  # Some offline tests import the research.veyabench namespace package; running
+  # them as scripts puts tests/ on sys.path, so add the repo root explicitly.
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  test:
+    name: tests (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only torch keeps the job under a minute instead of pulling CUDA wheels
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e . pytest
+
+      - name: Import check
+        run: python -c "import veya; print(veya.__version__); print(sorted(veya.__all__))"
+
+      - name: Routing and language-detection tests
+        run: |
+          python tests/test_router.py
+          python tests/test_criteria.py
+          python tests/test_download.py
+          python tests/test_shortlist.py
+          python tests/test_decision_model.py
+          python tests/test_packaging.py
+
+      - name: Model, calibration and reliability tests
+        run: |
+          python tests/test_manifest.py
+          python tests/test_phase6.py
+          python tests/test_reliability.py
+          python tests/test_selective_extra.py
+
+      - name: Research protocol tests (offline)
+        run: |
+          python tests/test_phase11_noise.py
+          python tests/test_phase11_protocol.py
+          python tests/test_phase12_context.py
+          python tests/test_phase12_sparse_scorer.py
+
+      - name: Trainer tests (offline RLCD math)
+        run: python tests/test_train.py
+
+      - name: Email cleaning tests
+        run: python tests/test_email.py
+
+      - name: Quantum integration tests (no network, no checkpoint)
+        run: python -m pytest -q tests/test_quantum.py tests/test_experts.py
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff mypy
+      - name: Ruff
+        run: ruff check veya/ quantum/ experts/ --select=E9,F63,F7,F82,F401,F811 --line-length=120
+      - name: Mypy (type gate on the shipped package)
+        # --ignore-missing-imports lets the gate run without pulling torch/transformers
+        # wheels: unresolvable third-party imports are treated as Any, our own
+        # annotations are still checked.
+        run: mypy --ignore-missing-imports veya/ quantum/ experts/
+      - name: Byte-compile every module
+        run: python -m compileall -q veya/ quantum/ experts/ tests/
+
+  build:
+    name: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install build twine
+      - run: python -m build
+      - name: Validate metadata
+        run: python -m twine check dist/*
+      - name: Version must match the tag on a release
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          pkg=$(python -c "import re;print(re.search(r'version = \"(.*)\"', open('pyproject.toml').read()).group(1))")
+          tag="${GITHUB_REF_NAME#v}"
+          test "$pkg" = "$tag" || { echo "pyproject $pkg != tag $tag"; exit 1; }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # ----- G21 tier 1 additions: PR gate ----------------------------------------
+  # New PR-tier checks (artifact integrity + security regressions). Runs on
+  # every pull request and every push, alongside the existing test/lint/build
+  # jobs above. main-gate below needs this job, so a push to main must clear
+  # the whole PR tier before the main-branch gate starts.
+  pr-gate:
+    name: pr-gate (integrity + security)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only torch keeps the job fast (same choice as the `test` job)
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e .
+          pip install pytest
+
+      - name: "Artifact integrity tests (G14: hash pins + SBOM structure)"
+        # Recomputes every SHA-256 pin in artifacts/release/manifest.json;
+        # the SBOM structure validation (test_sbom_valid_structure) is part of
+        # this module, as is the requirements.lock coverage check.
+        run: pytest tests/test_artifact_integrity.py -v
+
+      - name: Security header / hardening tests (G13)
+        # Skipped gracefully when the module is not present in the tree.
+        run: |
+          if [ -f tests/test_security_hardening.py ]; then
+            pytest tests/test_security_hardening.py -v
+          else
+            echo "tests/test_security_hardening.py not present - skipping"
+          fi
+
+      - name: Server security tests
+        run: pytest tests/test_server_security.py -v
+
+      - name: Cloudflare config separation, release pins and production hardening
+        # wrangler.jsonc (customer `veya`, built from main) must stay the plain proxy;
+        # staging/production pins must agree with the manifest bytes.
+        run: |
+          pytest -v tests/test_wrangler_configs.py tests/test_cloudflare_config.py \
+            tests/test_deploy_meta.py tests/test_production_hardening.py tests/test_product_platform.py
+
+      - name: Full offline test suite
+        run: pytest -q tests/
+
+      - name: Quantum boundary tests (no network, no checkpoint)
+        run: pytest tests/test_quantum.py tests/test_experts.py -q
+
+      - name: Free-tier Cloudflare proxy tests
+        run: |
+          pytest tests/test_checkpoint_fetch.py tests/test_cloudflare_config.py -v
+          python deploy/hf-space/assemble.py
+          python deploy/hf-space/assemble.py --check
+
+  # ----- Worker (edge) tests ----------------------------------------------------
+  # The Cloudflare Worker modules under worker/ are tested with node:test. Node 22
+  # is required for module.registerHooks (used to stub cloudflare:workers).
+  worker-tests:
+    name: worker tests (node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: node --test tests/*.mjs
+        run: node --test tests/*.mjs
+
+  # ----- G21 tier 2: main-branch gate -----------------------------------------
+  # Runs only for pushes to main, after every PR-tier check above has passed.
+  # Adds the integration (server startup, health/readiness probes) and
+  # reliability suites that do not need to run on every PR.
+  main-gate:
+    name: main-gate (integration + reliability)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [test, lint, build, pr-gate, worker-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e .
+          pip install pytest
+
+      - name: Integration tests - server startup and health probes (G18)
+        run: pytest tests/test_health_probes.py tests/test_web_gateway.py -v
+
+      - name: Reliability hardening tests
+        # Skipped gracefully when the module is not present; the existing
+        # script-style tests/test_reliability.py is already run by the `test`
+        # job above, so this step only adds the harder main-branch coverage.
+        run: |
+          if [ -f tests/test_reliability_hardening.py ]; then
+            pytest tests/test_reliability_hardening.py -v
+          else
+            echo "tests/test_reliability_hardening.py not present - skipping"
+          fi
