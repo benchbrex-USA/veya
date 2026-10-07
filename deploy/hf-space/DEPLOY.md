@@ -346,8 +346,8 @@ budget is the weakest of those, not the strongest.
 
 `gh repo view benchbrex-USA/veya` reports `{"isPrivate":true}`. A **public**
 Space would therefore publish `veya/` and `web/` source as the namespace's first
-public artifact — new exposure, not re-publication. Both are Apache-2.0, so
-this is a choice about publishing research code, not a licence problem.
+public artifact — new exposure, not re-publication. Both are proprietary (all rights reserved),
+so a public Space would also be a decision to publish proprietary source code.
 
 What a public Space does *not* expose: the checkpoint (private repo, fetched at
 boot), the legal and licence material, the SBOM, the readiness matrix, the

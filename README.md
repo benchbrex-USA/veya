@@ -1,517 +1,439 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/benchbrex-USA/veya/main/assets/logo-lockup-dark.png" />
-    <img src="https://raw.githubusercontent.com/benchbrex-USA/veya/main/assets/logo-lockup.png" alt="Veya" width="330" />
-  </picture>
+  <img src="assets/logo-lockup.png" alt="Veya" width="330" />
 </p>
 
-**Non-autoregressive typed-decision research system.** The audited release path serves English Choice; Noul, categorical Score, the multilingual checkpoints, ordinal Score, and Phase 9 remain research-only.
+# Veya
 
-<div align="center">
+Veya is a non-autoregressive typed-decision system. Instead of generating text, it answers a typed question about a piece of input (pick one of several options, answer yes or no, or place something on a rating scale) in a single encoder forward pass, and returns a calibrated probability for every answer. The system has two parts:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/15d4Yv__KHeHjshVb-6PRTfqVllxih2S3?usp=sharing)
-[![PyPI version](https://img.shields.io/pypi/v/veya.svg)](https://pypi.org/project/veya/)
-[![Hugging Face Model](https://img.shields.io/badge/%F0%9F%A4%97%20Model-veyadynamics%2Fveya-blue)](https://huggingface.co/veyadynamics/veya)
-[![Multilingual](https://img.shields.io/badge/%F0%9F%A4%97%20Model-veya--multilingual-blue)](https://huggingface.co/veyadynamics/veya-multilingual)
-[![Hugging Face Space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-veya--demo-orange)](https://huggingface.co/spaces/veyadynamics/veya-demo)
-[![Dev.to Article](https://img.shields.io/badge/dev.to-Read%20Article-0A0A0A?logo=devdotto&logoColor=white)](https://dev.to/BenchBrex/i-built-non-autoregressive-decision-models-a-year-ago-then-a-frontier-lab-called-it-a-18me)
-[![beguardit.com](https://img.shields.io/badge/beguardit.com-BenchBrex-FFDD00)](https://beguardit.com)
-[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+- **Veya Core**: the decision model. It is a ModernBERT-large encoder (421M parameters) with packed decision heads, served CPU-only from Cloudflare Containers behind the `veya-production` Worker.
+- **Veya Calibrations**: offline-fitted temperature-scaling artifacts (format `veya-calibration-v1`, method `temperature-nll`, produced by `veya/calibration.py`). They turn raw model scores into probabilities. They are baked into the container image and hash-pinned by the release manifest.
 
-</div>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/benchbrex-USA/veya/main/assets/veya_vs_jev_full.png" alt="Veya versus TypeSafe Jev: accuracy on shared public datasets, every application workflow, all 51 languages, speed, calibration, and the cost of not preloading" width="100%" />
-</p>
-
-## Audited release status
-
-The Phase 1–9 forensic audit does **not** support a release-candidate or global production-ready claim. Current status:
-
-| Scope | Status |
-|---|---|
-| English Choice | **RESEARCH RELEASE** |
-| English Noul / categorical Score | **RESEARCH ONLY** |
-| Multilingual Choice / Noul / Score | **RESEARCH ONLY** |
-| Ordinal Score | **RESEARCH ONLY, not served** |
-| Phase-9 hypothesis scorer | **RESEARCH ONLY, not served** |
-| Automatic execution | **DISABLED** |
-
-On the sealed cross-domain CLINC150 blind set (3,000 examples, 150 labels), the K=8 route reached 35.6% Recall@8, 98.03% conditional accuracy when the target was retrieved, and 34.9% end-to-end accuracy. The bottleneck is retrieval. End-to-end ECE was 0.267, so probabilities must not be treated as a production risk guarantee. See the [full audited verdict](docs/audit/release_verdict.md) and [Phase 1–9 matrix](docs/audit/phase_1_9_matrix.md).
-
-Phase 10 trained an **experimental, non-served** multi-schema retriever. On the untouched MASSIVE English blind test it improved Recall@8 from 28.51% to 34.97% and end-to-end accuracy from 22.93% to 27.34%, but failed the robustness gate: irrelevant or long suffixes sharply reduced retrieval. The decision is **KEEP AS RESEARCH**; the audited production manifest still uses the original retriever. See the [Phase-10 report](docs/phase10/final_report.md).
-
-The benchmark sections below are historical capability measurements, often on training-mix or development-exposed data. They are retained for reproducibility, not release certification.
-
-Veya's base API evaluates typed questions (`choice`, `score`, `noul`) without text generation. Historical T4 measurements were 33 ms for one question and 7.2 ms/question batched. The audited high-cardinality route is multi-stage: learned retrieval followed by a packed rerank.
-
-Three checkpoints, and a `Router` that picks between them per request:
-
-| | encoder | params | context | audited status |
-|---|---|---:|---:|---|
-| [`veya`](https://huggingface.co/veyadynamics/veya) | ModernBERT-large | 421M | 512 | English Choice research release |
-| [`veya-multilingual`](https://huggingface.co/veyadynamics/veya-multilingual) | mmBERT-base | 322M | 1024 | research only; release calibration unvalidated |
-| [`veya-typed-decisions`](https://huggingface.co/veyadynamics/veya-typed-decisions) | ModernBERT-large | 421M | 1024 | research only; benchmark-specialized |
+The current release is **`0.3.5-audit-baseline.1`** (package version `0.3.5`, architecture `veya-shortlist-k8-packed-rerank-v1`). It runs on Cloudflare: a customer-facing edge Worker, an authenticated production API, and a separate staging environment.
 
 ---
 
-## Installation
+## Contents
 
-```bash
-pip install veya
-```
-
-Python 3.10 or newer. The dependencies set that floor: `huggingface_hub` 1.x, `transformers` 5.x and `torch` 2.14 all require 3.10.
+- [Release status](#release-status)
+- [Capabilities](#capabilities)
+- [Architecture](#architecture)
+- [API](#api)
+- [Release integrity](#release-integrity)
+- [Reliability and testing](#reliability-and-testing)
+- [Security](#security)
+- [Deployment and operations](#deployment-and-operations)
+- [Local development](#local-development)
+- [Model evaluation](#model-evaluation)
+- [Research](#research)
+- [Repository layout](#repository-layout)
+- [Roadmap](#roadmap)
+- [Documentation](#documentation)
+- [License](#license)
 
 ---
 
-## Quickstart: Route Mode (Experimental)
+## Release status
 
-Veya ships three checkpoints. The built-in `Router` detects scripts/languages and dispatches between them, but the multilingual and typed-decisions checkpoints are not audited production routes. Use this API for research/evaluation, not as an implied multilingual guarantee.
+The forensic audit of phases 1 to 9 ([release verdict](docs/audit/release_verdict.md)) sets the status of each surface. Production serves exactly what is listed here and nothing more.
 
-```python
-import veya
-from veya import Router
+| Scope | Status | Served by `veya-production` |
+|---|---|---|
+| English `choice` | Research release | Yes |
+| English `noul` | Research only | Yes (checkpoint temperature only) |
+| English categorical `score` | Research only | Yes (checkpoint temperature only) |
+| `systemone` (multi-question) | Not served in this release | No (rejected with `400 unsupported_primitive`) |
+| Multilingual `choice` / `noul` / `score` | Research only | No |
+| Ordinal `score`, Phase 9 hypothesis scorer | Research only | No |
+| Automatic execution | Disabled | Every decision reports a prediction; automation stays off |
+| Specialists (`/v1/responses`) | None enabled | Returns `403 specialist_not_enabled` |
 
-# Preload checkpoints (high memory use; latency depends on hardware)
-router = Router(preload=True)
+Non-English input is detected before inference, and the model returns a `defer` decision (`unsupported_language`) instead of guessing. The machine-readable contract is [`artifacts/release/production_scope.json`](artifacts/release/production_scope.json); the human-readable version is [`docs/PRODUCTION_SCOPE.md`](docs/PRODUCTION_SCOPE.md).
 
-# 1. State payload
-state = {
-    "from": "user@acme.com",
-    "subject": "Duplicate charge on invoice #4411",
-    "body": "Hi, we were billed twice for March. Please refund the duplicate today or we will cancel our plan."
-}
+---
 
-# 2. Define your typed questions
-questions = {
-    "department": {
-        "type": "choice",
-        "instructions": "Which department should handle this request?",
-        "criteria": {
-            "billing": "invoices, payments, refunds",
-            "technical": "bugs, outages, system errors",
-            "sales": "pricing, new contracts",
-            "other": "everything else"
-        }
-    },
-    "urgency": {
-        "type": "score",
-        "instructions": "How urgent is this request?",
-        "criteria": ["not urgent", "soon", "critical deadline or blocking issue"]
-    },
-    "churn_risk": {
-        "type": "noul",
-        "instructions": "Does the user threaten to cancel or leave?"
-    },
-    "refund_requested": {
-        "type": "noul",
-        "instructions": "Does the user explicitly request a refund?"
-    }
-}
+## Capabilities
 
-# 3. English state -> automatically routed to veya (ModernBERT-large, 39.5 ms)
-res_en = router.predict(state, questions)
-print("Department :", res_en["answers"]["department"]["choice"])  # -> billing (confidence: 0.94)
-print("Routing    :", res_en["routing"]["model"])                 # -> english
+### Decision primitives
 
-# 4. Hindi state -> automatically routed to veya-multilingual (mmBERT-base, 32.8 ms)
-res_hi = router.predict({"body": "मुझसे दो बार शुल्क लिया गया, कृपया पैसे वापस करें।"}, questions)
-print("Department :", res_hi["answers"]["department"]["choice"])  # -> billing (confidence: 0.86)
-print("Routing    :", res_hi["routing"]["model"])                 # -> multilingual
-
-# 5. Explicit override when you want a specific checkpoint
-res_td = router.predict(state, questions, model="typed-decisions")
-```
-
-Every result carries full routing metadata explaining why the choice was made:
-
-```python
-res_hi["routing"]
-# {
-#   'model': 'multilingual',
-#   'repo': 'veyadynamics/veya/multilingual',
-#   'reason': 'non-Latin script (devanagari, 100% of letters); the English checkpoint cannot read it'
-# }
-```
-
-Inspect a routing decision without running any forward pass:
-
-```python
-router.route({"body": "Der Kunde wurde zweimal belastet"}, questions).reason
-# "Latin script but language looks like 'de', not English"
-```
-
-### Why Route: The Evidence
-
-On a shared benchmark (17,416 questions, one T4 GPU, identical questions per model):
-
-| Benchmark / Task | English (`veya`) | Multilingual (`veya-multilingual`) | `Router` (Routed) |
+| Primitive | Question it answers | Output | Limits |
 |---|---|---|---|
-| MASSIVE intent, English | **0.783** | 0.657 | **0.783** |
-| MASSIVE intent, 13 other languages | 0.306 | **0.451** | **0.451** |
-| XNLI, English | **0.860** | 0.843 | **0.860** |
-| XNLI, 14 other languages | 0.521 | **0.731** | **0.731** |
-| Languages usable (>3x random) | 23 / 51 | 45 / 51 | **45 / 51** |
-| Latency, 1 question (T4 GPU) | 39.5 ms | **32.8 ms** | **32.8 ms** |
-| Latency, 10 questions batched | 158.6 ms | **72.3 ms** | **72.3 ms** |
+| `choice` | Which of these options applies? | Selected option, a probability per option, confidence | 2 to 100 candidates. 2 to 19 are scored packed in one pass; 20 to 100 go through a learned top-8 shortlist, then a packed rerank |
+| `noul` | Is this statement true? | Calibrated probability that it is true | State and instructions only |
+| `score` | Where does this fall on an ordered scale? | Selected level and a distribution over levels (categorical) | 2 to 10 ordered labels |
 
-The English checkpoint collapses on non-Latin scripts (Khmer scores **0.000 accuracy at 0.952 confidence**). Because the model stays confident while being wrong, confidence gating cannot save you. `Router` detects the script in <0.5 ms pure Python before the forward pass.
+Request-level limits come from `web/contracts.py`: state up to 12,000 bytes, instructions up to 500 characters, candidate IDs up to 80 characters, candidate descriptions up to 240 characters. The production edge rejects any request body over 32 KB.
 
-### Production Preload & Memory
+### Served route
 
-A cold checkpoint build costs seconds; language detection costs microseconds. At the default `max_loaded=1`, traffic that alternates languages rebuilds a model on *every* request (measured at a 7.4 s median reload on CPU and 10.3 s on T4).
-
-For a server or production app, preload:
-
-```python
-# Every checkpoint resident in memory; language flips cost detection only (<1 ms)
-router = Router(preload=True)
-router = Router(preload=True, device="cuda")
-
-# Or preload only the specific checkpoints you serve:
-router.preload(["english", "multilingual"])
-
-# If your app already built an agent, attach it to avoid duplicate VRAM:
-router.attach("english", existing_agent)
-
-# Manage resident memory (default keeps 1 hot, LRU eviction)
-router = Router(max_loaded=2)       # keep two hot
-router.unload()                     # free memory
+```text
+English input
+  ├─ 1–19 candidates  -> packed base decision head
+  └─ 20+ candidates   -> learned 128-d shortlist -> top 8 -> packed base decision head
+Non-English input     -> defer (unsupported_language)
+Automation            -> disabled
 ```
-
-| Deployment Mode | Per-Request Latency | Model Reloads |
-|---|---|---|
-| `Router()` (lazy, `max_loaded=1`) | 7 to 10 s on every language switch | 1 per switch |
-| `Router(preload=True)` | **32.8 ms (GPU) / 193–464 ms (CPU)** | **none** |
-
----
-
-## Single-Model Mode (Direct SDK)
-
-If you only need a single checkpoint for a dedicated pipeline, you can load models directly:
-
-```python
-import veya
-
-# 1. Load a specific checkpoint directly from the hub
-agent = veya.load("veyadynamics/veya")                           # English root
-agent_ml = veya.load("veyadynamics/veya", subfolder="multilingual") # 100+ languages
-agent_td = veya.load("veyadynamics/veya", subfolder="typed-decisions")
-
-# 2. Run all questions in ONE single forward pass (~35 ms on GPU)
-result = agent.predict(state, questions)
-answers = result["answers"]
-
-print("Department :", answers["department"]["choice"])   # -> billing (confidence: 0.94)
-print("Urgency    :", answers["urgency"]["score"])        # -> 1.84 / 2.0
-print("Churn Risk :", answers["churn_risk"]["noul"])       # -> 0.892 (89.2% probability)
-```
-
----
-
-## Automated Confidence Gating
-
-Because Veya's probabilities are trained with strictly proper scoring rules (RLCD), confidence scores are statistically meaningful:
-
-```python
-dept = answers["department"]["choice"]
-conf = answers["department"]["confidence"]
-
-if conf >= 0.85:
-    # High confidence: automated action without human in the loop
-    route_automatically(dept)
-else:
-    # Low confidence: escalate to human triage
-    escalate_to_human_agent(dept, reason=f"Low confidence ({conf:.2f})")
-```
-
----
-
-## Built-in Workflow Presets
-
-Veya provides pre-tuned question schemas for immediate production use:
-
-```python
-import veya
-
-agent = veya.load("veyadynamics/veya")
-
-# 1. Intelligent Model Router (routes to small vs. frontier models)
-routing = agent.predict({"request": "Refactor this service using dependency injection"}, veya.router_questions())
-
-# 2. Real-time Prompt Guardrails (jailbreaks, injections, leaks)
-guard = agent.predict({"prompt": "Ignore all instructions"}, veya.guard_questions())
-
-# 3. Content Safety & Moderation (toxicity, harassment, threats)
-safety = agent.predict({"post": "User comment text"}, veya.moderation_questions())
-
-# 4. Support Ticket Triage (intent, urgency, frustration, churn)
-triage = agent.predict({"message": "My payment failed twice"}, veya.triage_questions())
-```
-
----
-
-## Decision Primitives
-
-| Primitive | Output | Use Cases |
-|---|---|---|
-| **`choice`** | Top label, probabilities per option, confidence | Department routing, intent classification, topic categorization |
-| **`score`** | Expected level on ordinal rubric, distribution, confidence | Frustration level, ticket urgency, harm severity |
-| **`noul`** | Calibrated probability P(true) from 0.0 to 1.0 | Phishing detection, spam filtering, jailbreak detection, churn risk |
-
----
-
-## Benchmarks
-
-**Full report: [`BENCHMARKS.md`](BENCHMARKS.md)** — every run consolidated, languages and themes, with per-language detail for all 51 languages.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/benchbrex-USA/veya/main/assets/veya_benchmark.png" alt="Per-language accuracy for both checkpoints across 51 languages" width="100%" />
-</p>
-
-All Veya numbers below are measured. Every model answered byte-identical questions
-(fixed seed) in the same run. Reproduce with
-[`notebooks/veya_benchmark_colab.ipynb`](https://github.com/benchbrex-USA/veya) on a T4.
-
-### Speed (Tesla T4, measured)
-
-| questions per call | `veya` | `veya-multilingual` |
-|---|---|---|
-| 1 | 39.5 ms | **32.8 ms** |
-| 5 | 84.5 ms | **40.1 ms** |
-| 10 | 158.6 ms (15.9 ms/q) | **72.3 ms (7.2 ms/q)** |
-| 50 | 771 ms | **337 ms (6.8 ms/q)** |
-
-Batched throughput reaches 103-332 questions/sec on a single T4. For reference, TypeSafe Jev
-has been independently measured at 236-276 ms p50
-([AbdelStark](https://github.com/AbdelStark/jev-benchmarks),
-[nibzard](https://github.com/nibzard/decision-model-benchmark)) -- Veya answers a single
-question roughly **6-7x faster**.
-
-### Veya (with routing) vs Jev
-
-Every Veya figure is what `Router().predict(...)` actually returns — the checkpoint the router
-selects for that input, not a hand-picked best of three. Jev figures are **third-party
-published, never measured here** (no TypeSafe API access), so sample sizes and prompts differ.
-
-| | Jev 1.13.0 | Veya (routed) | |
-|---|---|---|---|
-| typed-decisions, 2,000 decisions | 0.727 | **0.766** | +0.039 |
-| AG News, 4 labels | 0.910 | **0.950** | +0.040 |
-| DAIR Emotion, 6 labels | 0.480 | **0.595** | +0.115 |
-| Banking77 (72 vs 77 labels) | **0.870** | 0.425 | Jev leads on >20 options |
-| ECE *(lower better)* | 0.246 | **0.081** | 3× better (post-temperature) |
-| p50 latency, 1 question | 236–276 ms | **32.8 ms** | 7.8× faster |
-| Languages usable | *no published benchmark* | **45 of 51** | — |
-| Weights | closed API | **Apache 2.0** | — |
-| Cost | $0.042 / 1M tokens | **$0 self-hosted** | — |
-
-On DAIR Emotion, Jev assigned **zero probability to the true label on 16% of examples** — a hard
-failure for anything branching on confidence.
-
-#### Where Jev leads
-
-* **High-cardinality label spaces (20+ options):** The audited release routes 20+ candidates through the learned K=8 shortlist and keeps packed Choice through 19. This fixes packed token-budget collapse but does not solve cross-domain retrieval: sealed CLINC150 Recall@8 was only 35.6%, despite 98.03% conditional accuracy after retrieval. The public `predict_shortlist` helper remains available for caller-supplied retrieval, but its quality is the caller's responsibility.
-* **Soft distribution matching:** On typed-decisions, while Veya achieves higher argmax accuracy (0.766 vs 0.727), Jev achieves higher soft accuracy (0.580 vs 0.471) against the teacher's full probability distributions.
-* **Out-of-the-box raw calibration:** Before temperature scaling, the base checkpoint has higher raw ECE (0.213 vs 0.144). Veya achieves its 0.081 ECE after domain temperature fitting.
-
-Full detail, including every workflow and all 51 languages: **[`BENCHMARKS.md`](BENCHMARKS.md)**.
-
-### typed-decisions, measured on all three checkpoints
-
-400 cases, 2,000 decisions, four workflows.
-
-| model | accuracy | soft acc | Brier | ECE | score MAE |
-|---|---|---|---|---|---|
-| **`veya-typed-decisions`** | **0.766** | 0.471 | **0.062** | 0.213 | **0.242** |
-| `veya` | 0.362 | 0.332 | 0.316 | 0.175 | 0.694 |
-| `veya-multilingual` | 0.342 | 0.326 | 0.439 | 0.285 | 0.687 |
-| *Jev 1.13.0 (published)* | *0.727* | *0.580* | *0.148* | *0.144* | *0.391* |
-| *teacher self-agreement ceiling* | *0.735* | | | | |
-| *per-question majority class* | *0.461* | | | | |
-| *random guess* | *0.318* | | | | |
-
-The fine-tuned checkpoint beats Jev by 3.9 points and clears the teacher ceiling, with 2.4x
-better Brier and 1.6x better score MAE. It wins on all four workflows: invoice processing
-0.804, security incidents 0.766, customer service 0.764, agent-trace observability 0.730.
-By primitive: `noul` 0.857, `choice` 0.733, `score` 0.723.
-
-Two places it still trails Jev: **soft accuracy** (0.471 vs 0.580 — its argmax is better but
-its distributions match the teacher less well) and **ECE** (0.213 vs 0.144), which temperature
-fitting addresses.
-
-**The base checkpoints sit below the majority-class baseline** (0.362 and 0.342 against 0.461).
-All of the capability on this benchmark comes from fine-tuning.
-
-### Multilingual (51 languages, MASSIVE intent, 20 options, random = 0.050)
-
-| | `veya` | `veya-multilingual` |
-|---|---|---|
-| English | **0.783** | 0.657 |
-| 13 other languages | 0.306 | **0.451** |
-| XNLI, English | **0.860** | 0.843 |
-| XNLI, 14 other languages | 0.521 | **0.731** |
-
-Across all 51 languages the English checkpoint macro-averages **0.227** with macro ECE
-**0.733**, and only 23 of 51 languages clear 3x random. Khmer scores **0.000 at 95.2%
-confidence**. This is why [`Router`](#model-routing-three-checkpoints-one-call) exists: the
-model's own confidence gives no warning, so the routing decision has to be made before the
-forward pass.
-
-### English tasks
-
-| task | `veya` | `veya-multilingual` | note |
-|---|---|---|---|
-| AG News | **0.947** | 0.937 | in training mix |
-| BoolQ | **0.830** | 0.787 | in training mix |
-| DAIR Emotion | **0.573** | 0.513 | held out |
-| prompt-injections | **0.698** | 0.578 | held out, n=116 |
-| SST-5 (ordinal) | 0.372 | 0.282 | held out |
 
 ### Calibration
 
-Both checkpoints are over-confident as shipped. Refitting one temperature per (question type,
-option count) on held-out data moves mean ECE **0.466 -> 0.081** (`veya`) and
-**0.314 -> 0.106** (`veya-multilingual`). `veya-multilingual` ships with no fitted
-temperatures at all, so fit them before relying on its probabilities.
+- Per-cardinality temperature buckets for packed `choice`, plus a frozen hierarchical route temperature for the shortlist route (`models/production/calibration.json`, `models/production/calibration_shortlist_k8.json`).
+- `noul` and categorical `score` use checkpoint temperatures only.
+- Temperatures are clamped to the same band at training and at serving (`veya.common.clamp_temperature`), so the temperature the trainer reports is the one production applies.
+- Every calibration file is listed in the release manifest with its SHA-256. Changing one re-mints the manifest and the image.
 
-### Honest limits
+### Checkpoints
 
-* **Not a release candidate:** the audited English Choice path is a research release. Noul, Score, multilingual routes, and Phase 9 are research-only.
-* **Automation is disabled:** frozen 2%/5%/10% development thresholds observed 5.23%/9.48%/14.25% risk on the sealed blind set.
-* **High-N retrieval is domain-specific:** Recall@8 was 35.6% on sealed CLINC150, making end-to-end accuracy 34.9% even though conditional reranking accuracy was 98.03%.
-* **The base checkpoints are near chance on typed-decisions zero-shot** -- 0.362 and 0.352
-  against a 0.318 random baseline and a 0.461 majority-class baseline. The 0.766 figure comes
-  from the checkpoint fine-tuned on that benchmark's own training split. Veya is a fast base to
-  specialise, not a zero-shot decision engine.
-* **High-cardinality choice questions and token budgets:** Sequences split into an option prompt budget (`head_max_len`) and the remaining document/state budget (`max_len - head_max_len`):
-  * `veya` (English) defaults to 512 context (`head_max_len = 192`, ~320 tokens for state).
-  * `veya-multilingual` and `veya-typed-decisions` default to 1,024 context (`head_max_len = 256`, ~768 tokens for state; mmBERT-base encoder supports up to 8,192 with RoPE).
-  At default settings, a 77-option question like Banking77 allocates only `(256 - 16) // 77` ≈ 3–4 tokens per label, which causes accuracy to fall off sharply (0.425 vs Jev's 0.870). If evaluating 50+ options in a single question:
-  1. Raise `agent.cfg["head_max_len"] = 512` and `agent.cfg["max_len"] = 1024` (or up to 2048 / 4096 / 8192) so every option has enough tokens to remain distinct.
-  2. Or shortlist with embeddings and run one forward pass on the top `k` labels (`predict_shortlist`, example below). `predict` and `system_one` still score every criterion they are given.
-  3. Or split the label set yourself into a coarse question and a fine question.
+| Checkpoint | Encoder | Parameters | Context | Status |
+|---|---|---:|---:|---|
+| `veya` (Veya Core) | ModernBERT-large | 421M | 512 | Served in production (English) |
+| `veya-multilingual` | mmBERT-base | 322M | 1024 | Research only; calibration not validated for release |
+| `veya-typed-decisions` | ModernBERT-large | 421M | 1024 | Research only; specialized for the typed-decisions benchmark |
 
-```python
-import veya
+Model weights are not stored in git (`models/production/**/*.safetensors` is ignored). The production checkpoint lives in private R2 storage, keyed by release ID.
 
-questions = {
-    "intent": {
-        "type": "choice",
-        "instructions": "Which banking intent is this?",
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    visitors["Website visitors"] -->|HTTPS| edge["veya<br/>customer edge Worker"]
+    clients["API clients"] -->|"HTTPS + project API key"| prod
+    edge -->|"service binding VEYA_API<br/>server-side site key"| prod["veya-production<br/>production API Worker"]
+    prod --> d1[("D1 veya-production<br/>orgs, projects, hashed API keys,<br/>usage ledger")]
+    prod --> ae[("Analytics Engine<br/>veya_production_usage")]
+    prod -->|"Durable Object VeyaContainer<br/>random replica, one retry"| pool
+    subgraph pool["Cloudflare Containers: veya-production-runtime"]
+        r0["Replica 0<br/>standard-2: 1 vCPU, 6 GiB"]
+        r1["Replica 1<br/>standard-2: 1 vCPU, 6 GiB"]
+    end
+    r2[("R2 veya-model-artifacts<br/>releases/RELEASE_ID/model.safetensors")] -->|"streamed at boot,<br/>SHA-256 verified"| pool
+```
+
+**Customer edge: `veya`** (built from `main`: entrypoint `worker/veya-edge.mjs`, logic in `worker/veya_site_edge.mjs`, config `wrangler.jsonc`; this branch keeps the earlier proxy version of those files)
+- Serves the website from Workers static assets (`web/static`) and the same-origin gateway API (`/api/*`).
+- `POST /api/infer` is forwarded to `veya-production` `POST /v1/decisions` over a **service binding**, authenticated with a server-side project key. Browsers never see a key.
+- Keeps the gateway contract: 32 KB streamed cap, JSON only, same-origin check, and a weighted per-IP limit of 12 units per minute.
+- Every upstream failure is returned as structured JSON (`model_busy`, `timeout`, `rate_limited`, `model_unavailable`, `invalid_upstream_response`), with no upstream detail leaked.
+- Runs entirely on Cloudflare. It previously proxied to a laptop over Tailscale Funnel and went down whenever the laptop slept; that dependency was removed on 7 Oct 2026 (see `docs/VEYA_EDGE.md` on `main`).
+
+**Production API: `veya-production`** (`worker/veya-production.mjs`, logic in `worker/production_edge.mjs`, config `wrangler.production.jsonc`)
+- Authenticates per-project API keys against D1, applies per-project rate tiers, enforces the body limit, and proxies decisions to the container pool.
+- Picks one of two replicas at random. Each attempt has its own time budget, and a failed attempt (5xx, timeout or exception) is retried once on the other replica inside an overall 15 s deadline.
+- Writes one usage record per decision to D1 (the exact ledger) and Analytics Engine (sampled, for trends), after the response is sent.
+
+**Container runtime** (`deploy/cloudflare/`)
+- `supervise.py` fetches the checkpoint through the Worker's private R2 binding (`veya-r2.internal`), verifies its SHA-256 against the release pins, then starts the model server (`web/model_server.py`, which loads and verifies the full release manifest) and the gateway (`web/server.py`).
+- The gateway admits at most `VEYA_MAX_INFLIGHT` (default 2) concurrent requests per replica and sheds the rest with `503 model_busy`.
+- Containers have no internet access and no R2 credentials. They sleep after an idle period (`VEYA_SLEEP_AFTER`: production `1h`, staging `15m`).
+
+**Staging: `veya-staging`** (`wrangler.staging.jsonc`) runs the same container design with one instance, serves the `site/` build from static assets, and uses its own rate-limit namespaces and container application.
+
+---
+
+## API
+
+### Production endpoints (`veya-production`)
+
+| Method and path | Auth | Purpose |
+|---|---|---|
+| `GET /healthz`, `GET /__edge_health` | None | Edge-only liveness. Never touches a container |
+| `GET /v1/models`, `GET /v1/version` | None | Release identity, enabled models (`veya-core`), specialists (none) |
+| `POST /v1/decisions` | Project API key, scope `decisions:invoke` | Run one `choice`, `noul` or `score` decision |
+| `POST /v1/responses` | Project API key, scope `responses:invoke` | Reserved for specialists. Returns `403 specialist_not_enabled` in this release |
+| `GET /readyz`, `/startupz`, `/version`, `/api/version` | Admin secret | Container readiness and version probes |
+| `GET /__admin/version`, `GET /__admin/replicas` | Admin secret | Deployed version, per-replica readiness |
+| `POST /__admin/replicas/{i}/stop`, `/restart` | Admin secret | Failover drills |
+
+Admin routes fail closed: without the admin secret configured, they return `401` to everyone.
+
+### Example request
+
+```bash
+curl -sS -X POST "$VEYA_BASE_URL/v1/decisions" \
+  -H "authorization: Bearer $VEYA_API_KEY" \
+  -H "content-type: application/json" \
+  -d '{
+        "primitive": "choice",
+        "state": "I was charged twice",
+        "instructions": "Route this ticket",
         "criteria": {
-            "card_arrival": "where is my card",
-            "transfer_fee": "fee charged on a transfer",
-            # ...the rest of a large label set
-        },
-    }
-}
-result = veya.predict_shortlist(
-    agent,
-    {"text": "I was charged twice for a transfer"},
-    questions,
-    embed_fn=veya.embed_fn_from_agent(agent),  # or any callable: texts -> (n, dim)
-    k=20,
-)
-result["shortlist"]["intent"]["labels"]  # the top 20 labels sent to the model
+          "billing": "Payments and refunds",
+          "technical": "Bugs and errors"
+        }
+      }'
 ```
 
-`embed_fn(texts)` returns one vector per string. `embed_fn_from_agent` mean-pools the encoder already loaded on the agent; the decision head runs in the following `predict` / `system_one` call. Probabilities on a shortlisted choice are over those `k` labels. When `k` is at least the number of labels, the original question is passed through and `embed_fn` is not called.
+A response carries the `decision` (`answer` or `defer`), the answer, per-option probabilities, confidence, and release and calibration identifiers. Response headers include `x-veya-replica` (the replica that served it) and `x-veya-attempts`.
 
-[Issue #102](https://github.com/benchbrex-USA/veya/issues/102) reports that a top-20 zero-shot shortlist moved a BANKING77 run from 54.3% to 60.8% on the reporter's setup. Those figures are the reporter's; this repository has not remeasured them.
+### Rate limits
 
-* Served `score` behavior is categorical. The separate ordinal head is **RESEARCH ONLY** and is not loaded by the audited manifest.
-* `veya` collapses outside English; `veya-multilingual` is weaker on English. Route, or pick
-  deliberately.
+Each project has a rate tier, stored in D1 `projects.rate_tier` (NULL means `default`). The mapping lives in `worker/rate_tiers.mjs`.
+
+| Tier | `choice` | `noul` / `score` | Counted per |
+|---|---|---|---|
+| `default` | 20 per minute | 6 per minute | API key |
+| `site` | 150 per minute | 45 per minute | Project |
+
+The `site` tier is sized to the two-replica pool (about 2.6 requests per second) and is used by the public website, whose visitors are still limited individually at the `veya` edge. Workers rate limits are counted per Cloudflare location and are approximate; the gateway's `model_busy` load shedding is the hard capacity cap. Unknown tiers or missing bindings fall back to `default`, so a misconfiguration is never more lenient. A rate-limited response returns `429 rate_limited` with `Retry-After: 60` and `x-veya-rate-tier`.
+
+### Errors
+
+Errors are JSON with `code`, `detail` and `request_id`.
+
+| Status and code | Meaning |
+|---|---|
+| `400 invalid_input` | Body isn't a JSON object, or the caller tried to select a model or URL |
+| `400 unsupported_primitive` | `systemone` isn't served by this release |
+| `401 unauthorized` | Missing, unknown, expired, revoked or out-of-scope key |
+| `413 request_too_large` | More than 32 KB, counted on the streamed bytes whatever `content-length` says |
+| `429 rate_limited` | Tier limit reached (`Retry-After: 60`) |
+| `503 model_busy` | Both replicas are at their admission limit (`Retry-After: 2`). Capacity, not an outage: back off and retry |
+| `503 container_unavailable` | No ready replica (`Retry-After: 5`) |
+| `503 auth_unavailable`, `503 rate_limit_unavailable` | D1 key lookup or rate limiter temporarily unavailable |
+| `504 upstream_timeout` | The 15 s inference deadline passed |
+
+Production responses carry security headers: `Strict-Transport-Security: max-age=63072000; includeSubDomains`, a restrictive `Content-Security-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy` and `X-Robots-Tag: noindex`.
+
+### Customer edge endpoints (`veya`, built from `main`)
+
+| Path | Served by |
+|---|---|
+| `/`, site pages, `/static/*`, `/robots.txt`, `/sitemap.xml` | The edge Worker and static assets |
+| `POST /api/infer` | `veya-production` `/v1/decisions` over the service binding |
+| `GET /api/health`, `GET /api/version` | Mapped from `veya-production` `/healthz` and `/v1/version` |
+| `GET /api/benchmark` | The sealed blind evaluation result, bundled at build time |
+| `/healthz` | Edge liveness |
+| `/readyz`, `/startupz`, `/__edge_health` | A real probe of `veya-production` (3 s timeout) |
 
 ---
 
-## Live Demo & Resources
+## Release integrity
 
-* **Hugging Face Model:** [veyadynamics/veya](https://huggingface.co/veyadynamics/veya)
-* **Interactive Web Demo:** [veyadynamics/veya-demo](https://huggingface.co/spaces/veyadynamics/veya-demo)
-* **Engineering Writeup:** [Read the full story on Dev.to](https://dev.to/BenchBrex/i-built-non-autoregressive-decision-models-a-year-ago-then-a-frontier-lab-called-it-a-18me)
+The release is identified by three values that must agree everywhere:
+
+| Item | Value |
+|---|---|
+| Release ID | `0.3.5-audit-baseline.1` |
+| Checkpoint SHA-256 | `891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c` (842,609,210 bytes) |
+| Manifest SHA-256 | `80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4` |
+
+- **Manifest.** [`artifacts/release/manifest.json`](artifacts/release/manifest.json) (format `veya-release-manifest-v2`) lists every runtime file with its SHA-256: checkpoint, tokenizer, router, shortlist, calibrations and selective policy. `veya.release_bundle.load_release_manifest` rejects path traversal, hash mismatches, incompatible components and router/code cutoff mismatches.
+- **Pins.** The manifest digest is pinned in `wrangler.staging.jsonc`, `wrangler.production.jsonc`, `deploy/cloudflare/release-pins.json`, the container `Dockerfile`, `scripts/write_deploy_meta.py` and `worker/build-meta.mjs`. `tests/test_wrangler_configs.py` enforces agreement, and a container whose pins don't match refuses to boot.
+- **Safe loading.** `torch.load` is only called with `weights_only=True`. CI fails the build on any other `torch.load`, on `pickle`, `joblib.load` or `yaml.load`, and on `os.system`, `subprocess`, `eval` or `exec` in the shipped package.
+- **Re-minting.** The current manifest was re-minted after switching to `weights_only=True` loading and bounding the embedding cache, then re-audited on 7 Oct 2026: all version fields matched (release, manifest, checkpoint, shortlist, router, scorer, policy), and `choice` (small and high-N), `noul`, `score` and `systemone` all returned 200 from the model server. The procedure is in [RUNBOOK.md §9](RUNBOOK.md#9-release-identity-and-re-minting).
 
 ---
 
-## Fine-Tuning
+## Reliability and testing
 
-Fine-tune Veya on your own domain data. The training math lives in one place --
-[`veya/train.py`](veya/train.py) -- so the notebook, the reference single-process
-trainer, and the shipped runtime cannot drift apart:
+### Continuous integration
 
-* **[`notebooks/veya_finetune_typed_decisions_2xT4_kaggle.ipynb`](notebooks/veya_finetune_typed_decisions_2xT4_kaggle.ipynb)**
-  runs the whole loop on Kaggle's free 2xT4 GPUs (DDP via `torchrun`): build the
-  dataset, train with RLCD (proper-scoring-rule rewards, GRPO-style policy
-  gradient + soft cross-entropy distillation), fit calibration temperatures,
-  evaluate, and push the result to the Hub. It imports the reward, the
-  calibration fit, and the held-out split from `veya.train`.
-* **`veya.train.run_finetune`** is the tested single-process reference path
-  (CPU / MPS / one GPU) using the identical objective.
+| Workflow | What it checks |
+|---|---|
+| `CI` (`.github/workflows/ci.yml`) | Unit and protocol tests on Python 3.10, 3.11 and 3.13; lint (ruff, mypy, byte-compile); package build and `twine check`; PR gate (artifact hash pins and SBOM, security hardening, server security, Cloudflare config separation and release pins, production hardening, full offline pytest suite); Worker tests with `node --test` on Node 22; a main-branch gate with integration and reliability suites |
+| `Security` (`.github/workflows/security.yml`) | gitleaks on the diff and the working tree; `pip-audit` on declared dependencies; CodeQL with a gate that fails on error- or warning-level findings (`.github/scripts/codeql_gate.py`, allowlist in `.github/codeql/allowlist.json`); the unsafe-deserialization and no-shell-out checks above |
+| `Release Candidate Gate` (`.github/workflows/release-gate.yml`) | On version tags: full test suite, artifact integrity, license inventory, freeze records, Docker build |
+| `Deploy veya-production` (`.github/workflows/deploy-production.yml`) | Manual dispatch or `prod-v*` tag only. Gated gradual or full deploys (see [Deployment](#deployment-and-operations)) |
 
-Three guarantees are baked into `veya/train.py`:
+### Production verification (7 Oct 2026)
 
-* **Calibration matches serving.** `fit_temperature_soft` clamps to
-  `[TEMP_MIN, TEMP_MAX]` -- the same band `veya.common.clamp_temperature` applies
-  at load -- so the temperature the trainer reports is the one the runtime uses.
-* **Calibration is held out.** `split_items` fits temperature on rows the model
-  never trained on, so the reported ECE is honest.
-* **Reproducible.** `set_global_seed` seeds `random`, `numpy`, and `torch`
-  (CPU + CUDA) per rank.
+All tests ran against the live `veya-production` stack with dedicated, short-lived load-test keys, which were revoked afterwards.
 
-The objective exposes the **CE-only vs CE+PG ablation** as config flags
-(`rl_weight` / `ce_weight`), and `act_weight` decides whether the defer/escalate
-head receives gradient (default `0.0`, matching the historical recipe). Streaming
-the HF `typed-decisions` dataset needs the extra: `pip install 'veya[train]'`.
+| Test | Load | Result |
+|---|---|---|
+| Failover drill | 36 req/min; replica 1 stopped, then restarted | **361 requests, 0 server errors.** 2xx p50 1.47 s, p95 2.04 s, p99 3.95 s; max 7.74 s; none over 15 s. Replica back in service 86 s after the stop and 70 s after the restart. The same drill before the per-attempt timeout fix had 7 server errors (1.9%) and 4 requests over 15 s |
+| Burst | 180 req/min for 2 min across 6 keys | 361 requests: 240 succeeded (p50 1.83 s, p95 2.45 s, max 3.19 s; 52 were absorbed by a retry on the other replica), 25 `503 model_busy` with `Retry-After: 2`, 96 `429` from the per-key limit (expected with 6 keys on the default tier), **0 timeouts** |
+| Baseline load (k6) | 1.5 req/s for 5 min | 450 requests, p50 1.53 s, p95 2.13 s, p99 3.07 s; 3 `model_busy` responses (0.66%) during a burst |
+| Rollback rehearsal | Code-only rollback and roll-forward | Staging 3.0 s / 2.4 s with 116 of 116 probes returning 200. Production 3.0 s / 2.3 s with 55 of 55 probes returning 200 |
+| Idle sleep | Staging, `VEYA_SLEEP_AFTER=15m` | Container stopped 15 min 44 s after the last request (the previous build was still running after 24 idle minutes). Cold start to ready: about 67 s |
+| Usage accounting | 12-minute window | Analytics Engine's weighted total matched D1 exactly (559 and 559). D1 is the exact ledger; Analytics Engine samples and is used for trends |
 
-To run the **CE-only vs CE+PG ablation** on a single device, flip the weights and
-compare the held-out calibration each run reports:
+### Capacity
 
-```python
-from veya.train import TrainConfig, load_typed_decisions_items, run_finetune
+On `standard-2` (1 vCPU, 6 GiB, single-threaded torch), a `choice` call is CPU-bound at about 1.1 to 1.3 s inside the container (about 1.5 s p50 at the edge). One replica handles about 1.3 requests per second; the two-replica pool is sized at about 2.6 requests per second before load shedding. Raising `VEYA_MAX_INFLIGHT` on one vCPU only adds queueing, so more capacity means more replicas or a larger instance type. Details: [RUNBOOK.md §8](RUNBOOK.md#8-operational-knobs-worker-vars-and-container-env).
 
-items = load_typed_decisions_items("models/production")  # needs `veya[train]`
+---
 
-# CE-only (pure distillation): rl_weight=0
-run_finetune("models/production", "out/ce_only", items,
-             TrainConfig(rl_weight=0.0, ce_weight=1.0))
+## Security
 
-# CE + policy gradient (full RLCD): both non-zero
-run_finetune("models/production", "out/ce_pg", items,
-             TrainConfig(rl_weight=1.0, ce_weight=1.0))
+- **API keys.** Per-project keys, stored in D1 as SHA-256 hashes only, with scopes, expiry and revocation. Keys are issued with `product/keys.py`. A failed key lookup returns a structured `503`, never a raw error.
+- **Admin surface.** `/__admin/*` and the container probes require a separate admin secret and fail closed. Public health checks are answered at the edge and never wake a container.
+- **Input handling.** A 32 KB cap counted on the streamed bytes (chunked uploads included), JSON objects only, and callers can't choose a model or upstream URL.
+- **Isolation.** Containers have no internet access. The checkpoint comes through a private R2 binding with no credential in the container, and is SHA-256 verified before the model loads.
+- **Privacy.** The usage ledger records metadata only: organization, project, key ID, endpoint, primitive, route, status, latency and release. `product/ledger.py` rejects content fields such as `state`, `instructions`, `criteria`, `prompt` and `messages`, and credential fields.
+- **Secrets.** Admin and site keys are Worker secrets, never in git, config or logs. gitleaks runs on every pull request and on `main`. Version-preview URLs are disabled.
+- **Edge headers.** HSTS (two years, include subdomains), CSP, COOP, CORP, frame denial, `nosniff`, referrer and permissions policies on every response.
 
-# Train the defer/escalate head too: act_weight > 0
-run_finetune("models/production", "out/ce_pg_act", items,
-             TrainConfig(rl_weight=1.0, ce_weight=1.0, act_weight=0.1))
+The account-level hardening backlog (R2 bucket lock on `releases/`, retiring the one-time upload Worker, Cloudflare Access with an identity provider, alerting) is tracked in the [Roadmap](#roadmap).
+
+---
+
+## Deployment and operations
+
+### Environments
+
+| Worker | Config | Runtime | How it ships |
+|---|---|---|---|
+| `veya` (customer edge) | `wrangler.jsonc` on `main` | Worker + static assets, service binding to `veya-production` | Workers Builds on `main` runs `npx wrangler deploy --dry-run` (validation only). Releases use `wrangler versions upload`, then `wrangler versions deploy` at 10% and then 100% |
+| `veya-staging` | `wrangler.staging.jsonc` | 1 container instance, `sleepAfter` 15m | Workers Builds on `deploy/cloudflare-staging` |
+| `veya-production` | `wrangler.production.jsonc` | 2 container instances (`standard-2`), `sleepAfter` 1h | `Deploy veya-production` workflow, or `wrangler deploy --config wrangler.production.jsonc`. Workers Builds on `production/veya-dynamics` currently runs as a dry run |
+
+Always pass the matching `--config` file. `tests/test_wrangler_configs.py` locks each config to its Worker name, entrypoint, container application, rate-limit namespaces and release pins.
+
+### Production deploys
+
+- **Gradual (code-only changes).** `wrangler versions upload`, then `wrangler versions deploy` at 10%, 50% and 100%, with a `/healthz` gate between steps and automatic revert to the previous version on failure. The workflow refuses gradual mode if container inputs (image, runtime, pins, manifest, models) changed since the previous `prod-v*` tag.
+- **Full (image, config, binding or manifest changes).** `wrangler deploy` builds the image and starts a container rollout. During the rollout, the Worker routes around the replica that isn't ready.
+- **Verification** after any deploy: `/healthz`, `/v1/models`, authenticated `/readyz` and `/__admin/replicas`, and a real decision ([RUNBOOK.md §2c](RUNBOOK.md#2c-manual-verification-after-any-deploy)).
+
+### Rollback
+
+- **Code-only releases:** `npx wrangler rollback <version-id> --config wrangler.production.jsonc`. Rehearsed at about 3 s on both staging and production.
+- **Releases that changed the image, manifest, container config or bindings:** run a full deploy of the previous commit instead. `wrangler rollback` swaps Worker code only, and a new container started under an older Worker fails the pin check.
+- Rolling back restores the target version's secrets; re-apply any secret rotated since then.
+
+Full procedures: [RUNBOOK.md §3](RUNBOOK.md#3-rollback). Failover drill: [RUNBOOK.md §4](RUNBOOK.md#4-failover-drill-run-monthly-and-before-every-launch). Analytics queries: [RUNBOOK.md §5](RUNBOOK.md#5-analytics-engine-readback). Customer edge operations: `docs/VEYA_EDGE.md` on `main`.
+
+### Custom domain
+
+`veyadynamics.com` is being set up. The plan attaches `api.veyadynamics.com` to `veya-production` and the site hostnames to the customer edge, with Full (strict) TLS, Always Use HTTPS, minimum TLS 1.2, HSTS, WAF managed rules and an edge rate-limit rule, and then retires the `workers.dev` hostnames ([RUNBOOK.md §7](RUNBOOK.md#7-custom-domains-tls-and-waf)). Until then, the services are reachable on their `workers.dev` hostnames.
+
+---
+
+## Local development
+
+Requires Python 3.10 or newer, and Node 22 for the Worker tests.
+
+```bash
+# Python package and tests (CPU-only torch keeps the install small)
+python -m venv .venv && source .venv/bin/activate
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install -e . pytest
+
+export USE_TF=0 USE_TORCH=1 TOKENIZERS_PARALLELISM=false PYTHONPATH="$PWD"
+pytest -q tests/
+
+# Worker (edge) tests
+npm ci
+node --test tests/*.mjs
 ```
 
-For the multi-GPU recipe the Kaggle notebook wraps the same `compute_rcld_loss`
-and `fit_temperature_soft` in `torchrun --nproc_per_node=2`, so the objective is
-identical to the single-process path above.
+To run the serving stack locally, start the model server and the gateway in two terminals, as described in [web/README.md](web/README.md). The model server needs the release checkpoint at `models/production/model.safetensors`, which isn't stored in git.
 
-Fine-tuning is where most of the value is. On the typed-decisions benchmark the base
-checkpoints score near chance zero-shot (0.36 and 0.35 against a 0.318 random baseline),
-while the fine-tuned checkpoint reaches **0.766** on the same 2,000 decisions -- above
-TypeSafe Jev's published 0.727 and above the 0.735 teacher self-agreement ceiling. Treat Veya
-as a fast base to specialise, not as a zero-shot decision engine.
+```bash
+VEYA_DEVICE=cpu python3 -m web.model_server   # loads and verifies the release manifest, port 8080
+python3 -m web.server                         # same-origin gateway and website, port 3000
+```
 
-Runtime scales with epochs and world size: the shipped checkpoint records a
-1-epoch, single-GPU run at ~2 hours, while the full 4-epoch 2xT4 recipe over
-~30k questions takes roughly 4-5 hours.
+Fine-tuning uses one training module, [`veya/train.py`](veya/train.py) (proper-scoring-rule rewards, policy gradient plus soft cross-entropy distillation, held-out temperature fitting), shared by the reference trainer and the Kaggle notebook in [`notebooks/`](notebooks/). Install the training extra with `pip install -e '.[train]'`.
 
 ---
 
-## Support the Project
+## Model evaluation
 
-If Veya helps your research or products, consider supporting independent research:
+### Sealed blind evaluation (audited)
 
-<p align="left">
-  <a href="https://beguardit.com" target="_blank">beguardit.com</a>
-</p>
+CLINC150 validation, 3,000 in-scope examples, 150 candidates, evaluated once ([release verdict](docs/audit/release_verdict.md)):
+
+| Metric | Value |
+|---|---|
+| Recall@8 (shortlist contains the target) | 35.6% |
+| Accuracy when the target was retrieved | 98.03% |
+| End-to-end accuracy | 34.9% |
+| End-to-end ECE | 0.267 |
+
+The bottleneck is retrieval, not reranking. At frozen development risk targets of 2%, 5% and 10%, the blind set showed 5.23%, 9.48% and 14.25% risk, which is why automation stays disabled. Probabilities should not be treated as a production risk guarantee.
+
+### Historical capability measurements
+
+These come from earlier benchmark runs, often on training-mix or development-exposed data. They are kept for reproducibility, not as release certification. Full tables are in [BENCHMARKS.md](BENCHMARKS.md).
+
+- **Latency (Tesla T4):** 39.5 ms for one question on `veya`; 7.2 ms per question batched on `veya-multilingual`.
+- **Calibration:** refitting one temperature per question type and option count on held-out data moved mean ECE from 0.466 to 0.081 (`veya`) and from 0.314 to 0.106 (`veya-multilingual`).
+- **Fine-tuning:** on the typed-decisions benchmark (2,000 decisions), the fine-tuned checkpoint reached 0.766 accuracy, while the base checkpoints scored near chance zero-shot. Veya is a fast base to specialize, not a zero-shot decision engine.
+
+---
+
+## Research
+
+Research code is kept separate from the served path and is not loaded by the release manifest.
+
+| Area | Location | Status |
+|---|---|---|
+| veyabench evaluation harness: sealed blind protocols, phase runners, rival adapters, drift monitor, SBOM builder | [`research/veyabench/`](research/veyabench/) | Tooling |
+| Phase 10 multi-schema retriever | [docs/phase10/final_report.md](docs/phase10/final_report.md) | Kept as research. MASSIVE English blind test: Recall@8 28.51% to 34.97%, end-to-end 22.93% to 27.34%, but it failed the robustness gate |
+| Phase 11 query-noise robustness | [docs/phase11/final_report.md](docs/phase11/final_report.md) | Research. Semantic-field extraction raised JSON-noise Recall@8 from 11.00% to 38.50% |
+| Phase 12 schema-guided context scoring | [phase12 report](docs/commercialization/workflows/schema_guided_service_intent_routing/phase12_report.md) | Research. Best development scorer 93.91% raw accuracy, below the frozen 98% target |
+| Commercialization blind evaluation (HWU64) | [docs/commercialization/final_report.md](docs/commercialization/final_report.md) | One-shot blind result recorded |
+| Experimental modules: ordinal score, hypothesis scorer, domain retriever, top-8 | [`veya/experimental/`](veya/experimental/) | Research only, not served |
+| Expert routing: deterministic capability router, allowlisted model registry, promotion gates | [`experts/`](experts/) | Routing policy only. Nothing tuned or promoted |
+| Quantum calibration boundary: validated observations from an external model, then a bounded Veya decision | [`quantum/`](quantum/) | Experimental, disabled by default, never eligible for execution or hardware control |
+
+Phase 13 (a counterfactual routing bank with a sealed 3,646-row evaluation split) and the retrieval-robustness study are preserved on a private backup branch and haven't been merged. The Phase 13 baseline doesn't yet pass its gates.
+
+---
+
+## Repository layout
+
+| Path | Contents |
+|---|---|
+| `veya/` | Python package: agent, calibration, release-bundle loader, language gate, shortlist and reranker, router, selective policy, trainer |
+| `web/` | Container gateway (`server.py`), model server (`model_server.py`), request and response contracts, website assets (`web/static`) |
+| `worker/` | Cloudflare Workers: production API (`veya-production.mjs`, `production_edge.mjs`), container class (`veya-container.mjs`), replica pool, API keys, rate tiers, body hygiene, edge policy. The customer edge (`veya-edge.mjs`) is maintained on `main` |
+| `deploy/cloudflare/` | Container image, boot supervisor, checkpoint fetcher, release pins |
+| `deploy/hf-space/` | Hugging Face Space packaging |
+| `product/` | API key tooling, usage ledger, product contracts, D1 migrations |
+| `site/` | Web console and documentation site (React and Vite), served by staging |
+| `models/production/` | Model configs, tokenizers, calibrations, shortlist projection (weights not in git) |
+| `artifacts/release/` | Release manifest, runtime audit, production scope, readiness matrix, SBOM, license and legal inventories |
+| `research/` | veyabench, scripts, configs, datasets and results |
+| `experts/`, `quantum/` | Experimental routing and calibration boundaries |
+| `tests/` | pytest and `node:test` suites |
+| `loadtest/` | k6 load-test script |
+| `k8s/` | Kubernetes manifests, including a shadow-deployment overlay |
+| `tools/cloudflare-r2-uploader/` | One-time checkpoint upload Worker |
+| `notebooks/` | Fine-tuning notebook |
+| `docs/` | Operations, scope, readiness, audit and research reports |
+| `wrangler.staging.jsonc`, `wrangler.production.jsonc` | Worker configs for `veya-staging` and `veya-production`. The customer edge config (`wrangler.jsonc`) is deployed from `main` |
+
+---
+
+## Roadmap
+
+**Near term**
+- Link the custom domain `veyadynamics.com` (API, app and docs hostnames) and retire the `workers.dev` hostnames.
+- Account hardening: R2 bucket lock on `releases/`, retire the one-time upload Worker, Cloudflare Access with an identity provider for operator surfaces, budget and error-rate alerts, a scoped deploy token for the deploy workflow.
+
+**Next**, ranked by impact relative to effort:
+1. **Request-path performance and right-sizing:** thread pinning, instance sizing, readiness caching and response caching.
+2. **Calibration lifecycle:** decision log and feedback API, shadow calibration, per-tenant refits, ECE and Brier drift monitoring. This needs one calibration bucket scheme first.
+3. **veyabench regression gates in CI,** plus a rival harness, so quality, calibration and latency regressions block a release.
+4. **Retrieval upgrade** for high-cardinality `choice`, the documented bottleneck: persistent label-set embeddings and exemplar retrieval.
+5. **Faster, cheaper serving:** ONNX and int8 export, cold-start reduction, and a replica autoscaler.
+
+---
+
+## Documentation
+
+| Document | Covers |
+|---|---|
+| [RUNBOOK.md](RUNBOOK.md) | Production stack, deploys, rollback, failover drill, analytics, custom domains, operational settings, re-minting |
+| [deploy/cloudflare/README.md](deploy/cloudflare/README.md) | Container image, boot sequence and release identity |
+| [docs/PRODUCTION_SCOPE.md](docs/PRODUCTION_SCOPE.md) | What the audited release supports and doesn't |
+| [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md) | Production readiness review and certification gates |
+| [docs/OPERATIONS.md](docs/OPERATIONS.md), [docs/RUNBOOK.md](docs/RUNBOOK.md) | Serving-stack operations and incident response |
+| [docs/CONCURRENCY.md](docs/CONCURRENCY.md) | Concurrency and overload model |
+| [docs/SHADOW_DEPLOYMENT.md](docs/SHADOW_DEPLOYMENT.md), [docs/PROSPECTIVE_BLIND_WORKFLOW.md](docs/PROSPECTIVE_BLIND_WORKFLOW.md) | Shadow evaluation and prospective blind workflow |
+| [docs/audit/release_verdict.md](docs/audit/release_verdict.md), [docs/audit/phase_1_9_matrix.md](docs/audit/phase_1_9_matrix.md) | Audit verdict and phase matrix |
+| [web/README.md](web/README.md) | Website gateway and model contract |
+| [BENCHMARKS.md](BENCHMARKS.md) | Benchmark tables and stated limits |
+| [MASTER.md](MASTER.md) | Full code reference |
 
 ---
 
 ## License
 
-Apache 2.0. Developed by Veya Dynamics.
+Proprietary. Copyright (c) 2026 Veya Dynamics. All rights reserved.
+
+No license is granted to use, copy, modify or distribute this software, its models or its documentation without prior written permission from the copyright holder. Third-party dependencies, base models and datasets remain under their own licenses.
