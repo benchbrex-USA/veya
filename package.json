@@ -1,6 +1,7 @@
 {
   "name": "veya-edge",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "dependencies": {
     "@cloudflare/containers": "0.3.7"

@@ -1,6 +1,7 @@
 {
   "name": "veya-dynamics-web",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "vite",

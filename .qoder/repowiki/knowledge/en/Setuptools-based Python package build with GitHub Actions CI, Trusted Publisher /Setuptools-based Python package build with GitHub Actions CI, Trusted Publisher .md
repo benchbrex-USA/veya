@@ -20,7 +20,7 @@ Veya is a pure-Python distribution built with **setuptools** (PEP 517 backend) d
 
 ### Packaging metadata
 
-- `pyproject.toml` declares the package (`name = "veya"`, `version = "0.3.5"`), `requires-python = ">=3.10"`, dependencies (`torch>=2.0.0`, `transformers>=4.48.0`, `safetensors>=0.4.0`, `huggingface_hub>=0.20.0`, `numpy>=1.20.0`), classifiers for Python 3.10–3.13, and the Apache-2.0 license.
+- `pyproject.toml` declares the package (`name = "veya"`, `version = "0.3.5"`), `requires-python = ">=3.10"`, dependencies (`torch>=2.0.0`, `transformers>=4.48.0`, `safetensors>=0.4.0`, `huggingface_hub>=0.20.0`, `numpy>=1.20.0`), classifiers for Python 3.10–3.13, and a proprietary license.
 - `setup.py` is a one-line shim that calls `setuptools.setup()` so legacy tooling still works; all metadata lives in `pyproject.toml` only.
 - `tool.setuptools.packages` explicitly lists `veya`, `veya.experimental`, `web` because `assets/`, `research/`, and `notebooks/` sit at repo root and would otherwise confuse auto-discovery.
 - `web/static/*` is included as package data via `tool.setuptools.package-data`.

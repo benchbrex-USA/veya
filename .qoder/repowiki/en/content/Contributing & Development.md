@@ -301,7 +301,7 @@ Example patterns:
 - [docs/CHANGE_PROTOCOL.md:1-18](file://docs/CHANGE_PROTOCOL.md#L1-L18)
 
 ## Governance, Community Guidelines, and Communication Channels
-- Licensing: Apache 2.0.
+- Licensing: proprietary, all rights reserved.
 - Project maintainers and contributors should follow the change protocol and CI requirements.
 - Community engagement references include Hugging Face model and space links in the README.
 - Communication channels referenced by the project include:

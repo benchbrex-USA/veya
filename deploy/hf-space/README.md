@@ -2,7 +2,7 @@
 title: Veya Serve
 sdk: docker
 app_port: 7860
-license: apache-2.0
+license: other
 short_description: Audited serving stack for the Veya System-1 decision model, behind the origin the veya.dev website proxies to.
 pinned: false
 ---
@@ -183,4 +183,4 @@ manifest-pinned digest against the staged bytes. No pinned file is edited
 during deployment; if a digest would change, the release has to be re-minted
 under the repository's change protocol first.
 
-License: Apache-2.0, matching the source repository.
+License: proprietary, matching the source repository. Copyright (c) 2026 Veya Dynamics. All rights reserved.
