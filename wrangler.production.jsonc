@@ -1,0 +1,34 @@
+{
+  // Not deployed. A root `wrangler deploy` still targets veya-staging.
+  // This file is the production candidate shape: same checkpoint, two replicas.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "veya-production",
+  "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
+  "main": "worker/veya-container.mjs",
+  "compatibility_date": "2026-10-04",
+  "containers": [
+    {
+      "name": "veya-runtime",
+      "class_name": "VeyaContainer",
+      "scheduling_policy": "default",
+      "image": "./deploy/cloudflare/Dockerfile",
+      "image_build_context": ".",
+      "instance_type": "standard-2",
+      "max_instances": 2
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "VEYA_CONTAINER",
+        "class_name": "VeyaContainer"
+      }
+    ]
+  },
+  "r2_buckets": [
+    {
+      "binding": "VEYA_ARTIFACTS",
+      "bucket_name": "veya-model-artifacts"
+    }
+  ]
+}
