@@ -1,7 +1,8 @@
 name: Release Candidate Gate
 
-# G21 release-candidate gate: everything a version tag must clear before
-# release.yml publishes it. Triggered by version tags. workflow_dispatch can
+# G21 release-candidate gate: everything a version tag must clear before a
+# release. Triggered by version tags; it only tests and validates and never
+# publishes (release.yml is manual-only, see its header). workflow_dispatch can
 # additionally run the production evidence gate, which needs prospective
 # evaluation data and therefore never runs automatically on a tag push.
 

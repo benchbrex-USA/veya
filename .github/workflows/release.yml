@@ -1,16 +1,29 @@
 name: Release
 
-# Tag a commit v0.2.1 and push it; this builds, verifies the version matches the tag,
-# publishes to PyPI and opens a GitHub Release.
+# MANUAL ONLY. This repository is proprietary (all rights reserved). Publishing
+# to PyPI makes the package source code public and permanently downloadable;
+# PyPI does not allow re-uploading a deleted version. Do not run this workflow
+# unless the owner has explicitly decided to publish this code publicly.
 #
-# Set up once: PyPI -> Publishing -> add a Trusted Publisher for
+# Automatic publishing on `v*` tag pushes was removed on 2026-10-07. To publish:
+#   Actions -> Release -> Run workflow, choose the `v*` TAG (not a branch) under
+#   "Use workflow from", and set confirm_public_pypi_publish to true.
+# Without both, the guard job fails and nothing is built, uploaded or released.
+# The build verifies that the pyproject version matches the tag, uploads to PyPI
+# and creates a GitHub Release.
+#
+# PyPI setup (once): PyPI -> Publishing -> add a Trusted Publisher for
 #   owner benchbrex-USA, repo veya, workflow release.yml, environment pypi
 # Then no API token ever lives in GitHub secrets.
 
 on:
-  push:
-    tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      confirm_public_pypi_publish:
+        description: "I understand this publishes proprietary code publicly on PyPI (must be true)"
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: write        # create the GitHub Release
@@ -21,7 +34,25 @@ env:
   USE_TORCH: "1"
 
 jobs:
+  guard:
+    name: confirm public publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require explicit confirmation and a v* tag
+        env:
+          CONFIRM: ${{ inputs.confirm_public_pypi_publish }}
+        run: |
+          if [ "$CONFIRM" != "true" ]; then
+            echo "::error::confirm_public_pypi_publish must be true. This repository is proprietary; publishing to PyPI makes the code public."
+            exit 1
+          fi
+          case "$GITHUB_REF" in
+            refs/tags/v*) echo "Publishing $GITHUB_REF_NAME (confirmed)." ;;
+            *) echo "::error::Run this workflow from a v* tag, not $GITHUB_REF."; exit 1 ;;
+          esac
+
   build:
+    needs: guard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +80,7 @@ jobs:
         run: python -m build
 
       - name: Version matches the tag
-        if: startsWith(github.ref, 'refs/tags/v')   # workflow_dispatch has no tag to match
+        # guard guarantees a v* tag ref
         run: |
           pkg=$(python -c "import re;print(re.search(r'version = \"(.*)\"', open('pyproject.toml').read()).group(1))")
           tag="${GITHUB_REF_NAME#v}"
@@ -64,8 +95,8 @@ jobs:
           path: dist/
 
   pypi:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [guard, build]
+    if: inputs.confirm_public_pypi_publish && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
@@ -83,8 +114,8 @@ jobs:
           skip-existing: true
 
   github_release:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [guard, build]
+    if: inputs.confirm_public_pypi_publish && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
