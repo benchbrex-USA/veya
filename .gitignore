@@ -24,6 +24,8 @@ wheels/
 *.egg
 .DS_Store
 .env
+.dev.vars
+.dev.vars.*
 .pypirc
 
 

@@ -18,21 +18,29 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "artifacts" / "release" / "manifest.json"
 CHECKPOINT_PATH = ROOT / "models" / "production" / "model.safetensors"
-CONFIG_PATH = ROOT / "wrangler.jsonc"
+# wrangler.jsonc is the plain `veya` edge proxy that Workers Builds deploys from
+# main; it carries no release pins. The pinned Container Workers each have their
+# own config, and every one of them must agree with the audited manifest.
+PINNED_CONFIG_PATHS = (
+    ROOT / "wrangler.staging.jsonc",
+    ROOT / "wrangler.production.jsonc",
+)
+CONFIG_PATH = PINNED_CONFIG_PATHS[1]
 BUILD_META_PATH = ROOT / "worker" / "build-meta.mjs"
 PINS_PATH = ROOT / "deploy" / "cloudflare" / "release-pins.json"
 
 AUDITED_RELEASE = "0.3.5-audit-baseline.1"
 AUDITED_CHECKPOINT_SHA256 = "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c"
 AUDITED_CHECKPOINT_BYTES = 842609210
-AUDITED_MANIFEST_SHA256 = "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de"
+AUDITED_MANIFEST_SHA256 = "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4"
 
 SHIP = (
     "veya",
     "web",
     "worker",
     "deploy/cloudflare",
-    "wrangler.jsonc",
+    "wrangler.staging.jsonc",
+    "wrangler.production.jsonc",
     "artifacts/release/manifest.json",
     "site",
     "package.json",
@@ -173,8 +181,9 @@ def render_build_meta(commit: str, dirty: str) -> str:
 
 def main() -> None:
     verify_release()
-    config = json.loads(strip_jsonc(CONFIG_PATH.read_text(encoding="utf-8")))
-    assert_config_pins(config)
+    for path in PINNED_CONFIG_PATHS:
+        config = json.loads(strip_jsonc(path.read_text(encoding="utf-8")))
+        assert_config_pins(config)
     commit, dirty = source_identity()
     BUILD_META_PATH.write_text(render_build_meta(commit, dirty), encoding="utf-8")
     PINS_PATH.write_text(json.dumps(pins(), indent=2) + "\n", encoding="utf-8")

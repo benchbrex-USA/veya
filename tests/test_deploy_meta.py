@@ -14,8 +14,15 @@ def test_audited_manifest_and_wrangler_pins_agree():
     data = meta.verify_release()
     assert data["release"] == meta.AUDITED_RELEASE
     assert data["base_checkpoint_hash"] == meta.AUDITED_CHECKPOINT_SHA256
-    config = json.loads(meta.strip_jsonc((ROOT / "wrangler.jsonc").read_text(encoding="utf-8")))
-    meta.assert_config_pins(config)
+    for name in ("wrangler.staging.jsonc", "wrangler.production.jsonc"):
+        config = json.loads(meta.strip_jsonc((ROOT / name).read_text(encoding="utf-8")))
+        meta.assert_config_pins(config)
+
+
+def test_every_pinned_config_is_checked_by_the_build_script():
+    names = sorted(path.name for path in meta.PINNED_CONFIG_PATHS)
+    assert names == ["wrangler.production.jsonc", "wrangler.staging.jsonc"]
+    assert "wrangler.jsonc" not in [path.name for path in meta.PINNED_CONFIG_PATHS]
 
 
 def test_dirty_is_false_only_when_shipped_paths_are_clean():

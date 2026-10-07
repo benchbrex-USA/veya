@@ -34,6 +34,12 @@ from .contracts import (
 
 ROOT = Path(__file__).resolve().parent
 UPSTREAM = os.environ.get("VEYA_MODEL_URL", "http://127.0.0.1:8080").rstrip("/")
+# Fixed model-service paths. The upstream URL is never built from request text.
+UPSTREAM_INFER_PATHS: dict[str, str] = {
+    "choice": "/v1/choice",
+    "noul": "/v1/noul",
+    "score": "/v1/score",
+}
 PORT = int(os.environ.get("VEYA_WEB_PORT", "3000"))
 WEB_HOST = os.environ.get("VEYA_WEB_HOST", "127.0.0.1")
 PUBLIC_ORIGIN = os.environ.get("VEYA_PUBLIC_ORIGIN", "").rstrip("/")
@@ -82,6 +88,29 @@ MAX_RESPONSE_BYTES = 524_288
 INFER_TIMEOUT_S = int(os.environ.get("VEYA_REQUEST_TIMEOUT", "30"))
 WINDOW_S = 60
 CAPACITY = 12
+# Behind the Cloudflare Worker every request reaches the container from the same
+# internal address, so a per-IP limit would cap all customers together. When the
+# container is edge-managed (VEYA_EDGE_MANAGED=1) the Worker authenticates the
+# API key, enforces per-key limits, strips any client-supplied tenant header and
+# sets X-Veya-Tenant itself; the container port is not reachable any other way.
+EDGE_TENANT_HEADER = "X-Veya-Tenant"
+_TENANT_CHARS = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._:-")
+
+
+def _edge_tenant_capacity() -> int:
+    try:
+        value = int(os.environ.get("VEYA_EDGE_TENANT_CAPACITY", "30"))
+    except ValueError:
+        return 30
+    return max(CAPACITY, min(value, 600))
+
+
+def limit_key(client_ip: str, tenant: str | None) -> tuple[str, int]:
+    """Rate-limit bucket and capacity: the edge tenant when edge-managed, else the socket IP."""
+    managed = os.environ.get("VEYA_EDGE_MANAGED", "").strip().lower() in ("1", "true")
+    if managed and tenant and len(tenant) <= 96 and set(tenant) <= _TENANT_CHARS:
+        return "tenant:" + tenant, _edge_tenant_capacity()
+    return client_ip, CAPACITY
 MAX_INFLIGHT = 2
 # Graceful shutdown (G12): SIGTERM stops accepting new work, in-flight
 # requests get SHUTDOWN_DRAIN_S to finish, then the process exits hard.
@@ -159,7 +188,8 @@ def _hash_ip(ip: str) -> str:
 def _audit_text(value: Any, limit: int = 120) -> str:
     """One capped line of printable text; keeps control chars out of the log."""
     text = value if isinstance(value, str) else str(value)
-    return "".join(ch if ch.isprintable() else "_" for ch in text)[:limit]
+    cleaned = "".join(ch if ch.isprintable() else "_" for ch in text)[:limit]
+    return cleaned.replace("\r", "_").replace("\n", "_")
 
 
 def _upstream_request(
@@ -257,8 +287,8 @@ def _weight(primitive: str, body: dict[str, Any]) -> int:
     return min(CAPACITY, 1 + math.ceil(max(0, count - 19) / 20))
 
 
-def _charge(key: str, cost: int) -> int:
-    """Return seconds to retry, or zero if accepted. IP comes from the socket only."""
+def _charge(key: str, cost: int, capacity: int = CAPACITY) -> int:
+    """Return seconds to retry, or zero if accepted. Key comes from limit_key()."""
     now = time.monotonic()
     with rate_lock:
         if len(rate_hits) > 4096:
@@ -268,7 +298,7 @@ def _charge(key: str, cost: int) -> int:
         events = rate_hits[key]
         while events and now - events[0][0] >= WINDOW_S:
             events.popleft()
-        if sum(weight for _, weight in events) + cost > CAPACITY:
+        if sum(weight for _, weight in events) + cost > capacity:
             return (
                 max(1, math.ceil(WINDOW_S - (now - events[0][0])))
                 if events
@@ -360,7 +390,10 @@ def _safe_telemetry(
     }
     if _shadow_enabled():
         entry["shadow"] = True
-    logger.info(json.dumps(entry, separators=(",", ":")))
+    # json.dumps already escapes control characters; the replace makes the
+    # one-record-per-line guarantee explicit for log processors and scanners.
+    line = json.dumps(entry, separators=(",", ":"))
+    logger.info(line.replace("\r", "\\r").replace("\n", "\\n"))
 
 
 # Operational probes (G18). The gateway never loads weights itself; each
@@ -832,7 +865,8 @@ class Handler(BaseHTTPRequestHandler):
             }
             if origin and origin not in allowed_origins:
                 raise RequestError("Cross-origin model requests are not allowed.")
-            retry_after = _charge(self.client_address[0], 1)
+            bucket, capacity = limit_key(str(self.client_address[0]), self.headers.get(EDGE_TENANT_HEADER))
+            retry_after = _charge(bucket, 1, capacity)
             if retry_after:
                 status, error_code = 429, "rate_limited"
                 self.send(
@@ -856,7 +890,7 @@ class Handler(BaseHTTPRequestHandler):
                 len(body.get("criteria", {})) if primitive == "choice" else 0
             )
             cost = _weight(primitive, body)
-            retry_after = _charge(self.client_address[0], cost - 1) if cost > 1 else 0
+            retry_after = _charge(bucket, cost - 1, capacity) if cost > 1 else 0
             if retry_after:
                 status, error_code = 429, "rate_limited"
                 self.send(
@@ -889,8 +923,11 @@ class Handler(BaseHTTPRequestHandler):
                 raw = json.dumps(body, ensure_ascii=False, allow_nan=False).encode(
                     "utf-8"
                 )
+                upstream_path = UPSTREAM_INFER_PATHS.get(primitive)
+                if upstream_path is None:
+                    raise RequestError("Unsupported primitive.")
                 upstream = _upstream_request(
-                    "/v1/" + primitive, raw, timeout=INFER_TIMEOUT_S
+                    upstream_path, raw, timeout=INFER_TIMEOUT_S
                 )
                 result = validate_response(
                     cast(Primitive, primitive), upstream, body

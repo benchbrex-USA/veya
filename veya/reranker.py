@@ -102,7 +102,7 @@ def save_reranker(path, reranker, checkpoint_hash, shortlist_sha256, training_ma
 
 
 def load_reranker(path, agent, checkpoint_hash, shortlist_sha256):
-    blob = torch.load(path, map_location="cpu", weights_only=False)
+    blob = torch.load(path, map_location="cpu", weights_only=True)
     if blob.get("format") != FORMAT:
         raise ValueError("unsupported reranker format %r" % blob.get("format"))
     if blob.get("route") != ROUTE or int(blob.get("k", -1)) != 8:

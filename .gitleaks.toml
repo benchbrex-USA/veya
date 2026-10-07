@@ -1,0 +1,21 @@
+# gitleaks configuration (used by gitleaks-action and the working-tree scan in
+# .github/workflows/security.yml). Start from the default rule set and allowlist
+# only reviewed false positives. Never allowlist a real credential: remove it
+# from the tree and rotate it instead.
+
+title = "veya gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Reviewed false positives"
+regexTarget = "match"
+regexes = [
+  # generic-api-key matches SHA-256 file digests whose JSON key contains
+  # "tokenizer" (artifacts/release/manifest*.json tokenizer_files and
+  # prospective_blind_config.template.json tokenizer_version_sha256). The value is
+  # a public 64-hex content hash of a tokenizer file, not a credential. Reviewed
+  # 2026-10-07 (5 findings).
+  '''tokenizer[A-Za-z0-9_./-]*"\s*:\s*"[0-9a-f]{64}"''',
+]

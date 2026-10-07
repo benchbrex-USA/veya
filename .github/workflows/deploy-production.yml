@@ -1,0 +1,178 @@
+name: Deploy veya-production
+
+# Deploys ONLY the isolated production Worker `veya-production`
+# (wrangler.production.jsonc). Never runs on a branch push: only on a manual
+# dispatch or a `prod-v*` tag. The customer Worker `veya` (root config, built
+# from main) and `veya-staging` are not touched by this workflow.
+#
+# Modes
+#   gradual (default): `wrangler versions upload` + `wrangler versions deploy`
+#     10% -> 50% -> 100% with a health gate between steps. Moves Worker code only;
+#     the container image and container config are NOT changed by versions.
+#     Refused automatically when container inputs changed since the previous
+#     prod-v* tag (image, release pins, manifest, Python runtime), because new
+#     Worker pins would not match the running image.
+#   full: `wrangler deploy` - publishes the image and starts the Containers
+#     rollout (rollout_step_percentage, default [10, 100] for 2 instances).
+#
+# Requires the repository secret CLOUDFLARE_API_TOKEN (Workers Scripts:Edit,
+# Containers:Edit, D1/R2/Analytics read as bound). Optional repository variable
+# VEYA_PRODUCTION_BASE_URL (e.g. https://api.veyadynamics.com) for health gates.
+# Protect the `production` environment with required reviewers.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "gradual (versions 10/50/100, Worker code only) or full (wrangler deploy incl. container image)"
+        required: true
+        default: gradual
+        type: choice
+        options: [gradual, full]
+      soak_seconds:
+        description: "Seconds to hold each gradual step before the health gate"
+        required: true
+        default: "300"
+      confirm:
+        description: "Type veya-production to confirm"
+        required: true
+  push:
+    tags: ["prod-v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-veya-production
+  cancel-in-progress: false
+
+env:
+  WRANGLER_CONFIG: wrangler.production.jsonc
+  MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'gradual' }}
+  SOAK_SECONDS: ${{ github.event_name == 'workflow_dispatch' && inputs.soak_seconds || '300' }}
+  BASE_URL: ${{ vars.VEYA_PRODUCTION_BASE_URL }}
+
+jobs:
+  gate:
+    name: pre-deploy gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm target
+        if: github.event_name == 'workflow_dispatch' && inputs.confirm != 'veya-production'
+        run: |
+          echo "::error::confirm input must be veya-production"
+          exit 1
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: npm ci --no-audit --no-fund
+      - name: Worker tests
+        run: node --test tests/*.mjs
+      - name: Config separation and release pins
+        run: |
+          pip install pytest
+          pytest -q tests/test_wrangler_configs.py tests/test_deploy_meta.py
+      - name: Refuse gradual mode when container inputs changed
+        if: env.MODE == 'gradual'
+        run: |
+          previous=$(git describe --tags --abbrev=0 --match 'prod-v*' HEAD^ 2>/dev/null || true)
+          if [ -z "$previous" ]; then
+            echo "::error::no previous prod-v* tag to compare against; use mode=full for the first tagged deploy"
+            exit 1
+          fi
+          changed=$(git diff --name-only "$previous" HEAD -- deploy/cloudflare veya web requirements.lock \
+            artifacts/release/manifest.json models/production .dockerignore)
+          if [ -n "$changed" ]; then
+            echo "Container inputs changed since $previous:"
+            echo "$changed"
+            echo "::error::container image/pins changed - gradual Worker versions cannot roll them out; use mode=full"
+            exit 1
+          fi
+          echo "No container input changes since $previous"
+
+  deploy:
+    name: deploy (${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'gradual' }})
+    needs: gate
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: npm ci --no-audit --no-fund
+      - name: Generate deploy identity
+        run: python3 scripts/write_deploy_meta.py
+
+      - name: Record the currently deployed version (rollback target)
+        id: before
+        run: |
+          npx wrangler deployments status --config "$WRANGLER_CONFIG" --json > before.json
+          cat before.json
+          old=$(python3 -c "import json;d=json.load(open('before.json'));v=d.get('versions') or [];v=sorted(v,key=lambda x:-x.get('percentage',0));print(v[0].get('version_id') or v[0].get('id') if v else '')")
+          test -n "$old"
+          echo "old=$old" >> "$GITHUB_OUTPUT"
+          echo "Rollback target: npx wrangler rollback $old --config \"$WRANGLER_CONFIG\"" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Full deploy (Worker + container image rollout)
+        if: env.MODE == 'full'
+        run: npx wrangler deploy --config "$WRANGLER_CONFIG" --message "gh ${GITHUB_REF_NAME} ${GITHUB_SHA::12}"
+
+      - name: Upload new version
+        if: env.MODE == 'gradual'
+        id: upload
+        run: |
+          npx wrangler versions upload --config "$WRANGLER_CONFIG" \
+            --tag "${GITHUB_SHA::12}" --message "gh ${GITHUB_REF_NAME} ${GITHUB_SHA::12}" | tee upload.log
+          new=$(grep -oE 'Worker Version ID: [0-9a-f-]{36}' upload.log | awk '{print $4}' | tail -1)
+          test -n "$new"
+          echo "new=$new" >> "$GITHUB_OUTPUT"
+
+      - name: Gradual 10% -> 50% -> 100%
+        if: env.MODE == 'gradual'
+        env:
+          OLD: ${{ steps.before.outputs.old }}
+          NEW: ${{ steps.upload.outputs.new }}
+        run: |
+          health() {
+            if [ -z "$BASE_URL" ]; then echo "VEYA_PRODUCTION_BASE_URL not set; skipping HTTP health gate"; return 0; fi
+            fails=0
+            for i in $(seq 1 20); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$BASE_URL/healthz" || echo 000)
+              [ "$code" = "200" ] || fails=$((fails+1))
+              sleep 1
+            done
+            echo "health: $fails/20 failed"
+            [ "$fails" -le 1 ]
+          }
+          for pct in 10 50; do
+            npx wrangler versions deploy "$NEW@${pct}%" "$OLD@$((100-pct))%" -y \
+              --config "$WRANGLER_CONFIG" --message "gradual ${pct}% ${GITHUB_SHA::12}"
+            sleep "$SOAK_SECONDS"
+            if ! health; then
+              echo "::error::health gate failed at ${pct}% - returning 100% to $OLD"
+              npx wrangler versions deploy "$OLD@100%" -y --config "$WRANGLER_CONFIG" --message "auto-revert ${GITHUB_SHA::12}"
+              exit 1
+            fi
+          done
+          npx wrangler versions deploy "$NEW@100%" -y --config "$WRANGLER_CONFIG" --message "gradual 100% ${GITHUB_SHA::12}"
+          echo "Deployed $NEW at 100% (previous $OLD)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Post-deploy health
+        run: |
+          if [ -z "$BASE_URL" ]; then exit 0; fi
+          curl -fsS --max-time 10 "$BASE_URL/healthz"
+          curl -fsS --max-time 10 "$BASE_URL/v1/models"

@@ -1,12 +1,19 @@
-"""The Worker routes to one Cloudflare Container and does not use an external origin."""
+"""The staging Worker routes to one Cloudflare Container and does not use an external origin.
+
+wrangler.jsonc is the plain `veya` edge proxy built from main (see
+tests/test_wrangler_configs.py); the Container staging config is wrangler.staging.jsonc.
+"""
 
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIG_PATH = ROOT / "wrangler.jsonc"
+CONFIG_PATH = ROOT / "wrangler.staging.jsonc"
 ACTIVE = [
-    ROOT / "wrangler.jsonc",
+    ROOT / "wrangler.staging.jsonc",
+    ROOT / "wrangler.production.jsonc",
+    ROOT / "worker" / "veya-production.mjs",
+    ROOT / "worker" / "production_edge.mjs",
     ROOT / "worker" / "veya-container.mjs",
     ROOT / "worker" / "edge_policy.mjs",
     ROOT / "worker" / "artifact_route.mjs",
@@ -81,7 +88,8 @@ def test_wrangler_binds_one_container_and_has_no_origin():
     assert len(config["containers"]) == 1
     assert config["exports"]["VeyaContainer"]["container"] == "veya-runtime"
     assert config["exports"]["VeyaContainer"]["storage"] == "sqlite"
-    assert not (ROOT / "worker" / "veya-edge.mjs").exists()
+    # The staging and production Workers never use the tunnel proxy entrypoint.
+    assert config["main"] != "worker/veya-edge.mjs"
     dockerfile = (ROOT / "deploy" / "cloudflare" / "Dockerfile").read_text(encoding="utf-8")
     assert "R2_SECRET_ACCESS_KEY" not in dockerfile
     assert "AWS_SECRET_ACCESS_KEY" not in dockerfile

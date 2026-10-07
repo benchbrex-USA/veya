@@ -64,7 +64,7 @@ ENV VEYA_SHADOW_MODE=0 \
     VEYA_CHECKPOINT_URL=http://veya-r2.internal/releases/0.3.5-audit-baseline.1/model.safetensors \
     VEYA_CHECKPOINT_SHA256=891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c \
     VEYA_CHECKPOINT_BYTES=842609210 \
-    VEYA_MANIFEST_SHA256=cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de \
+    VEYA_MANIFEST_SHA256=80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4 \
     PYTHONUNBUFFERED=1
 HEALTHCHECK --interval=30s --timeout=10s --start-period=300s --retries=3 \
   CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=8)"]
