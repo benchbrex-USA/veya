@@ -9,4 +9,4 @@ scope:
     - '**'
 ---
 
-The project is published as the `veya` Python package on PyPI (Apache 2.0, built with setuptools). Consumers install via `pip install veya`; the package exposes `veya.load`, `veya.predict_shortlist`, `veya.Router`, and the `veya.experimental` subpackage.
+The project is published as the `veya` Python package on PyPI (proprietary license, built with setuptools). Consumers install via `pip install veya`; the package exposes `veya.load`, `veya.predict_shortlist`, `veya.Router`, and the `veya.experimental` subpackage.
