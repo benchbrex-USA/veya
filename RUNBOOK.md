@@ -278,6 +278,7 @@ Then:
 | `VEYA_SUSPECT_MS` | Worker var | 10000 (0–120000) | How long a replica that timed out or errored is tried second |
 | `VEYA_SLEEP_AFTER` | Worker var → container class | staging `15m`, production `1h` (fallback `8h`; 1m–24h) | Container idle timeout. Each wake costs a cold start of about 60–70 s with the checkpoint fetched from R2 |
 | `VEYA_MAX_INFLIGHT` | Worker var → container env | 2 (1–8) | Gateway admission limit per replica; above it the gateway sheds load with `503 model_busy` |
+| `VEYA_INFLIGHT_STALE_MS` | Worker var → container class | 120000 (30000–3600000) | If the container class reports requests in flight but none has started or finished for this long, the count is treated as leaked and reset so `sleepAfter` can expire |
 
 Edge errors are JSON with `code`, `detail` and `request_id`:
 
@@ -286,6 +287,24 @@ Edge errors are JSON with `code`, `detail` and `request_id`:
 - `503 rate_limit_unavailable`
 - `503 container_unavailable`: no ready replica. Comes with `retry-after: 5`.
 - `503 model_busy`: both replicas shed load (gateway admission limit reached). Comes with `retry-after: 2` and `retry_after` in the body. Clients should back off and retry; this is capacity, not an outage.
+
+### Idle sleep (`sleepAfter`)
+
+`@cloudflare/containers` 0.3.7 counts a request as in flight until its response body has been **piped to the end**. `containerFetch` decrements only in `res.body.pipeTo(...).finally(...)`, and the pipe has no buffer. While anything is in flight, `isActivityExpired()` renews the timer, so the container never sleeps. On 7 Oct 2026 the staging container (`VEYA_SLEEP_AFTER=15m`) was still running after 24 idle minutes.
+
+Rules (enforced by `worker/body_hygiene.mjs` and `tests/test_container_body_hygiene.mjs`):
+
+- Every container response the edge does not forward to the client is read or cancelled. That covers readiness probes, retried attempts, load-shed 503s, responses rejected by the pool, admin report probes, and answers that arrive after a deadline (cancelled when they land, via `waitUntil`).
+- Nothing pings containers on a timer. Readiness probes happen only on behalf of a real request, at most once per `VEYA_READY_CACHE_MS` per isolate and replica.
+- Safety net in `VeyaContainer`: if requests have been in flight with no request starting or finishing for `VEYA_INFLIGHT_STALE_MS` (2 min), the count is reset, a `container_inflight_reset` warning is logged, and the idle time counts from the last real activity.
+
+**Observe it.** Each DO alarm (at most every 3 min) logs:
+
+```json
+{"event":"container_activity","inflight":0,"idle_ms":…,"sleep_after":"15m","expires_in_ms":…,"expired":false}
+```
+
+When the timer expires, the library logs `Activity expired, signalling container to stop`. In Workers Logs, filter `$metadata.service = veya-staging`. The Containers API (`/containers/applications/{id}/deployments`, `current_placement.status.container_status`) shows `running` or stopped. The next request cold-starts the container (about 60–90 s; staging `/readyz` returns 503 meanwhile).
 
 ### Capacity (standard-2: 1 vCPU, 6 GiB, torch on one thread)
 
