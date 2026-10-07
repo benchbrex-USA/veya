@@ -140,13 +140,15 @@ def call(port, payload):
         return exc.code, json.load(exc), exc.headers
 
 
-def last_entry(records, timeout=2.0):
+def last_entry(records, timeout=2.0, previous=0):
     # The gateway logs telemetry in a `finally` after the response has been
-    # written, so the client can observe the response first. Wait briefly.
+    # written, so the client can observe the response first. Wait briefly
+    # until a new entry lands: `previous` is the entry count before the call,
+    # so a test making several calls never reads the prior call's entry.
     deadline = time.monotonic() + timeout
-    while not records and time.monotonic() < deadline:
+    while len(records) <= previous and time.monotonic() < deadline:
         time.sleep(0.01)
-    assert records, "no telemetry entry was logged"
+    assert len(records) > previous, "no new telemetry entry was logged"
     return json.loads(records[-1])
 
 
@@ -248,9 +250,10 @@ def test_defer_and_error_paths_log_null(http_pair, telemetry):
     assert last_entry(telemetry)["max_probability"] is None
 
     state["response"] = 500  # upstream failure
+    seen = len(telemetry)
     status, out, _ = call(port, CHOICE)
     assert status == 502 and out["code"] == "model_error"
-    entry = last_entry(telemetry)
+    entry = last_entry(telemetry, previous=seen)
     assert entry["error_code"] == "model_error"
     assert entry["max_probability"] is None
 
