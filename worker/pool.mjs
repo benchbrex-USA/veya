@@ -3,6 +3,8 @@
  * getRandom is injected in tests. The default import is the Cloudflare helper.
  */
 
+import { discard } from "./body_hygiene.mjs";
+
 export const REPLICA_COUNT = 2;
 
 export function replicaName(index) {
@@ -33,6 +35,9 @@ export async function fetchFromPool(binding, requestFactory, options = {}) {
       const response = await requestFactory(stub, index);
       const accept = options.accept || ((candidate) => candidate && candidate.ok);
       if (response && accept(response)) return { index, response, attempts };
+      // A rejected response is never handed to the client: release it so the
+      // container's in-flight count drops (see body_hygiene.mjs).
+      await discard(response);
       attempts.push({ index, status: response ? response.status : 0 });
     } catch {
       attempts.push({ index, status: 0 });

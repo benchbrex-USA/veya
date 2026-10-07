@@ -77,6 +77,27 @@ export function sleepAfterFor(env) {
   return raw;
 }
 
+/** Seconds in a "<n>s|m|h" expression (the sleepAfter format); NaN if malformed. */
+export function sleepAfterSeconds(expr) {
+  const match = /^([0-9]+)([smh])$/.exec(String(expr));
+  return match ? Number(match[1]) * { s: 1, m: 60, h: 3600 }[match[2]] : Number.NaN;
+}
+
+/**
+ * How long the container may report requests in flight without any request
+ * starting or finishing before the count is treated as leaked (see
+ * worker/body_hygiene.mjs). Far above the 15 s edge deadline. VEYA_INFLIGHT_STALE_MS,
+ * 30 s to 1 h, default 2 min.
+ */
+export const DEFAULT_INFLIGHT_STALE_MS = 120_000;
+
+export function inflightStaleMs(env) {
+  const raw = env && env.VEYA_INFLIGHT_STALE_MS;
+  const value = Number(raw);
+  if (raw === undefined || raw === null || raw === "" || !Number.isFinite(value)) return DEFAULT_INFLIGHT_STALE_MS;
+  return Math.min(3_600_000, Math.max(30_000, Math.floor(value)));
+}
+
 /**
  * Optional container env passed through from Worker vars. Only VEYA_MAX_INFLIGHT
  * (gateway admission limit per replica, 1..8) today; release pins are never

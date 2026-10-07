@@ -34,6 +34,7 @@ import {
   requestId,
   stamp,
 } from "./edge_policy.mjs";
+import { discard, fetchTracker } from "./body_hygiene.mjs";
 import { REPLICA_COUNT, fetchFromPool, replicaName, stubFor } from "./pool.mjs";
 
 export const DEFAULT_INFER_TIMEOUT_MS = 15_000;
@@ -189,6 +190,12 @@ function overloaded(id) {
   );
 }
 
+/** Mark how many replica attempts a response (success or error) took. */
+export function withAttempts(response, attempts) {
+  response.headers.set("x-veya-attempts", String(attempts));
+  return response;
+}
+
 /** Gateway load shedding: 503 with body code "model_busy" (web/server.py). */
 export async function isLoadShed(response) {
   if (!response || response.status !== 503) return false;
@@ -268,15 +275,16 @@ export function createHandler(build, options = {}) {
     return response;
   }
 
-  async function proxyProbe(request, env, id) {
+  async function proxyProbe(request, env, ctx, id) {
     if (!env || !env.VEYA_CONTAINER) return unavailable(id);
     const headers = forwardHeaders(request, id);
+    const tracker = fetchTracker();
     try {
       const result = await withDeadline(probeTimeoutMs(env), (signal) => fetchFromPool(
         env.VEYA_CONTAINER,
         (stub) => {
           if (signal.aborted) throw new DeadlineExceeded();
-          return stub.fetch(new Request(request.url, { method: request.method, headers }));
+          return tracker.fetch(stub, new Request(request.url, { method: request.method, headers }));
         },
         { accept: (response) => response && response.status < 500, random },
       ));
@@ -284,6 +292,8 @@ export function createHandler(build, options = {}) {
       out.set("x-veya-replica", String(result.index));
       return stamp(new Response(result.response.body, { status: result.response.status, headers: out }));
     } catch (error) {
+      // Whatever is still on its way back is never used.
+      background(ctx, tracker.release());
       if (error instanceof DeadlineExceeded) return timeoutFailure(id);
       return unavailable(id);
     }
@@ -292,33 +302,47 @@ export function createHandler(build, options = {}) {
   /**
    * One replica attempt: readiness probe (unless cached) then the inference call,
    * both inside `budgetMs`. Returns { kind, response } where kind is
-   * ok | busy | failed | timeout | error.
+   * ok | busy | failed | timeout | error; only "ok" carries a response (the
+   * caller owns its body). Every other container response is read or cancelled
+   * here, including ones that arrive after the budget ran out (body_hygiene.mjs).
    */
-  async function attemptReplica(stub, index, infer, headers, body, budgetMs, ttl) {
+  async function attemptReplica(ctx, stub, index, infer, headers, body, budgetMs, ttl) {
+    const tracker = fetchTracker();
     try {
       return await withDeadline(budgetMs, async (signal) => {
         if (!readyCache.fresh(index)) {
-          const probe = await stub.fetch(new Request(new URL("/readyz", infer.url), { method: "GET" }));
+          const probe = await tracker.fetch(stub, new Request(new URL("/readyz", infer.url), { method: "GET" }));
+          // Only the status matters; release the body so the probe is not left in flight.
+          await discard(probe);
           if (probe.status !== 200) {
             readyCache.clear(index);
-            return { kind: "failed", response: probe };
+            return { kind: "failed", status: probe.status, response: null };
           }
           readyCache.mark(index, ttl);
         }
         if (signal.aborted) throw new DeadlineExceeded();
-        const response = await stub.fetch(new Request(infer.url, { method: "POST", headers, body }));
-        if (response.status < 500) return { kind: "ok", response };
-        if (await isLoadShed(response)) return { kind: "busy", response };
+        const response = await tracker.fetch(stub, new Request(infer.url, { method: "POST", headers, body }));
+        if (signal.aborted) {
+          // The budget expired while the answer was on its way; nobody will read it.
+          await discard(response);
+          throw new DeadlineExceeded();
+        }
+        if (response.status < 500) return { kind: "ok", status: response.status, response };
+        const shed = await isLoadShed(response);
+        await discard(response);
+        if (shed) return { kind: "busy", status: response.status, response: null };
         readyCache.clear(index);
-        return { kind: "failed", response };
+        return { kind: "failed", status: response.status, response: null };
       });
     } catch (error) {
       readyCache.clear(index);
+      // A probe or inference call may still answer after the deadline: cancel it then.
+      background(ctx, tracker.release());
       return { kind: error instanceof DeadlineExceeded ? "timeout" : "error", response: null };
     }
   }
 
-  async function proxyInference(infer, env, id, identity, options = {}) {
+  async function proxyInference(infer, env, ctx, id, identity, options = {}) {
     if (!env || !env.VEYA_CONTAINER) return unavailable(id);
     const headers = forwardHeaders(infer, id);
     headers.set("content-type", "application/json");
@@ -332,6 +356,7 @@ export function createHandler(build, options = {}) {
     const started = Date.now();
     const order = orderReplicas(REPLICA_COUNT, readyCache, random).slice(0, retry ? 2 : 1);
     const attempts = [];
+    const pending = [];
     try {
       const result = await withDeadline(deadlineMs, async (signal) => {
         for (let n = 0; n < order.length; n += 1) {
@@ -342,7 +367,9 @@ export function createHandler(build, options = {}) {
           // The last attempt may use whatever is left of the overall deadline.
           const budget = n === order.length - 1 ? remaining : Math.min(perAttempt, remaining);
           const stub = stubFor(env.VEYA_CONTAINER, index);
-          const outcome = await attemptReplica(stub, index, infer, headers, body, budget, ttl);
+          const running = attemptReplica(ctx, stub, index, infer, headers, body, budget, ttl);
+          pending.push(running);
+          const outcome = await running;
           attempts.push({ index, kind: outcome.kind });
           if (outcome.kind === "ok") return { index, response: outcome.response };
           if (outcome.kind !== "busy") readyCache.suspect(index, cooldown);
@@ -356,28 +383,39 @@ export function createHandler(build, options = {}) {
         out.set("x-veya-attempts", String(attempts.length));
         return stamp(new Response(result.response.body, { status: result.response.status, headers: out }));
       }
-      if (attempts.length > 0 && attempts.every((attempt) => attempt.kind === "busy")) return overloaded(id);
-      if (attempts.length > 0 && attempts.every((attempt) => attempt.kind === "timeout")) return timeoutFailure(id);
-      return unavailable(id);
+      if (attempts.length > 0 && attempts.every((attempt) => attempt.kind === "busy")) {
+        return withAttempts(overloaded(id), attempts.length);
+      }
+      if (attempts.length > 0 && attempts.every((attempt) => attempt.kind === "timeout")) {
+        return withAttempts(timeoutFailure(id), attempts.length);
+      }
+      return withAttempts(unavailable(id), attempts.length);
     } catch (error) {
-      if (error instanceof DeadlineExceeded) return timeoutFailure(id);
-      return unavailable(id);
+      // The overall deadline won: an attempt still running may yet return an
+      // "ok" response that nobody will read. Cancel it when it lands.
+      background(ctx, Promise.all(pending.map((running) => running.then((outcome) => discard(outcome && outcome.response)))));
+      const response = error instanceof DeadlineExceeded ? timeoutFailure(id) : unavailable(id);
+      return withAttempts(response, pending.length);
     }
   }
 
-  async function replicaReport(env, id) {
+  async function replicaReport(env, ctx, id) {
     if (!env || !env.VEYA_CONTAINER) return unavailable(id);
     const replicas = [];
     for (let index = 0; index < REPLICA_COUNT; index += 1) {
       const stub = stubFor(env.VEYA_CONTAINER, index);
       const entry = { index, name: replicaName(index), ready_status: null, state: null };
+      const tracker = fetchTracker();
       try {
-        const probe = await withDeadline(probeTimeoutMs(env), () => stub.fetch(
+        const probe = await withDeadline(probeTimeoutMs(env), () => tracker.fetch(
+          stub,
           new Request("https://veya.internal/readyz", { method: "GET" }),
         ));
         entry.ready_status = probe.status;
+        await discard(probe);
       } catch (error) {
         entry.ready_status = error instanceof DeadlineExceeded ? "timeout" : "error";
+        background(ctx, tracker.release());
       }
       if (typeof stub.getState === "function") {
         try {
@@ -551,7 +589,7 @@ export function createHandler(build, options = {}) {
       headers: { "content-type": "application/json", "x-request-id": id },
       body: JSON.stringify(payload),
     });
-    const response = await proxyInference(infer, env, id, identity, { retry: IDEMPOTENT_INFERENCE.has(url.pathname) });
+    const response = await proxyInference(infer, env, ctx, id, identity, { retry: IDEMPOTENT_INFERENCE.has(url.pathname) });
     const latencyMs = Date.now() - started;
     const replica = response.headers.get("x-veya-replica");
     const copy = response.ok ? response.clone() : null;
@@ -581,11 +619,11 @@ export function createHandler(build, options = {}) {
         return json({ code: "unauthorized", detail: "Authentication is required.", request_id: id }, 401);
       }
       if (request.method === "GET" && pathname === "/__admin/version") return stamp(adminVersion(env, build));
-      if (request.method === "GET" && pathname === "/__admin/replicas") return replicaReport(env, id);
+      if (request.method === "GET" && pathname === "/__admin/replicas") return replicaReport(env, ctx, id);
       const action = ADMIN_REPLICA.exec(pathname);
       if (action && request.method === "POST") return replicaAction(env, ctx, id, Number(action[1]), action[2]);
       if ((request.method === "GET" || request.method === "HEAD") && ADMIN_PROBES.has(pathname)) {
-        return proxyProbe(request, env, id);
+        return proxyProbe(request, env, ctx, id);
       }
       return json({ code: "not_found", detail: "Unknown admin route.", request_id: id }, 404);
     }

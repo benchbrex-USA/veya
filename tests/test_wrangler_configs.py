@@ -145,3 +145,12 @@ def test_deploy_workflow_targets_only_veya_production():
     assert "wrangler versions upload" in workflow and "wrangler versions deploy" in workflow
     for pct in ("10", "50"):
         assert "for pct in 10 50" in workflow, pct
+
+
+def test_container_workers_keep_workers_dev_but_disable_preview_urls():
+    # Preview URLs were disabled account-side on 7 Oct 2026; a deploy without
+    # "preview_urls": false would silently re-enable them for every version.
+    for name in ("wrangler.staging.jsonc", "wrangler.production.jsonc"):
+        config = load(name)
+        assert config.get("preview_urls") is False, name
+        assert config.get("workers_dev") is True, name
