@@ -1,6 +1,8 @@
 {
-  // Isolated production candidate. `wrangler deploy` without this config
-  // still targets veya-staging. This file must not be used to replace Worker `veya`.
+  // Production Worker `veya-production`. Deploy only with
+  // `--config wrangler.production.jsonc` (Workers Builds on production/veya-dynamics
+  // or .github/workflows/deploy-production.yml). Root wrangler.jsonc is the plain
+  // `veya` proxy and wrangler.staging.jsonc is `veya-staging`. See RUNBOOK.md.
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "veya-production",
   "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
@@ -52,7 +54,7 @@
   "vars": {
     "VEYA_RELEASE_ID": "0.3.5-audit-baseline.1",
     "VEYA_CHECKPOINT_SHA256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
-    "VEYA_MANIFEST_SHA256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de"
+    "VEYA_MANIFEST_SHA256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4"
   },
   "observability": { "enabled": true }
 }

@@ -47,6 +47,10 @@ export class VeyaContainer extends Container {
     VEYA_CHECKPOINT_BYTES: CHECKPOINT_BYTES,
     VEYA_RELEASE_ID: RELEASE_ID,
     VEYA_MANIFEST_SHA256: MANIFEST_SHA256,
+    // The gateway keys its limiter on X-Veya-Tenant (set by the production Worker,
+    // stripped from client requests by forwardHeaders) instead of the shared
+    // Worker->container source address.
+    VEYA_EDGE_MANAGED: "1",
   };
 }
 

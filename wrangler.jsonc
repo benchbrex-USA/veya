@@ -1,81 +1,19 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  // Staging is the default name so `wrangler deploy` cannot replace the live
-  // production Worker `veya`. Production cutover is a separate step.
-  "name": "veya-staging",
-  "account_id": "8d0a6a64de03f4c9b14184398e75aa6e",
-  "main": "worker/veya-container.mjs",
-  "compatibility_date": "2026-10-04",
-  "assets": {
-    "directory": "./site/dist",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": [
-      "/api/*",
-      "/__*",
-      "/healthz",
-      "/readyz",
-      "/startupz",
-      "/version"
-    ]
-  },
-  "containers": [
-    {
-      "name": "veya-runtime",
-      "class_name": "VeyaContainer",
-      "scheduling_policy": "default",
-      "image": "./deploy/cloudflare/Dockerfile",
-      "image_build_context": ".",
-      "instance_type": "standard-2",
-      "max_instances": 1,
-      "observability": {
-        "enabled": true
-      }
-    }
-  ],
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "VEYA_CONTAINER",
-        "class_name": "VeyaContainer"
-      }
-    ]
-  },
-  "exports": {
-    "VeyaContainer": {
-      "type": "durable-object",
-      "storage": "sqlite",
-      "container": "veya-runtime"
-    }
-  },
-  "r2_buckets": [
-    {
-      "binding": "VEYA_ARTIFACTS",
-      "bucket_name": "veya-model-artifacts"
-    }
-  ],
-  "ratelimits": [
-    {
-      "name": "VEYA_RATE_INFERENCE",
-      "namespace_id": "1001",
-      "simple": { "limit": 20, "period": 60 }
-    },
-    {
-      "name": "VEYA_RATE_HEAVY",
-      "namespace_id": "1002",
-      "simple": { "limit": 6, "period": 60 }
-    }
-  ],
-  "secrets": {
-    "required": ["VEYA_EDGE_TOKEN", "VEYA_DEMO_TOKEN"]
-  },
-  "version_metadata": {
-    "binding": "CF_VERSION_METADATA"
-  },
+  // Cloudflare Workers config for the GitHub-connected build on account
+  // 8d0a6a64de03f4c9b14184398e75aa6e (deploy command: `npx wrangler deploy`).
+  //
+  // The PyTorch decision model cannot run inside a Worker, so this Worker is a
+  // thin edge reverse proxy: it forwards every request to the audited serving
+  // stack (web/server.py gateway + web/model_server.py) reachable at
+  // VEYA_ORIGIN, and gives the project a stable public hostname
+  // (veya.<account-subdomain>.workers.dev) instead of an ephemeral tunnel URL.
+  "name": "veya",
+  "main": "worker/veya-edge.mjs",
+  "compatibility_date": "2026-09-01",
   "vars": {
-    "VEYA_RELEASE_ID": "0.3.5-audit-baseline.1",
-    "VEYA_CHECKPOINT_SHA256": "891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
-    "VEYA_MANIFEST_SHA256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de"
+    // Stable origin via Tailscale Funnel (replaces ephemeral cloudflared tunnels).
+    // This URL is permanent as long as Tailscale is running on the Mac.
+    "VEYA_ORIGIN": "https://benchbrex.taila8b570.ts.net"
   },
   "observability": {
     "enabled": true

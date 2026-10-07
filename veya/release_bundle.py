@@ -7,7 +7,9 @@ is never written into the packed ``choice:6-10`` bucket.
 """
 import json
 import os
+import threading
 import time
+from collections import OrderedDict
 from typing import Optional
 
 import numpy as np
@@ -25,6 +27,18 @@ from .common import (
 from .selective import load_policy, score_probabilities
 from .shortlist import PRODUCTION_SHORTLIST_ABOVE, PRODUCTION_SHORTLIST_K, _criteria_items
 from .shortlist_artifact import ROUTE, file_sha256, load_route_calibration, load_shortlist
+
+# Candidate texts are caller-supplied, so the embedding cache must be bounded.
+# 50k vectors of 1024 float32 is roughly 200 MB. VEYA_EMBED_CACHE_MAX overrides.
+DEFAULT_EMBED_CACHE_MAX = 50_000
+
+
+def embed_cache_max(environ=os.environ) -> int:
+    try:
+        value = int(environ.get("VEYA_EMBED_CACHE_MAX", DEFAULT_EMBED_CACHE_MAX))
+    except (TypeError, ValueError):
+        return DEFAULT_EMBED_CACHE_MAX
+    return max(1, value)
 
 ROUTER_FORMAT = "veya-choice-router-v1"
 INSTRUCTIONS = "Which label best fits the text?"
@@ -145,7 +159,9 @@ class ReleaseBundle:
         self.manifest_path: Optional[str] = None
         self.manifest_sha256: Optional[str] = None
         self._embed = None
-        self._cache = {}
+        self._cache: "OrderedDict[str, np.ndarray]" = OrderedDict()
+        self._cache_lock = threading.Lock()
+        self._cache_max = embed_cache_max()
 
     def plan(self, n_options: int) -> dict:
         return plan_for(self.router, n_options)
@@ -158,12 +174,25 @@ class ReleaseBundle:
                 max_length=int(self.router["embed_max_length"]),
                 batch_size=16,
             )
-        missing = [text for text in texts if text not in self._cache]
+        found = {}
+        with self._cache_lock:
+            for text in texts:
+                vector = self._cache.get(text)
+                if vector is not None:
+                    self._cache.move_to_end(text)
+                    found[text] = vector
+        missing = [text for text in dict.fromkeys(texts) if text not in found]
         if missing:
             vectors = self._embed(missing)
-            for text, vector in zip(missing, vectors):
-                self._cache[text] = np.asarray(vector, dtype=np.float32)
-        return np.stack([self._cache[text] for text in texts], axis=0)
+            with self._cache_lock:
+                for text, vector in zip(missing, vectors):
+                    array = np.asarray(vector, dtype=np.float32)
+                    found[text] = array
+                    self._cache[text] = array
+                    self._cache.move_to_end(text)
+                while len(self._cache) > self._cache_max:
+                    self._cache.popitem(last=False)
+        return np.stack([found[text] for text in texts], axis=0)
 
     def project(self, vectors: np.ndarray) -> np.ndarray:
         with torch.no_grad():

@@ -10,9 +10,9 @@
     "policy_file": "artifacts/release/selective_policy.json",
     "policy_sha256": "80e7be582c9c890cf73da701cbd86a71c6d908331186ee68f1021763011cd620",
     "manifest_file": "artifacts/release/manifest.json",
-    "manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+    "manifest_sha256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4",
     "manifest_automation_status": "DISABLED",
-    "runtime_audit_manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+    "runtime_audit_manifest_sha256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4",
     "policy_bindings": {
       "route": "shortlist_k8_packed_rerank",
       "scorer_id": "base_decision_head",

@@ -37,9 +37,17 @@ const HOP = [
   "transfer-encoding",
   "upgrade",
   "host",
+  // Set only by the production Worker after API-key authentication. A client
+  // must never be able to choose the in-container rate-limit bucket.
+  "x-veya-tenant",
 ];
 
 export const SECURITY_HEADERS = {
+  // HTTPS only for two years, including api./app./docs. subdomains. `preload` is
+  // deliberately omitted until the apex is ready for the HSTS preload list.
+  "strict-transport-security": "max-age=63072000; includeSubDomains",
+  "cross-origin-opener-policy": "same-origin",
+  "cross-origin-resource-policy": "same-origin",
   "content-security-policy":
     "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
   "x-content-type-options": "nosniff",

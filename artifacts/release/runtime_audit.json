@@ -1,7 +1,14 @@
 {
   "format": "veya-runtime-audit-v1",
   "release": "0.3.5-audit-baseline.1",
-  "manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+  "manifest_sha256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4",
+  "manifest_repin": {
+    "measured_under_manifest_sha256": "cd1e20296811ed80e4e400ab52ee812bf927e4e9b879b758656542d72410e5de",
+    "repinned_to_manifest_sha256": "80720058c6b07dfef0640171d4193ff7bcaa3f40629ac60df7f9b28e074d65a4",
+    "reason": "hardening/production-gates re-mint. Pinned runtime files changed: veya/reranker.py and veya/shortlist_artifact.py (torch.load now weights_only=True; deserialization mode only) and veya/release_bundle.py (candidate-embedding cache bounded to an LRU; cached vectors are identical, only eviction is new). No scoring, calibration, routing or checkpoint change; release id and checkpoint are unchanged.",
+    "measurements_rerun": false,
+    "required_before_activation": "Re-run research/veyabench/run_runtime_audit.py against the checkpoint for this manifest and replace this file."
+  },
   "environment": {
     "platform": "macOS-27.0-arm64-arm-64bit",
     "machine": "arm64",
