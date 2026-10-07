@@ -18,15 +18,15 @@ The account is `8d0a6a64de03f4c9b14184398e75aa6e` and its workers.dev subdomain 
 
 | Config | Worker | Deployed by |
 |---|---|---|
-| `wrangler.jsonc` (root) | `veya`: plain edge proxy (`worker/veya-edge.mjs`, `VEYA_ORIGIN`) | Workers Builds on `main` (`npx wrangler deploy`). Non-`main` branches get `npx wrangler preview` (previews enabled) |
+| `wrangler.jsonc` (root) | `veya`: customer edge (on `main`: `worker/veya-edge.mjs` + `worker/veya_site_edge.mjs`, service binding to `veya-production`; see `docs/VEYA_EDGE.md` on `main`) | Workers Builds on `main` runs `npx wrangler deploy --dry-run` (validate only). Real releases: `wrangler versions upload` + `wrangler versions deploy`. Preview URLs are off |
 | `wrangler.staging.jsonc` | `veya-staging`: container stack (`worker/veya-container.mjs`, container `veya-runtime`, rate limit ns 1001/1002) | Workers Builds on `deploy/cloudflare-staging` |
-| `wrangler.production.jsonc` | `veya-production`: container stack (`worker/veya-production.mjs`, container `veya-production-runtime`, rate limit ns 2001/2002) | Workers Builds on `production/veya-dynamics` (`npx wrangler deploy --config wrangler.production.jsonc`), or `.github/workflows/deploy-production.yml` |
+| `wrangler.production.jsonc` | `veya-production`: container stack (`worker/veya-production.mjs`, container `veya-production-runtime`, rate limit ns 2001/2002) | `.github/workflows/deploy-production.yml` (`prod-v*` tag or manual dispatch), or a manual `npx wrangler deploy --config wrangler.production.jsonc`. Workers Builds on `production/veya-dynamics` runs the same command with `--dry-run` (validate only) |
 
 `tests/test_wrangler_configs.py` locks this mapping. It checks names, entrypoints, distinct container apps and rate-limit namespaces, that there are no placeholders, and that release pins agree everywhere.
 
 > **Required before merging the config split:** change the `veya-staging` Workers Builds deploy command from `npx wrangler deploy` to `npx wrangler deploy --config wrangler.staging.jsonc`. Without that change, the next staging build deploys the plain proxy config under the wrong name. The build command (`python3 scripts/write_deploy_meta.py && npm ci && …`) stays the same; `write_deploy_meta.py` now checks the pins in both container configs.
 
-Workers Builds pushes to `main`, `production/veya-dynamics` and `deploy/cloudflare-staging` **deploy automatically**. Only push those branches when you mean to deploy.
+Workers Builds on `main` and `production/veya-dynamics` run as `--dry-run`: pushes and merges there validate the build but **do not deploy**. Production deploys go through `.github/workflows/deploy-production.yml` (`prod-v*` tag or manual dispatch, §2) or a deliberate manual `wrangler deploy`/`wrangler versions deploy`. Pushes to `deploy/cloudflare-staging` **do deploy staging automatically**; only push that branch when you mean to deploy staging.
 
 ## 2. Deploying
 
@@ -43,7 +43,7 @@ Gradual deployments move **Worker code only**. The container image and container
 
 ### 2b. Image, config, binding or manifest change: full
 
-Use `mode=full` (`wrangler deploy --config wrangler.production.jsonc`). This also happens automatically when `production/veya-dynamics` is pushed. A full deploy builds the image and starts a Containers rollout (`rollout_step_percentage` defaults to 10% → 100% across the 2 instances). During the rollout, the Worker routes around a replica that is not ready (see §4).
+Use `mode=full` (`wrangler deploy --config wrangler.production.jsonc`), or run that command manually. Pushing `production/veya-dynamics` does **not** deploy (its Workers Build is `--dry-run`). A full deploy builds the image and starts a Containers rollout (`rollout_step_percentage` defaults to 10% → 100% across the 2 instances). During the rollout, the Worker routes around a replica that is not ready (see §4).
 
 ### 2c. Manual verification after any deploy
 
