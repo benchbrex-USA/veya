@@ -33,10 +33,7 @@
   "vars": {
     "VEYA_RELEASE_ID": "0.3.5-audit-baseline.1",
     "VEYA_MODEL_VERSION": "0.3.5",
-    "VEYA_ARCHITECTURE_VERSION": "veya-shortlist-v1",
-    // Legacy Tailscale Funnel origin. Unused by the code since the cutover; kept
-    // for the first Cloudflare-backed version only and removed in the next one.
-    "VEYA_ORIGIN": "https://benchbrex.taila8b570.ts.net"
+    "VEYA_ARCHITECTURE_VERSION": "veya-shortlist-v1"
   },
   "preview_urls": false,
   "observability": {
