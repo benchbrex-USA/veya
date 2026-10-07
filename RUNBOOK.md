@@ -306,7 +306,7 @@ Set or clear a tier (production D1):
 
 ```bash
 npx wrangler d1 execute veya-production --remote -c wrangler.production.jsonc \
-  --command "UPDATE projects SET rate_tier='site' WHERE id='veya-public-site'"   # or rate_tier=NULL
+  --command "UPDATE projects SET rate_tier='site' WHERE id='project-veya-public-site'"   # or rate_tier=NULL
 ```
 
 Changes apply on the next request; there is no cache.
