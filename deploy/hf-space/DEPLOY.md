@@ -273,8 +273,11 @@ distribution summing to one, `route: "packed"`, and `model: "Veya Core"`.
 "vars": { "VEYA_ORIGIN": "https://educated-entertainment-bookmarks-aging.trycloudflare.com" }
 ```
 
-Change it to `$SPACE_URL`, commit, and push — the GitHub-connected build
-deploys automatically:
+Change it to `$SPACE_URL` and commit. Pushing does **not** deploy: since
+2026-10-07 the GitHub-connected Workers Build on `main` runs
+`npx wrangler deploy --dry-run` (validate only). Ship the change deliberately
+with `npx wrangler versions upload` followed by `npx wrangler versions deploy`
+(10%, then 100%):
 
 ```bash
 GIT_AUTHOR_EMAIL=261865777+benchbrex-USA@users.noreply.github.com \
