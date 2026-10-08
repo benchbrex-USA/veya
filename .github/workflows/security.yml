@@ -84,7 +84,7 @@ jobs:
           output: codeql-results
       - name: Fail on error- or warning-level CodeQL findings
         run: python3 .github/scripts/codeql_gate.py codeql-results
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: codeql-sarif
