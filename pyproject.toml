@@ -30,7 +30,7 @@ classifiers = [
 # (torch 2.x, transformers 5.x, numpy 2.x, safetensors 0.x, hub 1.x).
 dependencies = [
     "torch>=2.0.0,<3",
-    "transformers>=4.48.0,<6",
+    "transformers>=5.17.0,<6",
     "safetensors>=0.4.0,<1",
     "huggingface_hub>=0.20.0,<2",
     "numpy>=1.20.0,<3",
