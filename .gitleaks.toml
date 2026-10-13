@@ -18,4 +18,11 @@ regexes = [
   # a public 64-hex content hash of a tokenizer file, not a credential. Reviewed
   # 2026-10-07 (5 findings).
   '''tokenizer[A-Za-z0-9_./-]*"\s*:\s*"[0-9a-f]{64}"''',
+  # generic-api-key matches Cloudflare account IDs (32 hex) under keys like
+  # account_id / authenticated_account_id in read-only inventory dumps. These
+  # are public account identifiers, not API tokens. The finding that failed the
+  # 2026-10-12 scheduled Security run was in git history on
+  # backup/local-drive-20261007 (artifacts/deployment/cloudflare/account-inventory.json).
+  # Reviewed 2026-10-13.
+  '''(?:authenticated_)?account_id"\s*:\s*"[0-9a-f]{32}"''',
 ]
